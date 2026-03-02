@@ -6,9 +6,7 @@ def index(request):
     # Database-backed content
     gallery_images = GalleryImage.objects.all()
     events = [e.to_template_dict() for e in Event.objects.all()]
-    projects = list(Project.objects.values(
-        'title', 'description', 'tech', 'link', 'coming_soon',
-    ))
+    projects = Project.objects.all()
 
     context = {
         'benefits': [

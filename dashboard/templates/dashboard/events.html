@@ -1,0 +1,142 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Events{% endblock %}
+
+{% block extra_css %}
+<style>
+  .events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .events-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .events-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #1f1f1f;
+    background: #111;
+  }
+  .events-table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    border-bottom: 1px solid #1a1a1a;
+    color: #e5e7eb;
+  }
+  .events-table tr:last-child td {
+    border-bottom: none;
+  }
+  .events-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+  }
+  .event-title {
+    font-weight: 600;
+    color: #fff;
+  }
+  .event-desc {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.125rem;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .event-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .event-actions a {
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.8125rem;
+    transition: color 0.15s;
+  }
+  .event-actions a:hover {
+    color: #F1B82D;
+  }
+  .delete-form { display: inline; }
+  .delete-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    padding: 0;
+    transition: color 0.15s;
+  }
+  .delete-btn:hover { color: #f87171; }
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+  }
+  .past-event td { opacity: 0.5; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="events-header">
+  <div class="page-header" style="margin-bottom:0;">
+    <h1>Events</h1>
+    <p>Manage upcoming events and calendar.</p>
+  </div>
+  <a href="{% url 'dashboard:event_create' %}" class="btn btn-gold">+ New Event</a>
+</div>
+
+{% if events %}
+<table class="events-table">
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Location</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for event in events %}
+    <tr>
+      <td>
+        <div class="event-title">{{ event.title }}</div>
+        <div class="event-desc">{{ event.description }}</div>
+      </td>
+      <td>{{ event.date|date:"M j, Y" }}</td>
+      <td>{{ event.start_time|time:"g:i A" }} – {{ event.end_time|time:"g:i A" }}</td>
+      <td>{{ event.location }}</td>
+      <td>
+        <div class="event-actions">
+          <a href="{% url 'dashboard:event_edit' event.pk %}">Edit</a>
+          <form method="post" action="{% url 'dashboard:event_delete' event.pk %}" class="delete-form" onsubmit="return confirm('Delete this event?');">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn">Delete</button>
+          </form>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+  <p>No events yet. Create your first one.</p>
+</div>
+{% endif %}
+{% endblock %}

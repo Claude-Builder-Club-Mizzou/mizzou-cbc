@@ -1,0 +1,201 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Gallery{% endblock %}
+
+{% block extra_css %}
+<style>
+  .upload-form {
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .upload-form h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 150px;
+  }
+  .form-field label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+  }
+  .form-field input {
+    padding: 0.5rem 0.75rem;
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.8125rem;
+    font-family: inherit;
+  }
+  .form-field input:focus {
+    outline: none;
+    border-color: #F1B82D;
+  }
+  .form-field input[type="file"] {
+    padding: 0.375rem;
+  }
+  .form-field input[type="file"]::file-selector-button {
+    background: #1f1f1f;
+    color: #e5e7eb;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+  }
+  .form-field input[type="number"] {
+    max-width: 80px;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .gallery-item {
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .gallery-item:hover {
+    border-color: #2a2a2a;
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+  }
+  .gallery-item-info {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .gallery-item-caption {
+    font-size: 0.8125rem;
+    color: #e5e7eb;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .gallery-item-order {
+    font-size: 0.6875rem;
+    color: #6b7280;
+    flex-shrink: 0;
+  }
+  .delete-form {
+    display: inline;
+  }
+  .delete-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    padding: 0.25rem;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+  .delete-btn:hover {
+    color: #f87171;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+  }
+  .empty-state p {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+  .form-errors {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    margin-bottom: 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Gallery</h1>
+  <p>Manage photos shown on the public site.</p>
+</div>
+
+<div class="upload-form">
+  <h3>Upload New Image</h3>
+  {% if form.errors %}
+  <div class="form-errors">
+    {% for field, errors in form.errors.items %}
+      {% for error in errors %}
+        {{ field }}: {{ error }}<br>
+      {% endfor %}
+    {% endfor %}
+  </div>
+  {% endif %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-field">
+        <label for="id_image">Image</label>
+        {{ form.image }}
+      </div>
+      <div class="form-field">
+        <label for="id_caption">Caption</label>
+        {{ form.caption }}
+      </div>
+      <div class="form-field">
+        <label for="id_order">Order</label>
+        {{ form.order }}
+      </div>
+      <button type="submit" class="btn btn-gold">Upload</button>
+    </div>
+  </form>
+</div>
+
+{% if images %}
+<div class="gallery-grid">
+  {% for img in images %}
+  <div class="gallery-item">
+    <img src="{{ img.image.url }}" alt="{{ img.caption }}">
+    <div class="gallery-item-info">
+      <span class="gallery-item-caption">{{ img.caption }}</span>
+      <span class="gallery-item-order">#{{ img.order }}</span>
+      <form method="post" action="{% url 'dashboard:gallery_delete' img.pk %}" class="delete-form" onsubmit="return confirm('Delete this image?');">
+        {% csrf_token %}
+        <button type="submit" class="delete-btn" title="Delete">✕</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <p>No gallery images yet. Upload your first one above.</p>
+</div>
+{% endif %}
+{% endblock %}

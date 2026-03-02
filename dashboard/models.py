@@ -29,6 +29,10 @@ class Event(models.Model):
     def __str__(self):
         return f"{self.title} ({self.date})"
 
+    def _format_time(self, t):
+        """Format time as '2:00 PM' — works on both Windows and Unix."""
+        return t.strftime('%I:%M %p').lstrip('0')
+
     def to_template_dict(self):
         """Format event data the way landing/index.html expects it."""
         return {
@@ -40,16 +44,14 @@ class Event(models.Model):
             'title': self.title,
             'description': self.description,
             'location': self.location,
-            'time': (
-                f"{self.start_time.strftime('%-I:%M %p')} – "
-                f"{self.end_time.strftime('%-I:%M %p')}"
-            ),
+            'time': f"{self._format_time(self.start_time)} – {self._format_time(self.end_time)}",
         }
 
 
 class Project(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
+    image = models.ImageField(upload_to='projects/', blank=True)
     tech = models.JSONField(default=list, help_text='List of tech tags, e.g. ["Next.js", "Supabase"]')
     link = models.URLField(blank=True, default='')
     coming_soon = models.BooleanField(default=False)

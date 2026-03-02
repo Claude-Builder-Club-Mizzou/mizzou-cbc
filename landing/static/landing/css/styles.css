@@ -1137,6 +1137,15 @@ body.dark .detail-event-item:hover {
 
 /* ===== Projects ===== */
 .project-card { display: flex; flex-direction: column; }
+
+.project-card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
 .project-card p { flex: 1; }
 .tech-tags {
   display: flex;

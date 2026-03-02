@@ -1,0 +1,118 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{% if editing %}Edit Event{% else %}New Event{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .form-card {
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 600px;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  .form-group label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #9ca3af;
+    margin-bottom: 0.25rem;
+  }
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.8125rem;
+    font-family: inherit;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #F1B82D;
+  }
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  .form-row {
+    display: flex;
+    gap: 1rem;
+  }
+  .form-row .form-group {
+    flex: 1;
+  }
+  .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .form-errors {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    margin-bottom: 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% if editing %}Edit Event{% else %}New Event{% endif %}</h1>
+  <p>{% if editing %}Update event details.{% else %}Add an event to the calendar.{% endif %}</p>
+</div>
+
+<div class="form-card">
+  {% if form.errors %}
+  <div class="form-errors">
+    {% for field, errors in form.errors.items %}
+      {% for error in errors %}
+        {{ field }}: {{ error }}<br>
+      {% endfor %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_title">Title</label>
+      {{ form.title }}
+    </div>
+    <div class="form-group">
+      <label for="id_description">Description</label>
+      {{ form.description }}
+    </div>
+    <div class="form-group">
+      <label for="id_location">Location</label>
+      {{ form.location }}
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="id_date">Date</label>
+        {{ form.date }}
+      </div>
+      <div class="form-group">
+        <label for="id_start_time">Start Time</label>
+        {{ form.start_time }}
+      </div>
+      <div class="form-group">
+        <label for="id_end_time">End Time</label>
+        {{ form.end_time }}
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-gold">{% if editing %}Save Changes{% else %}Create Event{% endif %}</button>
+      <a href="{% url 'dashboard:events' %}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
