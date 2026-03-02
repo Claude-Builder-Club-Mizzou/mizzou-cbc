@@ -26,14 +26,10 @@ def index(request):
             },
         ],
         'gallery': [
-            {'caption': 'First club meeting', 'size': 'tall'},
-            {'caption': 'Workshop: Intro to Claude API', 'size': 'wide'},
-            {'caption': 'Team building session', 'size': 'small'},
-            {'caption': 'Hackathon night', 'size': 'small'},
-            {'caption': 'Demo day presentations', 'size': 'wide'},
-            {'caption': 'Guest speaker event', 'size': 'tall'},
-            {'caption': 'Campus collab', 'size': 'small'},
-            {'caption': 'Building with Claude', 'size': 'wide'},
+            {'caption': 'First club presentation', 'image': 'landing/images/gallery/1.jpg'},
+            {'caption': 'Workshop: Intro to Claude Code', 'image': 'landing/images/gallery/2.jpg'},
+            {'caption': 'Claude Builder Club & Robotics', 'image': 'landing/images/gallery/3.jpg'},
+            {'caption': 'Claude Builder Outreach', 'image': 'landing/images/gallery/4.jpg'},
         ],
         'stats': [
             {'value': '60+', 'num': 60, 'label': 'Universities Nationwide'},
