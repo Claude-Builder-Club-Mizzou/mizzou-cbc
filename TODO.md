@@ -14,15 +14,10 @@ Items that need real data from the team before the site is ready.
 
 ## Events (all 4 are sample/placeholder)
 - [ ] Replace with actual upcoming events (date, title, description, location, time)
-- [ ] Add real RSVP links (currently all `#`)
-
-## Projects (all 3 are fictional examples)
-- [ ] **MizzouMeal Planner** — real or remove? Add link if real
-- [ ] **StudyBuddy AI** — real or remove? Add link if real
-- [ ] **Tiger Research Assistant** — real or remove? Add link if real
+- [X] Add real RSVP links (currently all `#`)
 
 ## Content to Verify
-- [ ] **About stats** — are these accurate for the national CBC program? (60+ Universities, 15K+ Student Builders, 7 Ivy League Schools)
+- [X] **About stats** — are these accurate for the national CBC program? (60+ Universities, 15K+ Student Builders, 7 Ivy League Schools)
 - [X] **FAQ answers** — confirm Claude Pro is free for members and API credits amount ($50/mo)
 - [ ] **Favicon / OG image** — add custom favicon and social share image
 
