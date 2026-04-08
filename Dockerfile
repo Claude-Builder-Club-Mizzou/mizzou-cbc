@@ -19,5 +19,5 @@ RUN DJANGO_SECRET_KEY=build-placeholder python manage.py collectstatic --noinput
 ENV PORT=8080
 EXPOSE 8080
 
-# Run migrations at startup then start gunicorn
-CMD python manage.py migrate --noinput && exec gunicorn mizzou_cbc.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4
+# Run migrations and create superuser at startup, then start gunicorn
+CMD python manage.py migrate --noinput && python manage.py createsuperuser --noinput 2>/dev/null; exec gunicorn mizzou_cbc.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4
