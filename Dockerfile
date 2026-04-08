@@ -12,8 +12,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Collect static files and run migrations (build-time secret key for manage.py commands)
+RUN DJANGO_SECRET_KEY=build-placeholder python manage.py collectstatic --noinput
+RUN DJANGO_SECRET_KEY=build-placeholder python manage.py migrate --noinput
 
 # Cloud Run injects PORT env var (default 8080)
 ENV PORT=8080
