@@ -35,29 +35,11 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'claudebuilderclub.com,www.claud
 
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://claudebuilderclub.com,https://www.claudebuilderclub.com').split(',')
 
-# Media files - use GCS in production, local filesystem in dev
-GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
-import logging
-logging.basicConfig(level=logging.INFO)
-_logger = logging.getLogger(__name__)
-_logger.info(f"GS_BUCKET_NAME = '{GS_BUCKET_NAME}' (type={type(GS_BUCKET_NAME)})")
-if GS_BUCKET_NAME:
-    STORAGES = {
-        "default": {
-            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
-            "OPTIONS": {
-                "bucket_name": GS_BUCKET_NAME,
-                "location": "media",
-            },
-        },
-        "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        },
-    }
-    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
-else:
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Media files
+# In production, the GCS bucket is mounted as a volume at /app/media
+# In local dev, files are stored in ./media/
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Application definition
@@ -69,7 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'storages',
     'landing',
     'dashboard',
 ]
