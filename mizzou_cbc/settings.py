@@ -37,6 +37,10 @@ CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://claudebui
 
 # Media files - use GCS in production, local filesystem in dev
 GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
+import logging
+logging.basicConfig(level=logging.INFO)
+_logger = logging.getLogger(__name__)
+_logger.info(f"GS_BUCKET_NAME = '{GS_BUCKET_NAME}' (type={type(GS_BUCKET_NAME)})")
 if GS_BUCKET_NAME:
     STORAGES = {
         "default": {
