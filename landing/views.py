@@ -17,7 +17,7 @@ def index(request):
             },
             {
                 'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l2-2-2-2M8 18l-2-2 2-2M14 4l-4 16" stroke="#F1B82D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                'title': '$50/mo API Credits',
+                'title': '$25/mo API Credits',
                 'description': 'Monthly API credits to build real applications powered by Claude. Ship projects, automate workflows, and experiment freely.',
             },
             {
@@ -65,7 +65,7 @@ def index(request):
                 'answer': "Totally flexible. We host events 2-3 times per month, and attendance is optional. Come to what interests you — whether that's every workshop or just the hackathons.",
             },
             {
-                'question': 'How are the $50 monthly API credits distributed?',
+                'question': 'How are the $25 monthly API credits distributed?',
                 'answer': "Active members receive API credits through Anthropic's program. You'll get access to the Claude API to build personal projects, class assignments, or hackathon submissions.",
             },
             {
