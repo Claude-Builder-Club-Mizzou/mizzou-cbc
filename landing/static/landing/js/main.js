@@ -370,6 +370,7 @@ document.querySelectorAll('.magnetic').forEach(btn => {
     eventDateMap[key].push(e.title);
   });
 
+  var selectedKey = null;
   var now = new Date();
   var currentYear = now.getFullYear();
   var currentMonth = now.getMonth();
@@ -413,6 +414,9 @@ document.querySelectorAll('.magnetic').forEach(btn => {
 
       if (isCurrentMonth && d === today.getDate()) {
         cell.classList.add('today');
+      }
+      if (dateKey === selectedKey) {
+        cell.classList.add('active');
       }
 
       if (eventDateMap[dateKey]) {
@@ -495,6 +499,7 @@ document.querySelectorAll('.magnetic').forEach(btn => {
   }
 
   function handleDateClick(dateKey, cell) {
+    selectedKey = dateKey;
     grid.querySelectorAll('.calendar-day.active').forEach(function(c) {
       c.classList.remove('active');
     });
@@ -556,15 +561,36 @@ document.querySelectorAll('.magnetic').forEach(btn => {
     renderCalendar(currentYear, currentMonth);
   });
 
-  renderCalendar(currentYear, currentMonth);
-
-  // Auto-select first event on load
-  if (events.length > 0) {
-    var firstKey = events[0].year + '-' + events[0].month_num + '-' + events[0].day_num;
-    var firstCell = grid.querySelector('.calendar-day.has-event[data-date-key="' + firstKey + '"]');
-    if (firstCell) {
-      firstCell.classList.add('active');
-    }
-    showEventDetail(firstKey);
+  // ----- Pick the NEXT upcoming event (today or later), not the first one added -----
+  function eventDate(e) { return new Date(e.year, e.month_num - 1, e.day_num); }
+  function keyToDate(key) {
+    var p = key.split('-');
+    return new Date(parseInt(p[0]), parseInt(p[1]) - 1, parseInt(p[2]));
   }
+
+  var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var sorted = events.slice().sort(function(a, b) { return eventDate(a) - eventDate(b); });
+  var upcoming = sorted.filter(function(e) { return eventDate(e) >= todayStart; });
+
+  // Hide past events from the "All Upcoming" list (they stay visible on the calendar)
+  if (upcoming.length > 0) {
+    document.querySelectorAll('.detail-event-item').forEach(function(item) {
+      if (item.dataset.date && keyToDate(item.dataset.date) < todayStart) {
+        item.style.display = 'none';
+      }
+    });
+  }
+
+  // Feature the next upcoming event; if everything is in the past, fall back to the latest one
+  var featured = upcoming.length > 0 ? upcoming[0] : sorted[sorted.length - 1];
+
+  if (featured) {
+    selectedKey = featured.year + '-' + featured.month_num + '-' + featured.day_num;
+    // Open the calendar on the month of that event so the highlight is visible
+    currentYear = featured.year;
+    currentMonth = featured.month_num - 1;
+  }
+
+  renderCalendar(currentYear, currentMonth);
+  if (selectedKey) showEventDetail(selectedKey);
 })();

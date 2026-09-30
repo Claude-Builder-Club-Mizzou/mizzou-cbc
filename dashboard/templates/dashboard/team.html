@@ -1,0 +1,152 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Team{% endblock %}
+
+{% block extra_css %}
+<style>
+  .team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .team-card {
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s;
+  }
+  .team-card:hover { border-color: #2a2a2a; }
+  .team-top {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
+  .team-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+    background: rgba(241, 184, 45, 0.1);
+    color: #F1B82D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .team-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  .team-role {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #F1B82D;
+    margin-top: 0.125rem;
+  }
+  .team-major {
+    font-size: 0.8125rem;
+    color: #9ca3af;
+    flex: 1;
+  }
+  .team-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #1a1a1a;
+  }
+  .team-order {
+    font-size: 0.6875rem;
+    color: #6b7280;
+  }
+  .team-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .team-actions a {
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.8125rem;
+    transition: color 0.15s;
+  }
+  .team-actions a:hover { color: #F1B82D; }
+  .delete-form { display: inline; }
+  .delete-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    padding: 0;
+    transition: color 0.15s;
+  }
+  .delete-btn:hover { color: #f87171; }
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="team-header">
+  <div class="page-header" style="margin-bottom:0;">
+    <h1>Team</h1>
+    <p>Manage the exec team shown on the public site.</p>
+  </div>
+  <a href="{% url 'dashboard:team_create' %}" class="btn btn-gold">+ New Member</a>
+</div>
+
+{% if members %}
+<div class="team-grid">
+  {% for member in members %}
+  <div class="team-card">
+    <div class="team-top">
+      {% if member.image_url %}
+      <img src="{{ member.image_url }}" alt="{{ member.name }}" class="team-avatar">
+      {% else %}
+      <div class="team-avatar">{{ member.initials }}</div>
+      {% endif %}
+      <div>
+        <div class="team-name">{{ member.name }}</div>
+        <div class="team-role">{{ member.role }}</div>
+      </div>
+    </div>
+    <div class="team-major">{{ member.major }}</div>
+    <div class="team-meta">
+      <span class="team-order">Order #{{ member.order }}</span>
+      <div class="team-actions">
+        <a href="{% url 'dashboard:team_edit' member.pk %}">Edit</a>
+        <form method="post" action="{% url 'dashboard:team_delete' member.pk %}" class="delete-form" onsubmit="return confirm('Remove this team member?');">
+          {% csrf_token %}
+          <button type="submit" class="delete-btn">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <p>No team members yet. Add your first one.</p>
+</div>
+{% endif %}
+{% endblock %}

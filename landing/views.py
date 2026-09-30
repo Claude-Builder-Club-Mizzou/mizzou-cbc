@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from dashboard.models import GalleryImage, Event, Project
+from dashboard.models import GalleryImage, Event, Project, TeamMember
 
 
 def index(request):
@@ -7,6 +7,7 @@ def index(request):
     gallery_images = GalleryImage.objects.all()
     events = [e.to_template_dict() for e in Event.objects.all()]
     projects = Project.objects.all()
+    team = TeamMember.objects.all()
 
     context = {
         'benefits': [
@@ -39,13 +40,7 @@ def index(request):
             {'value': '7', 'num': 7, 'label': 'Ivy League Schools'},
             {'value': '∞', 'num': 0, 'label': 'Projects to Build'},
         ],
-        'team': [
-            {'name': 'Brandon Gomes', 'initials': 'BG', 'role': 'President', 'major': 'Computer Science & Math, Senior', 'linkedin': 'https://www.linkedin.com/in/brandon-gomes-mu/', 'image': 'landing/images/team/brandon.jpeg'},
-            {'name': 'Pari Patel', 'initials': 'PP', 'role': 'Vice President', 'major': 'Computer Science, Senior', 'linkedin': 'https://www.linkedin.com/in/paripatel54/', 'image': 'landing/images/team/pari.jpeg'},
-            {'name': 'Colton Treloar', 'initials': 'CT', 'role': 'Treasurer', 'major': 'Industrial Engineering, Junior', 'linkedin': 'https://www.linkedin.com/in/colton-treloar-613442206/', 'image': 'landing/images/team/colton.jpg'},
-            {'name': 'Akbar K.', 'initials': 'AK', 'role': 'Secretary', 'major': 'Electrical Engineering, Junior', 'linkedin': 'https://www.linkedin.com/in/akbarjon-kamoldinov/', 'image': 'landing/images/team/akbar.jpeg'},
-            {'name': 'Sebastian Main', 'initials': 'SM', 'role': 'Outreach', 'major': 'Information Technology, Junior', 'linkedin': 'https://www.linkedin.com/in/sebastian-main-6a4799224/', 'image': 'landing/images/team/sebastian.jpg'},
-        ],
+        'team': team,
         'projects': projects,
         'faq_items': [
             {

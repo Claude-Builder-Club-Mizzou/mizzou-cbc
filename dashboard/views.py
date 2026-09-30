@@ -2,8 +2,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import EventForm, GalleryImageForm, ProjectForm
-from .models import Event, GalleryImage, Project
+from .forms import EventForm, GalleryImageForm, ProjectForm, TeamMemberForm
+from .models import Event, GalleryImage, Project, TeamMember
 
 LOGIN_URL = '/cb-exec/'
 
@@ -38,6 +38,7 @@ def dashboard_home(request):
         'gallery_count': GalleryImage.objects.count(),
         'event_count': Event.objects.count(),
         'project_count': Project.objects.count(),
+        'team_count': TeamMember.objects.count(),
     }
     return render(request, 'dashboard/home.html', context)
 
@@ -191,3 +192,63 @@ def project_delete(request, pk):
     if request.method == 'POST':
         project.delete()
     return redirect('dashboard:projects')
+
+
+# ── Team ─────────────────────────────────────────────────────────────────
+
+
+@login_required(login_url=LOGIN_URL)
+def team_list(request):
+    members = TeamMember.objects.all()
+    context = {
+        'active_page': 'team',
+        'members': members,
+    }
+    return render(request, 'dashboard/team.html', context)
+
+
+@login_required(login_url=LOGIN_URL)
+def team_create(request):
+    if request.method == 'POST':
+        form = TeamMemberForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard:team')
+    else:
+        form = TeamMemberForm(initial={'order': TeamMember.objects.count()})
+
+    context = {
+        'active_page': 'team',
+        'form': form,
+        'editing': False,
+    }
+    return render(request, 'dashboard/team_form.html', context)
+
+
+@login_required(login_url=LOGIN_URL)
+def team_edit(request, pk):
+    member = get_object_or_404(TeamMember, pk=pk)
+    if request.method == 'POST':
+        form = TeamMemberForm(request.POST, request.FILES, instance=member)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard:team')
+    else:
+        form = TeamMemberForm(instance=member)
+
+    context = {
+        'active_page': 'team',
+        'form': form,
+        'member': member,
+        'editing': True,
+    }
+    return render(request, 'dashboard/team_form.html', context)
+
+
+@login_required(login_url=LOGIN_URL)
+def team_delete(request, pk):
+    member = get_object_or_404(TeamMember, pk=pk)
+    if request.method == 'POST':
+        member.photo.delete(save=False)
+        member.delete()
+    return redirect('dashboard:team')

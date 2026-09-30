@@ -24,4 +24,10 @@ urlpatterns = [
     path('dashboard/projects/new/', views.project_create, name='project_create'),
     path('dashboard/projects/<int:pk>/edit/', views.project_edit, name='project_edit'),
     path('dashboard/projects/<int:pk>/delete/', views.project_delete, name='project_delete'),
+
+    # Team
+    path('dashboard/team/', views.team_list, name='team'),
+    path('dashboard/team/new/', views.team_create, name='team_create'),
+    path('dashboard/team/<int:pk>/edit/', views.team_edit, name='team_edit'),
+    path('dashboard/team/<int:pk>/delete/', views.team_delete, name='team_delete'),
 ]

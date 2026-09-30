@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event, GalleryImage, Project
+from .models import Event, GalleryImage, Project, TeamMember
 
 
 class GalleryImageForm(forms.ModelForm):
@@ -58,3 +58,16 @@ class ProjectForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class TeamMemberForm(forms.ModelForm):
+    class Meta:
+        model = TeamMember
+        fields = ['name', 'role', 'major', 'linkedin', 'photo', 'order']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Full name'}),
+            'role': forms.TextInput(attrs={'placeholder': 'e.g. President'}),
+            'major': forms.TextInput(attrs={'placeholder': 'e.g. Computer Science, Senior'}),
+            'linkedin': forms.URLInput(attrs={'placeholder': 'https://www.linkedin.com/in/...'}),
+            'order': forms.NumberInput(attrs={'min': 0}),
+        }
