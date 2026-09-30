@@ -264,33 +264,6 @@ window.addEventListener('scroll', () => {
   });
 });
 
-// ===== Custom Cursor =====
-const cursor = document.createElement('div');
-cursor.classList.add('custom-cursor');
-const cursorDot = document.createElement('div');
-cursorDot.classList.add('custom-cursor-dot');
-document.body.appendChild(cursor);
-document.body.appendChild(cursorDot);
-
-let cursorX = 0, cursorY = 0;
-let dotX = 0, dotY = 0;
-
-document.addEventListener('mousemove', (e) => {
-  cursorX = e.clientX;
-  cursorY = e.clientY;
-  cursorDot.style.left = cursorX + 'px';
-  cursorDot.style.top = cursorY + 'px';
-});
-
-function animateCursor() {
-  dotX += (cursorX - dotX) * 0.15;
-  dotY += (cursorY - dotY) * 0.15;
-  cursor.style.left = dotX + 'px';
-  cursor.style.top = dotY + 'px';
-  requestAnimationFrame(animateCursor);
-}
-animateCursor();
-
 // Enlarge cursor on interactive elements
 document.querySelectorAll('a, button, .tilt-card, .faq-btn').forEach(el => {
   el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
