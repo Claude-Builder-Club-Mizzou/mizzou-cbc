@@ -1664,9 +1664,9 @@ body.dark {
 @media (hover: none) {
   .custom-cursor, .custom-cursor-dot { display: none; }
 }
-/* Hide default cursor on desktop */
+/* Hide default cursor on desktop, only once the custom cursor is running (JS adds the class) */
 @media (hover: hover) {
-  *, *::before, *::after { cursor: none !important; }
+  body.custom-cursor-active, body.custom-cursor-active *, body.custom-cursor-active *::before, body.custom-cursor-active *::after { cursor: none !important; }
 }
 
 /* ===== Back to Top Button ===== */
