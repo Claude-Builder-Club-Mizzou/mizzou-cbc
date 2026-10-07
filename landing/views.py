@@ -13,13 +13,13 @@ def index(request):
         'benefits': [
             {
                 'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#F1B82D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                'title': 'Claude Pro Access',
-                'description': 'Free unlimited access to Claude\'s most advanced models with priority processing. Build, research, and create without limits.',
+                'title': 'Merchandise',
+                'description': 'Earn Claude Builder Club merchandise, including stickers and apparel, through club activities, events, and projects.',
             },
             {
                 'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l2-2-2-2M8 18l-2-2 2-2M14 4l-4 16" stroke="#F1B82D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                'title': '$25 API Credits',
-                'description': 'Monthly API credits to build real applications powered by Claude. Ship projects, automate workflows, and experiment freely.',
+                'title': 'API Credits',
+                'description': '$25 in API credits each fall and $50 each spring to build real applications powered by Claude. Ship projects, automate workflows, and experiment freely.',
             },
             {
                 'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z" stroke="#F1B82D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5" stroke="#F1B82D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -52,16 +52,16 @@ def index(request):
                 'answer': "Not at all! We have tracks for all skill levels. Our workshops start from the basics, and Claude itself is a great tool for learning to code. Many of our most creative projects come from non-CS majors.",
             },
             {
-                'question': 'How do I get free Claude Pro access?',
-                'answer': "Join the club by filling out our sign-up form. Once you're a member, you'll receive instructions to activate your free Claude Pro subscription within a few days.",
+                'question': 'How do I get merchandise?',
+                'answer': "Join the club by filling out our sign-up form. Once you're a member, you'll be eligible for merchandise opportunities through club events and activities. Check our GroupMe for details.",
             },
             {
                 'question': "What's the time commitment?",
                 'answer': "Totally flexible. We host events 2-3 times per month, and attendance is optional. Come to what interests you — whether that's every workshop or just the hackathons.",
             },
             {
-                'question': 'How are the $25 API credits distributed?',
-                'answer': "Active members receive API credits through Anthropic's program. You'll get access to the Claude API to build personal projects, class assignments, or hackathon submissions.",
+                'question': 'How are the API credits distributed?',
+                'answer': "Active members receive $25 in API credits in the fall and $50 in the spring through Anthropic's program. You'll get access to the Claude API to build personal projects, class assignments, or hackathon submissions.",
             },
             {
                 'question': 'Can I join the leadership team?',
