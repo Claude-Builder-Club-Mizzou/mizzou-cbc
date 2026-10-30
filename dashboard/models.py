@@ -22,6 +22,7 @@ class Event(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
+    rsvp_url = models.URLField(blank=True, default='', help_text='Campus RSVP link (optional)')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -37,6 +38,9 @@ class Event(models.Model):
     def to_template_dict(self):
         """Format event data the way landing/home.html expects it."""
         return {
+            'id': self.pk,
+            'rsvp_url': self.rsvp_url,
+            'weekday': self.date.strftime('%a'),
             'month': self.date.strftime('%b'),
             'day': str(self.date.day),
             'year': self.date.year,

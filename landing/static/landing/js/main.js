@@ -187,32 +187,51 @@ window.addEventListener('scroll', () => {
   if (!dataEl) return;
 
   var events = JSON.parse(dataEl.textContent);
+  var root = document.getElementById('eventsRoot');
   var grid = document.getElementById('calGrid');
   var label = document.getElementById('calMonthLabel');
   var prevBtn = document.getElementById('calPrev');
   var nextBtn = document.getElementById('calNext');
   var todayBtn = document.getElementById('calToday');
+  var mainEl = document.getElementById('eventMain');
+  var nextEl = document.getElementById('eventNext');
 
-  if (!grid || !label) return;
-
-  // Map date keys to event titles for display in calendar cells
-  var eventDateMap = {};
-  events.forEach(function(e) {
-    var key = e.year + '-' + e.month_num + '-' + e.day_num;
-    if (!eventDateMap[key]) eventDateMap[key] = [];
-    eventDateMap[key].push(e.title);
-  });
-
-  var selectedKey = null;
-  var now = new Date();
-  var currentYear = now.getFullYear();
-  var currentMonth = now.getMonth();
+  if (!root || !grid || !label || !mainEl || !nextEl) return;
 
   var MONTH_NAMES = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
+  function dateKey(e) { return e.year + '-' + e.month_num + '-' + e.day_num; }
+  function eventDate(e) { return new Date(e.year, e.month_num - 1, e.day_num); }
+
+  var now = new Date();
+  var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var currentYear = now.getFullYear();
+  var currentMonth = now.getMonth();
+
+  // Chronological order; the server already sorts by date + start time, and sort() is stable.
+  var sorted = events.slice().sort(function(a, b) { return eventDate(a) - eventDate(b); });
+  var upcoming = sorted.filter(function(e) { return eventDate(e) >= todayStart; });
+
+  var eventsByDay = {};
+  sorted.forEach(function(e) {
+    var k = dateKey(e);
+    (eventsByDay[k] = eventsByDay[k] || []).push(e);
+  });
+
+  var selected = null;
+
+  // ----- Safe DOM builder (event text is admin-entered; never inject it as HTML) -----
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+
+  // ----- Calendar -----
   function renderCalendar(year, month) {
     grid.innerHTML = '';
     label.textContent = MONTH_NAMES[month] + ' ' + year;
@@ -220,204 +239,199 @@ window.addEventListener('scroll', () => {
     var firstDay = new Date(year, month, 1).getDay();
     var daysInMonth = new Date(year, month + 1, 0).getDate();
     var daysInPrevMonth = new Date(year, month, 0).getDate();
-
-    var today = new Date();
-    var isCurrentMonth = (today.getFullYear() === year && today.getMonth() === month);
+    var isCurrentMonth = (now.getFullYear() === year && now.getMonth() === month);
+    var selectedKey = selected ? dateKey(selected) : null;
 
     function makeCell(dayNum, extraClass) {
-      var cell = document.createElement('div');
-      cell.classList.add('calendar-day');
-      if (extraClass) cell.classList.add(extraClass);
-      var numSpan = document.createElement('span');
-      numSpan.classList.add('calendar-day-num');
-      numSpan.textContent = dayNum;
-      cell.appendChild(numSpan);
+      var cell = el('div', 'calendar-day' + (extraClass ? ' ' + extraClass : ''));
+      cell.appendChild(el('span', 'calendar-day-num', dayNum));
       return cell;
     }
 
-    // Previous month trailing days
     for (var i = firstDay - 1; i >= 0; i--) {
       grid.appendChild(makeCell(daysInPrevMonth - i, 'other-month'));
     }
 
-    // Current month days
     for (var d = 1; d <= daysInMonth; d++) {
       var cell = makeCell(d);
-      var dateKey = year + '-' + (month + 1) + '-' + d;
+      var key = year + '-' + (month + 1) + '-' + d;
 
-      if (isCurrentMonth && d === today.getDate()) {
-        cell.classList.add('today');
-      }
-      if (dateKey === selectedKey) {
-        cell.classList.add('active');
-      }
+      if (isCurrentMonth && d === now.getDate()) cell.classList.add('today');
+      if (key === selectedKey) cell.classList.add('active');
 
-      if (eventDateMap[dateKey]) {
+      if (eventsByDay[key]) {
         cell.classList.add('has-event');
         cell.setAttribute('role', 'button');
         cell.setAttribute('tabindex', '0');
         cell.setAttribute('aria-label', 'View event on ' + MONTH_NAMES[month] + ' ' + d);
-        cell.dataset.dateKey = dateKey;
+        cell.dataset.dateKey = key;
 
-        // Add event title labels inside the cell
-        eventDateMap[dateKey].forEach(function(title) {
-          var titleEl = document.createElement('span');
-          titleEl.classList.add('calendar-event-title');
-          titleEl.textContent = title;
-          cell.appendChild(titleEl);
+        eventsByDay[key].forEach(function(ev) {
+          cell.appendChild(el('span', 'calendar-event-title', ev.title));
         });
 
-        cell.addEventListener('click', function() {
-          handleDateClick(this.dataset.dateKey, this);
-        });
+        cell.addEventListener('click', onDayActivate);
         cell.addEventListener('keydown', function(e) {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            handleDateClick(this.dataset.dateKey, this);
+            onDayActivate.call(this);
           }
         });
       }
-
       grid.appendChild(cell);
     }
 
-    // Next month leading days
     var totalCells = firstDay + daysInMonth;
     var remaining = (totalCells <= 35) ? 35 - totalCells : 42 - totalCells;
-    for (var i = 1; i <= remaining; i++) {
-      grid.appendChild(makeCell(i, 'other-month'));
+    for (var j = 1; j <= remaining; j++) {
+      grid.appendChild(makeCell(j, 'other-month'));
     }
   }
 
-  var detailContent = document.getElementById('detailContent');
-  var detailDate = document.getElementById('detailDate');
-  var detailCards = document.getElementById('detailCards');
-
-  function showEventDetail(dateKey) {
-    var matched = events.filter(function(e) {
-      return (e.year + '-' + e.month_num + '-' + e.day_num) === dateKey;
-    });
-
-    if (matched.length > 0 && detailContent && detailCards && detailDate) {
-      var parts = dateKey.split('-');
-      detailDate.textContent = MONTH_NAMES[parseInt(parts[1]) - 1] + ' ' + parts[2] + ', ' + parts[0];
-
-      detailCards.innerHTML = '';
-      matched.forEach(function(ev) {
-        var card = document.createElement('div');
-        card.classList.add('detail-card');
-        card.innerHTML =
-          '<div class="detail-card-title text-heading">' + ev.title + '</div>' +
-          '<div class="detail-card-desc text-muted">' + ev.description + '</div>' +
-          '<div class="detail-card-meta text-muted">' +
-            '<span>\u{1F4CD} ' + ev.location + '</span>' +
-            '<span>\u{1F550} ' + ev.time + '</span>' +
-          '</div>';
-        detailCards.appendChild(card);
-      });
-
-      document.querySelectorAll('.detail-event-item').forEach(function(item) {
-        item.classList.remove('active');
-        if (item.dataset.date === dateKey) {
-          item.classList.add('active');
-        }
-      });
-    }
-  }
-
-  function handleDateClick(dateKey, cell) {
-    selectedKey = dateKey;
-    grid.querySelectorAll('.calendar-day.active').forEach(function(c) {
-      c.classList.remove('active');
-    });
-    cell.classList.add('active');
-
-    showEventDetail(dateKey);
-
+  function onDayActivate() {
+    var list = eventsByDay[this.dataset.dateKey];
+    if (!list) return;
+    selectEvent(list[0]);
     if (window.innerWidth <= 960) {
-      document.getElementById('eventDetailPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      mainEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
-  // Click on all-events list items to trigger calendar selection
-  document.querySelectorAll('.detail-event-item').forEach(function(item) {
-    item.addEventListener('click', function() {
-      var dateKey = this.dataset.date;
-      if (!dateKey) return;
-      var parts = dateKey.split('-');
-      var targetMonth = parseInt(parts[1]) - 1;
-      var targetYear = parseInt(parts[0]);
+  // ----- Event cards -----
+  function titleBar(titleText, tagText, muted) {
+    var bar = el('div', 'term-bar');
+    var dots = el('span', 'term-dots');
+    dots.setAttribute('aria-hidden', 'true');
+    for (var i = 0; i < 3; i++) dots.appendChild(document.createElement('i'));
+    bar.appendChild(dots);
+    bar.appendChild(el('span', 'term-bar-title', titleText));
+    if (tagText) bar.appendChild(el('span', 'term-tag' + (muted ? ' muted' : ''), tagText));
+    return bar;
+  }
 
-      // Navigate calendar to the right month if needed
-      if (targetYear !== currentYear || targetMonth !== currentMonth) {
-        currentYear = targetYear;
-        currentMonth = targetMonth;
-        renderCalendar(currentYear, currentMonth);
-      }
+  function mainTag(ev) {
+    var d = eventDate(ev);
+    if (d < todayStart) return { text: 'past', muted: true };
+    if (upcoming.length && upcoming[0] === ev) return { text: d.getTime() === todayStart.getTime() ? 'today' : 'next up', muted: false };
+    if (d.getTime() === todayStart.getTime()) return { text: 'today', muted: false };
+    return { text: 'upcoming', muted: false };
+  }
 
-      // Find and click the matching calendar day
-      var dayCell = grid.querySelector('.calendar-day.has-event[data-date-key="' + dateKey + '"]');
-      if (dayCell) {
-        handleDateClick(dateKey, dayCell);
-      }
-    });
-  });
+  function metaRow(dl, k, v) {
+    dl.appendChild(el('dt', null, k));
+    dl.appendChild(el('dd', null, v));
+  }
 
+  function renderMain(ev) {
+    var tag = mainTag(ev);
+    mainEl.innerHTML = '';
+    mainEl.appendChild(titleBar('event --rsvp', tag.text, tag.muted));
+
+    var body = el('div', 'event-body');
+    var prompt = el('div', 'ec-prompt');
+    prompt.appendChild(el('b', null, '$ '));
+    prompt.appendChild(document.createTextNode('cat events/' + ev.year + '-' + pad(ev.month_num) + '-' + pad(ev.day_num) + '.md'));
+    body.appendChild(prompt);
+
+    body.appendChild(el('h3', 'ec-title', ev.title));
+
+    var dl = el('dl', 'ec-meta');
+    metaRow(dl, 'date', ev.weekday + ', ' + MONTH_NAMES[ev.month_num - 1] + ' ' + ev.day_num + ', ' + ev.year);
+    metaRow(dl, 'time', ev.time);
+    metaRow(dl, 'where', ev.location);
+    body.appendChild(dl);
+
+    if (ev.description) body.appendChild(el('p', 'ec-desc', ev.description));
+
+    body.appendChild(renderRsvp(ev));
+    mainEl.appendChild(body);
+  }
+
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+  function renderRsvp(ev) {
+    if (eventDate(ev) < todayStart) {
+      return el('div', 'rsvp-closed', '# rsvp closed: this event has already happened');
+    }
+    if (!ev.rsvp_url) {
+      return el('div', 'rsvp-closed', '# rsvp link coming soon \u2014 check the GroupMe');
+    }
+    var wrap = el('div', 'rsvp');
+    var link = el('a', 'btn-gold rsvp-submit', 'RSVP \u2192');
+    link.href = ev.rsvp_url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    wrap.appendChild(link);
+    wrap.appendChild(el('span', 'rsvp-note', 'opens the campus RSVP page'));
+    return wrap;
+  }
+
+  function renderNext(current) {
+    nextEl.innerHTML = '';
+    // The event after the selected one, never one that already happened.
+    var idx = sorted.indexOf(current);
+    var following = null;
+    for (var i = idx + 1; i < sorted.length; i++) {
+      if (eventDate(sorted[i]) >= todayStart) { following = sorted[i]; break; }
+    }
+
+    nextEl.appendChild(titleBar('git log --next', following ? 'then' : null));
+    var body = el('div', 'event-body');
+
+    if (!following) {
+      body.appendChild(el('p', 'next-empty', '# nothing scheduled after this — check the GroupMe'));
+    } else {
+      var link = el('button', 'next-link');
+      link.type = 'button';
+      link.appendChild(el('div', 'next-when', following.weekday + ', ' + following.month + ' ' + following.day + ' · ' + following.time));
+      link.appendChild(el('div', 'next-title', following.title));
+      link.appendChild(el('div', 'next-loc', '@ ' + following.location));
+      link.addEventListener('click', function() { selectEvent(following); });
+      body.appendChild(link);
+    }
+    nextEl.appendChild(body);
+  }
+
+  function selectEvent(ev, keepMonth) {
+    selected = ev;
+    if (!keepMonth) {
+      currentYear = ev.year;
+      currentMonth = ev.month_num - 1;
+    }
+    renderCalendar(currentYear, currentMonth);
+    renderMain(ev);
+    renderNext(ev);
+  }
+
+  // ----- Navigation -----
   prevBtn.addEventListener('click', function() {
     currentMonth--;
-    if (currentMonth < 0) {
-      currentMonth = 11;
-      currentYear--;
-    }
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
     renderCalendar(currentYear, currentMonth);
   });
 
   nextBtn.addEventListener('click', function() {
     currentMonth++;
-    if (currentMonth > 11) {
-      currentMonth = 0;
-      currentYear++;
-    }
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
     renderCalendar(currentYear, currentMonth);
   });
 
   todayBtn.addEventListener('click', function() {
-    var t = new Date();
-    currentYear = t.getFullYear();
-    currentMonth = t.getMonth();
+    currentYear = now.getFullYear();
+    currentMonth = now.getMonth();
     renderCalendar(currentYear, currentMonth);
   });
 
-  // ----- Pick the NEXT upcoming event (today or later), not the first one added -----
-  function eventDate(e) { return new Date(e.year, e.month_num - 1, e.day_num); }
-  function keyToDate(key) {
-    var p = key.split('-');
-    return new Date(parseInt(p[0]), parseInt(p[1]) - 1, parseInt(p[2]));
-  }
-
-  var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  var sorted = events.slice().sort(function(a, b) { return eventDate(a) - eventDate(b); });
-  var upcoming = sorted.filter(function(e) { return eventDate(e) >= todayStart; });
-
-  // Hide past events from the "All Upcoming" list (they stay visible on the calendar)
-  if (upcoming.length > 0) {
-    document.querySelectorAll('.detail-event-item').forEach(function(item) {
-      if (item.dataset.date && keyToDate(item.dataset.date) < todayStart) {
-        item.style.display = 'none';
-      }
-    });
-  }
-
-  // Feature the next upcoming event; if everything is in the past, fall back to the latest one
+  // ----- Initial state: feature the next upcoming event, else the most recent past one -----
   var featured = upcoming.length > 0 ? upcoming[0] : sorted[sorted.length - 1];
-
   if (featured) {
-    selectedKey = featured.year + '-' + featured.month_num + '-' + featured.day_num;
-    // Open the calendar on the month of that event so the highlight is visible
-    currentYear = featured.year;
-    currentMonth = featured.month_num - 1;
+    selectEvent(featured);
+  } else {
+    renderCalendar(currentYear, currentMonth);
+    mainEl.appendChild(titleBar('event --rsvp'));
+    var empty = el('div', 'event-body');
+    empty.appendChild(el('p', 'next-empty', '# no events scheduled yet — check back soon'));
+    mainEl.appendChild(empty);
+    nextEl.appendChild(titleBar('git log --next'));
   }
-
-  renderCalendar(currentYear, currentMonth);
-  if (selectedKey) showEventDetail(selectedKey);
 })();

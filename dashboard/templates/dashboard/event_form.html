@@ -109,6 +109,10 @@
         {{ form.end_time }}
       </div>
     </div>
+    <div class="form-group">
+      <label for="id_rsvp_url">RSVP Link</label>
+      {{ form.rsvp_url }}
+    </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-gold">{% if editing %}Save Changes{% else %}Create Event{% endif %}</button>
       <a href="{% url 'dashboard:events' %}" class="btn btn-outline">Cancel</a>

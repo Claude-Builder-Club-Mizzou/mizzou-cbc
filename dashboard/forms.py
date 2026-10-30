@@ -15,7 +15,7 @@ class GalleryImageForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'description', 'location', 'date', 'start_time', 'end_time']
+        fields = ['title', 'description', 'location', 'date', 'start_time', 'end_time', 'rsvp_url']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Event title'}),
             'description': forms.Textarea(attrs={'placeholder': 'Event description', 'rows': 3}),
@@ -23,6 +23,7 @@ class EventForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'type': 'date'}),
             'start_time': forms.TimeInput(attrs={'type': 'time'}),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),
+            'rsvp_url': forms.URLInput(attrs={'placeholder': 'https://... (campus RSVP link)'}),
         }
 
 
