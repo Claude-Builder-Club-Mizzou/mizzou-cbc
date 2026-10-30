@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'landing/css/base.css' %}?v=20">
+  <link rel="stylesheet" href="{% static 'landing/css/base.css' %}?v=22">
   {% block extra_css %}{% endblock %}
   <style>body{opacity:0;transition:opacity 0.5s ease}body.loaded{opacity:1}</style>
 </head>
@@ -36,7 +36,7 @@
   <!-- ===== Navbar ===== -->
   <nav class="navbar">
     <div class="navbar-inner">
-      <a href="{% url 'home' %}" class="nav-brand"><span class="text-gold">CBC</span> Mizzou</a>
+      <a href="{% url 'home' %}" class="nav-brand" aria-label="CBC Mizzou"><img class="nav-logo" src="{% static 'landing/images/cbc-mizzou-nav.svg' %}" alt="CBC Mizzou"></a>
 
       <div class="nav-links">
         {% for item in nav_items %}
@@ -75,7 +75,7 @@
       <span class="terminal-frame-label">footer_links v1.0.0</span>
     <div class="footer-grid">
       <div>
-        <h3><a href="/cb-exec/" style="color:inherit;text-decoration:none;"><span class="text-gold">CBC</span> Mizzou</a></h3>
+        <h3><a href="/cb-exec/" aria-label="Claude Builder Club @ Mizzou"><img class="footer-logo" src="{% static 'landing/images/cbc-mizzou-footer.svg' %}" alt="Claude Builder Club @ Mizzou"></a></h3>
         <p>The Claude Builders Club at the University of Missouri. Part of Anthropic's Campus Program empowering students to build with AI.</p>
       </div>
       <div>

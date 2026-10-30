@@ -185,6 +185,12 @@ h1, h2, h3, h4 {
   transition: color 0.2s;
 }
 
+.nav-logo {
+  display: block;
+  height: 1.25rem;
+  width: auto;
+}
+
 .nav-links {
   display: flex;
   align-items: center;
@@ -426,6 +432,12 @@ h1, h2, h3, h4 {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-faint);
+}
+.footer-logo {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  height: auto;
 }
 .footer p { font-size: 0.8125rem; line-height: 1.75; margin: 0; }
 .footer ul { list-style: none; padding: 0; margin: 0; }
