@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'landing/css/styles.css' %}?v=17">
+  <link rel="stylesheet" href="{% static 'landing/css/styles.css' %}?v=18">
   <style>body{opacity:0;transition:opacity 0.5s ease}body.loaded{opacity:1}</style>
 </head>
 <body>
@@ -83,6 +83,27 @@
       <div class="hero-buttons hero-anim">
         <a href="{{ links.signup }}" target="_blank" rel="noopener noreferrer" class="btn-gold">Sign Up</a>
         <a href="{{ links.groupme }}" target="_blank" rel="noopener noreferrer" class="btn-gold-outline">Join GroupMe</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Meet Claude ===== -->
+  <section id="claude" class="section bg-cream">
+    <div class="container">
+      <div class="terminal-frame fade-up">
+        <span class="terminal-frame-label">claude --intro v1.0.0</span>
+        <div class="claude-intro">
+          <div class="claude-intro-art">
+            <img src="{% static 'landing/images/icons/claude-code-guy.svg' %}" alt="Claude Code mascot" class="claude-intro-guy">
+            <img src="{% static 'landing/images/claude-text.svg' %}" alt="CLAUDE" class="claude-intro-text">
+          </div>
+          <div class="claude-intro-copy">
+            <h2 class="text-heading">Meet <span class="text-terracotta">Claude</span></h2>
+            <p class="text-muted"><span class="accent">Claude</span> is an AI assistant built by Anthropic. Use it to write, research, analyze, brainstorm, and learn on any project. It's the tool behind everything our club does.</p>
+            <p class="text-muted"><span class="accent">Claude Code</span> takes that further. It lives in your terminal, reads your project, and helps you plan, write, debug, and ship real software &mdash; even if you've never coded before.</p>
+            <p class="text-muted">Through the <span class="accent">Claude API</span>, you can also build Claude into your own apps. Our workshops walk you through all three, from your first prompt to your first deployed project.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>

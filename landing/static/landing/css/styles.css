@@ -527,7 +527,6 @@ h1, h2, h3, h4 {
 .terminal-frame {
   position: relative;
   border: 1px solid var(--terracotta-border);
-  border-radius: 4px;
   padding: 2rem 1.5rem 1.5rem;
 }
 
@@ -548,6 +547,40 @@ h1, h2, h3, h4 {
 /* Frame on dark sections where the bg is surface-raised */
 .footer .terminal-frame-label {
   background: var(--surface-raised);
+}
+
+.bg-cream .terminal-frame-label { background: var(--surface-subtle); }
+
+/* ===== Meet Claude ===== */
+.claude-intro {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 3rem;
+  align-items: center;
+}
+.claude-intro-art {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.claude-intro-guy { width: 55%; max-width: 180px; height: auto; display: block; }
+.claude-intro-text { width: 100%; max-width: 300px; height: auto; display: block; }
+.claude-intro-copy h2 {
+  font-size: clamp(1.4rem, 3vw, 1.875rem);
+  font-weight: 700;
+  margin: 0 0 1.25rem 0;
+  letter-spacing: -0.03em;
+}
+.claude-intro-copy h2::before { content: '~/ '; color: var(--terracotta); font-weight: 400; }
+.claude-intro-copy p {
+  font-size: 0.875rem;
+  line-height: 1.85;
+  margin: 0 0 1rem 0;
+}
+.claude-intro-copy p:last-child { margin-bottom: 0; }
+@media (max-width: 768px) {
+  .claude-intro { grid-template-columns: 1fr; gap: 2rem; }
 }
 
 /* ===== Pixelated Icon ===== */
