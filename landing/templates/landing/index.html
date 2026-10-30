@@ -24,15 +24,14 @@
   <link rel="icon" type="image/svg+xml" href="{% static 'landing/images/favicon.svg' %}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'landing/css/styles.css' %}?v=14">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'landing/css/styles.css' %}?v=16">
   <style>body{opacity:0;transition:opacity 0.5s ease}body.loaded{opacity:1}</style>
   <script>
-    // Apply dark mode before paint to prevent flash
+    // Apply light mode override before paint — dark is the default
     (function() {
-      var theme = localStorage.getItem('theme');
-      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
+      if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light');
       }
     })();
   </script>
@@ -85,16 +84,15 @@
 
   <!-- ===== Hero ===== -->
   <section class="hero">
-    <canvas class="hero-particles" id="heroParticles"></canvas>
-    <div class="hero-orb-1 parallax-orb"></div>
-    <div class="hero-orb-2 parallax-orb"></div>
+    <div class="hero-scanlines" aria-hidden="true"></div>
     <div class="hero-content">
-      <div class="hero-badge hero-anim">Part of the Anthropic Campus Program</div>
-      <h1 class="hero-anim">Claude Builders Club<br><span class="hero-gradient-text">@ Mizzou</span></h1>
-      <p class="hero-anim"><span class="accent">Learn, Build, and Ship</span> with Claude AI at the University of Missouri. API credits each semester, exclusive merchandise, and a community of builders across <span class="accent">every major.</span></p>
+      <img src="{% static 'landing/images/hero-text.svg' %}" alt="Claude Builder Club @ Mizzou" class="hero-fig hero-anim">
+      <h1 class="sr-only hero-mobile-title hero-anim">Claude Builder Club <span class="text-terracotta">@ Mizzou</span></h1>
+      <div class="hero-badge hero-anim"><img src="{% static 'landing/images/icons/claude-logo.svg' %}" alt="Claude" class="hero-badge-logo"> Part of the Anthropic Campus Program</div>
+      <p class="hero-anim"><span class="accent">Learn, Build, and Ship</span> with Claude AI at the University of Missouri. We invite you to join a community of builders across <span class="accent">every major.</span></p>
       <div class="hero-buttons hero-anim">
-        <a href="{{ links.signup }}" target="_blank" rel="noopener noreferrer" class="btn-gold magnetic">Sign Up</a>
-        <a href="{{ links.groupme }}" target="_blank" rel="noopener noreferrer" class="btn-gold-outline magnetic">Join GroupMe</a>
+        <a href="{{ links.signup }}" target="_blank" rel="noopener noreferrer" class="btn-gold">Sign Up</a>
+        <a href="{{ links.groupme }}" target="_blank" rel="noopener noreferrer" class="btn-gold-outline">Join GroupMe</a>
       </div>
     </div>
   </section>
@@ -103,17 +101,20 @@
   <section id="benefits" class="section bg-white-section">
     <div class="container">
       <div class="section-header fade-up">
-        <h2 class="text-heading">Member <span class="gradient-text">Benefits</span></h2>
+        <h2 class="text-heading">Member <span class="text-terracotta">Benefits</span></h2>
         <p class="text-muted">Everything you need to start building with AI — <span class="accent">Pro Membership, API credits, merch, and more</span> for Mizzou students.</p>
       </div>
-      <div class="grid-4 stagger-container">
-        {% for b in benefits %}
-        <div class="card stagger-item tilt-card">
-          <div class="card-icon">{{ b.icon|safe }}</div>
-          <h3 class="text-heading">{{ b.title }}</h3>
-          <p class="text-muted">{{ b.description }}</p>
+      <div class="terminal-frame fade-up">
+        <span class="terminal-frame-label">benefits_panel v1.0.0</span>
+        <div class="grid-4 stagger-container">
+          {% for b in benefits %}
+          <div class="card stagger-item">
+            <div class="card-icon">{{ b.icon|safe }}</div>
+            <h3 class="text-heading">{{ b.title }}</h3>
+            <p class="text-muted">{{ b.description }}</p>
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
       </div>
     </div>
   </section>
@@ -123,7 +124,7 @@
     <div class="container">
       <div class="about-grid">
         <div class="about-text fade-up">
-          <h2 class="text-heading">About <span class="gradient-text">CBC Mizzou</span></h2>
+          <h2 class="text-heading">About <span class="text-terracotta">CBC Mizzou</span></h2>
           <p class="text-body">Claude Builders Club at Mizzou is a student-led community for builders of <span class="accent">all backgrounds.</span> Whether you're a computer science major or a journalism student, we believe AI tools like Claude can amplify what you create.</p>
           <p class="text-body">As part of Anthropic's nationwide Campus Program, our chapter gives Mizzou students API credits ($25 in the fall and $50 in the spring), merchandise opportunities, <span class="accent">hands-on workshops,</span> and a collaborative community to learn and build together.</p>
           <p class="text-body">We're building at the intersection of Mizzou's world-class journalism, engineering, and business programs — bringing <span class="accent">diverse perspectives</span> to AI development and responsible innovation.</p>
@@ -144,7 +145,7 @@
   <section id="gallery" class="section bg-white-section">
     <div class="container">
       <div class="section-header fade-up">
-        <h2 class="text-heading">Club <span class="gradient-text">Gallery</span></h2>
+        <h2 class="text-heading">Club <span class="text-terracotta">Gallery</span></h2>
         <p class="text-muted">Moments from our meetings, workshops, and <span class="accent">events.</span></p>
       </div>
       <div class="gallery fade-up">
@@ -179,7 +180,7 @@
   <section id="events" class="section bg-white-section">
     <div class="container">
       <div class="section-header fade-up">
-        <h2 class="text-heading">Upcoming <span class="gradient-text">Events</span></h2>
+        <h2 class="text-heading">Upcoming <span class="text-terracotta">Events</span></h2>
         <p class="text-muted">Workshops, hackathons, and demo nights — <span class="accent">come build with us.</span></p>
       </div>
       <div class="events-layout">
@@ -235,12 +236,12 @@
   <section id="team" class="section bg-cream">
     <div class="container">
       <div class="section-header fade-up">
-        <h2 class="text-heading">Our <span class="gradient-text">Team</span></h2>
+        <h2 class="text-heading">Our <span class="text-terracotta">Team</span></h2>
         <p class="text-muted">The student leaders <span class="accent">making it happen.</span></p>
       </div>
       <div class="team-grid stagger-container">
         {% for m in team %}
-        <div class="card team-card stagger-item tilt-card">
+        <div class="card team-card stagger-item">
           {% if m.image_url %}
           <img src="{{ m.image_url }}" alt="{{ m.name }}" class="avatar avatar-img" loading="lazy">
           {% else %}
@@ -262,12 +263,12 @@
   <section id="projects" class="section bg-white-section">
     <div class="container">
       <div class="section-header fade-up">
-        <h2 class="text-heading">Member <span class="gradient-text">Projects</span></h2>
+        <h2 class="text-heading">Member <span class="text-terracotta">Projects</span></h2>
         <p class="text-muted">Check out what our members are <span class="accent">building with Claude.</span></p>
       </div>
       <div class="grid-3 stagger-container">
         {% for p in projects %}
-        <div class="card project-card stagger-item tilt-card{% if p.coming_soon %} coming-soon{% endif %}">
+        <div class="card project-card stagger-item{% if p.coming_soon %} coming-soon{% endif %}">
           {% if p.coming_soon %}<span class="coming-soon-badge">Coming Soon</span>{% endif %}
           {% if p.image %}
           <img src="{{ p.image.url }}" alt="{{ p.title }}" class="project-card-img" loading="lazy">
@@ -294,7 +295,7 @@
   <section id="faq" class="section bg-cream">
     <div class="container">
       <div class="section-header fade-up">
-        <h2 class="text-heading">Frequently Asked <span class="gradient-text">Questions</span></h2>
+        <h2 class="text-heading">Frequently Asked <span class="text-terracotta">Questions</span></h2>
         <p class="text-muted">Everything you need to know about <span class="accent">joining CBC Mizzou.</span></p>
       </div>
       <div class="faq-list stagger-container">
@@ -319,7 +320,7 @@
   <section id="connect" class="section bg-white-section">
     <div class="container">
       <div class="section-header fade-up">
-        <h2 class="text-heading">Get <span class="gradient-text">Connected</span></h2>
+        <h2 class="text-heading">Get <span class="text-terracotta">Connected</span></h2>
         <p class="text-muted">Join the community and <span class="accent">start building with us.</span></p>
       </div>
       <div class="connect-grid fade-up">
@@ -369,6 +370,8 @@
 
   <!-- ===== Footer ===== -->
   <footer class="footer">
+    <div class="terminal-frame" style="max-width:1280px;margin:0 auto;">
+      <span class="terminal-frame-label">footer_links v1.0.0</span>
     <div class="footer-grid">
       <div>
         <h3><a href="/cb-exec/" style="color:inherit;text-decoration:none;"><span class="text-gold">CBC</span> Mizzou</a></h3>
@@ -406,8 +409,10 @@
         </ul>
       </div>
     </div>
+    </div>
     <div class="footer-bottom">
-      <p>&copy; 2026 Claude Builders Club @ Mizzou. Powered by <a href="{{ links.anthropic }}" target="_blank" rel="noopener noreferrer">Anthropic</a>.</p>
+      <p>&copy; 2026 Claude Builders Club @ Mizzou. Part of <a href="{{ links.anthropic }}" target="_blank" rel="noopener noreferrer">Anthropic's Campus Program</a>.</p>
+      <p>&#x2736; built with claude</p>
     </div>
   </footer>
 
@@ -416,6 +421,6 @@
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4L4 10h4v6h4v-6h4L10 4z" fill="currentColor"/></svg>
   </button>
 
-  <script src="{% static 'landing/js/main.js' %}?v=14"></script>
+  <script src="{% static 'landing/js/main.js' %}?v=16"></script>
 </body>
 </html>

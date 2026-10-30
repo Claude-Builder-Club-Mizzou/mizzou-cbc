@@ -21,24 +21,24 @@ mobileMenu.querySelectorAll('a').forEach(link => {
   });
 });
 
-// ===== Dark mode toggle =====
+// ===== Theme toggle — dark is default, light is the toggled state =====
 const allDarkToggles = document.querySelectorAll('.dark-toggle');
 const savedTheme = localStorage.getItem('theme');
 
-function applyDark(isDark) {
-  document.body.classList.toggle('dark', isDark);
-  document.documentElement.classList.toggle('dark', isDark);
+function applyTheme(isDark) {
+  document.body.classList.toggle('light', !isDark);
+  document.documentElement.classList.toggle('light', !isDark);
   allDarkToggles.forEach(btn => btn.textContent = isDark ? '☀️' : '🌙');
 }
 
-const shouldBeDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-applyDark(shouldBeDark);
+const shouldBeDark = savedTheme !== 'light';
+applyTheme(shouldBeDark);
 
 allDarkToggles.forEach(btn => {
   btn.addEventListener('click', () => {
-    const isDark = !document.body.classList.contains('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    applyDark(isDark);
+    const nowDark = document.body.classList.contains('light');
+    localStorage.setItem('theme', nowDark ? 'dark' : 'light');
+    applyTheme(nowDark);
   });
 });
 
@@ -172,135 +172,6 @@ window.addEventListener('scroll', () => {
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
   const progress = (scrollTop / docHeight) * 100;
   scrollProgress.style.width = progress + '%';
-});
-
-// ===== Floating Particles =====
-const canvas = document.getElementById('heroParticles');
-if (canvas) {
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-  let animId;
-
-  function resizeCanvas() {
-    const hero = canvas.parentElement;
-    canvas.width = hero.offsetWidth;
-    canvas.height = hero.offsetHeight;
-  }
-
-  function createParticles() {
-    particles = [];
-    const count = Math.floor((canvas.width * canvas.height) / 15000);
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 2 + 0.5,
-        dx: (Math.random() - 0.5) * 0.4,
-        dy: (Math.random() - 0.5) * 0.4,
-        opacity: Math.random() * 0.5 + 0.1,
-      });
-    }
-  }
-
-  function drawParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    particles.forEach((p, i) => {
-      p.x += p.dx;
-      p.y += p.dy;
-
-      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(241, 184, 45, ${p.opacity})`;
-      ctx.fill();
-
-      // Draw lines between nearby particles
-      for (let j = i + 1; j < particles.length; j++) {
-        const p2 = particles[j];
-        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `rgba(241, 184, 45, ${0.06 * (1 - dist / 120)})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    });
-
-    animId = requestAnimationFrame(drawParticles);
-  }
-
-  resizeCanvas();
-  createParticles();
-  drawParticles();
-
-  window.addEventListener('resize', () => {
-    resizeCanvas();
-    createParticles();
-  });
-
-  // Pause particles when hero is not visible
-  const heroObserver = new IntersectionObserver(([entry]) => {
-    if (!entry.isIntersecting) {
-      cancelAnimationFrame(animId);
-    } else {
-      drawParticles();
-    }
-  });
-  heroObserver.observe(canvas.parentElement);
-}
-
-// ===== Parallax Orbs =====
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  document.querySelectorAll('.parallax-orb').forEach((orb, i) => {
-    const speed = i === 0 ? 0.3 : 0.2;
-    orb.style.transform = `translateY(${scrollY * speed}px)`;
-  });
-});
-
-// Enlarge cursor on interactive elements
-document.querySelectorAll('a, button, .tilt-card, .faq-btn').forEach(el => {
-  el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
-  el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
-});
-
-// ===== 3D Tilt Effect on Cards =====
-document.querySelectorAll('.tilt-card').forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-
-    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-  });
-
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)';
-  });
-});
-
-// ===== Magnetic Buttons =====
-document.querySelectorAll('.magnetic').forEach(btn => {
-  btn.addEventListener('mousemove', (e) => {
-    const rect = btn.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-  });
-
-  btn.addEventListener('mouseleave', () => {
-    btn.style.transform = 'translate(0, 0)';
-  });
 });
 
 // ===== Gallery Carousel =====
@@ -454,12 +325,6 @@ document.querySelectorAll('.magnetic').forEach(btn => {
     for (var i = 1; i <= remaining; i++) {
       grid.appendChild(makeCell(i, 'other-month'));
     }
-
-    // Register calendar event days with custom cursor
-    grid.querySelectorAll('.has-event').forEach(function(el) {
-      el.addEventListener('mouseenter', function() { cursor.classList.add('cursor-hover'); });
-      el.addEventListener('mouseleave', function() { cursor.classList.remove('cursor-hover'); });
-    });
   }
 
   var detailContent = document.getElementById('detailContent');
