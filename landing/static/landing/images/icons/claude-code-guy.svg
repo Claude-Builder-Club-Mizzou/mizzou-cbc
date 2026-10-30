@@ -1,7 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
   <title>Claude Code</title>
-  <path clip-rule="evenodd"
-        d="M20.998 10.949H24v3.102h-3v3.028h-1.487V20H18v-2.921h-1.487V20H15v-2.921H9V20H7.488v-2.921H6V20H4.487v-2.921H3V14.05H0V10.95h3V5h17.998v5.949zM6 10.949h1.488V8.102H6v2.847zm10.51 0H18V8.102h-1.49v2.847z"
-        fill="#D97757"
-        fill-rule="evenodd" />
+  <style>
+    .bob { animation: bob 2.4s ease-in-out infinite; }
+    .eye { transform-box: fill-box; transform-origin: center; animation: blink 4s infinite; }
+    .eye.r { animation-delay: 0.03s; }
+    /* wave loop is twice the blink loop, so it starts right as every other blink ends */
+    .arm { animation: wave 8s step-end infinite; }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-0.6px); }
+    }
+    @keyframes blink {
+      0%, 92%, 100% { transform: scaleY(1); }
+      95%           { transform: scaleY(0.08); }
+    }
+    @keyframes wave {
+      0%   { transform: translateY(-1.5px); }
+      3%   { transform: translateY(0); }
+      6%   { transform: translateY(-1.5px); }
+      9%   { transform: translateY(0); }
+      12%  { transform: translateY(-1.5px); }
+      15%, 100% { transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .bob, .eye, .arm { animation: none; }
+    }
+  </style>
+  <defs>
+    <mask id="eyes" maskUnits="userSpaceOnUse" x="-1" y="-1" width="26" height="26">
+      <rect x="-1" y="-1" width="26" height="26" fill="#fff" />
+      <rect class="eye l" x="6" y="8.102" width="1.488" height="2.847" fill="#000" />
+      <rect class="eye r" x="16.51" y="8.102" width="1.49" height="2.847" fill="#000" />
+    </mask>
+  </defs>
+  <g class="bob">
+    <path mask="url(#eyes)"
+          d="M3 5h17.998v12.079h-1.485V20H18v-2.921h-1.487V20H15v-2.921H9V20H7.488v-2.921H6V20H4.487v-2.921H3V14.05H0V10.95h3z"
+          fill="#D97757" />
+    <rect class="arm" x="20.9" y="10.949" width="3.1" height="3.102" fill="#D97757" />
+  </g>
 </svg>

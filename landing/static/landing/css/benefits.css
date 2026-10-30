@@ -14,7 +14,7 @@
 /* ===== Benefits + growth graph ===== */
 .benefits-intro .feature-intro-copy { padding: 1.5rem 2.5rem 1.5rem 0; margin: -2rem 0 -1.5rem; }
 .benefits-intro .feature-intro-art { padding-left: 2.5rem; }
-.benefits-intro .feature-intro-img { max-width: 340px; }
+.benefits-intro .feature-intro-img { max-width: 340px; max-height: none; }
 .benefits-grid {
   display: flex;
   flex-direction: column;
