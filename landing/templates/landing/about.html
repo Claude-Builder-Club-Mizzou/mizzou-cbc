@@ -1,0 +1,57 @@
+{% extends "landing/base.html" %}
+{% load static %}
+
+{% block title %}About | CBC Mizzou{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'landing/css/about.css' %}?v=19">
+{% endblock %}
+
+{% block content %}
+  <!-- ===== About ===== -->
+  <section id="about" class="section bg-cream">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text fade-up">
+          <h2 class="text-heading">About <span class="text-terracotta">CBC Mizzou</span></h2>
+          <p class="text-body">Claude Builders Club at Mizzou is a student-led community for builders of <span class="accent">all backgrounds.</span> Whether you're a computer science major or a journalism student, we believe AI tools like Claude can amplify what you create.</p>
+          <p class="text-body">As part of Anthropic's nationwide Campus Program, our chapter gives Mizzou students API credits ($25 in the fall and $50 in the spring), merchandise opportunities, <span class="accent">hands-on workshops,</span> and a collaborative community to learn and build together.</p>
+          <p class="text-body">We're building at the intersection of Mizzou's world-class journalism, engineering, and business programs — bringing <span class="accent">diverse perspectives</span> to AI development and responsible innovation.</p>
+        </div>
+        <div class="stats-grid stagger-container">
+          {% for s in stats %}
+          <div class="stat-card stagger-item">
+            <div class="stat-value counter" data-target="{{ s.num }}" data-final="{{ s.value }}">0</div>
+            <div class="stat-label text-muted">{{ s.label }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" class="section bg-cream">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="text-heading">Frequently Asked <span class="text-terracotta">Questions</span></h2>
+        <p class="text-muted">Everything you need to know about <span class="accent">joining CBC Mizzou.</span></p>
+      </div>
+      <div class="faq-list stagger-container">
+        {% for faq in faq_items %}
+        <div class="faq-item stagger-item">
+          <button class="faq-btn">
+            <span class="text-heading">{{ faq.question }}</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p class="text-muted">{{ faq.answer }}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

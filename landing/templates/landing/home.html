@@ -1,0 +1,102 @@
+{% extends "landing/base.html" %}
+{% load static %}
+
+{% block title %}Claude Builders Club @ Mizzou{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'landing/css/home.css' %}?v=19">
+{% endblock %}
+
+{% block content %}
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="hero-scanlines" aria-hidden="true"></div>
+    <div class="hero-content">
+      <img src="{% static 'landing/images/hero-text.svg' %}" alt="Claude Builder Club @ Mizzou" class="hero-fig hero-anim">
+      <h1 class="sr-only hero-mobile-title hero-anim">Claude Builder Club <span class="text-terracotta">@ Mizzou</span></h1>
+      <div class="hero-badge hero-anim"><img src="{% static 'landing/images/icons/claude-logo.svg' %}" alt="Claude" class="hero-badge-logo"> Part of the Anthropic Campus Program</div>
+      <p class="hero-anim"><span class="accent">Learn, Build, and Ship</span> with Claude AI at the University of Missouri. We invite you to join a community of builders across <span class="accent">every major.</span></p>
+      <div class="hero-buttons hero-anim">
+        <a href="{{ links.signup }}" target="_blank" rel="noopener noreferrer" class="btn-gold">Sign Up</a>
+        <a href="{{ links.groupme }}" target="_blank" rel="noopener noreferrer" class="btn-gold-outline">Join GroupMe</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Meet Claude ===== -->
+  <section id="claude" class="section bg-cream">
+    <div class="container">
+      <div class="terminal-frame fade-up">
+        <span class="terminal-frame-label">claude --intro v1.0.0</span>
+        <div class="claude-intro">
+          <div class="claude-intro-art">
+            <img src="{% static 'landing/images/icons/claude-code-guy.svg' %}" alt="Claude Code mascot" class="claude-intro-guy">
+            <img src="{% static 'landing/images/claude-text.svg' %}" alt="CLAUDE" class="claude-intro-text">
+          </div>
+          <div class="claude-intro-copy">
+            <h2 class="text-heading">Meet <span class="text-terracotta">Claude</span></h2>
+            <p class="text-muted"><span class="accent">Claude</span> is an AI assistant built by Anthropic. Use it to write, research, analyze, brainstorm, and learn on any project. It's the tool behind everything our club does.</p>
+            <p class="text-muted"><span class="accent">Claude Code</span> takes that further. It lives in your terminal, reads your project, and helps you plan, write, debug, and ship real software &mdash; even if you've never coded before.</p>
+            <p class="text-muted">Through the <span class="accent">Claude API</span>, you can also build Claude into your own apps. Our workshops walk you through all three, from your first prompt to your first deployed project.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Events ===== -->
+  <section id="events" class="section bg-white-section">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="text-heading">Upcoming <span class="text-terracotta">Events</span></h2>
+        <p class="text-muted">Workshops, hackathons, and demo nights — <span class="accent">come build with us.</span></p>
+      </div>
+      <div class="events-layout">
+        <!-- Calendar Widget (left ~58%) -->
+        <div class="calendar-widget fade-up">
+          <div class="calendar-header">
+            <div class="calendar-header-left">
+              <button class="calendar-nav" id="calPrev" aria-label="Previous month">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <span class="calendar-month-label text-heading" id="calMonthLabel"></span>
+              <button class="calendar-nav" id="calNext" aria-label="Next month">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <button class="calendar-today-btn" id="calToday">Today</button>
+          </div>
+          <div class="calendar-weekdays">
+            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+          <div class="calendar-grid" id="calGrid"></div>
+        </div>
+
+        <!-- Event Details Panel (right ~42%) -->
+        <div class="event-detail-panel fade-up" id="eventDetailPanel">
+          <div class="detail-panel-content" id="detailContent">
+            <div class="detail-date-label text-muted" id="detailDate"></div>
+            <div id="detailCards"></div>
+          </div>
+          <!-- All Events List -->
+          <div class="detail-all-events">
+            <h4 class="text-heading detail-all-heading">All Upcoming</h4>
+            {% for e in events %}
+            <div class="detail-event-item"
+                 id="event-{{ e.year }}-{{ e.month_num }}-{{ e.day_num }}"
+                 data-date="{{ e.year }}-{{ e.month_num }}-{{ e.day_num }}">
+              <div class="detail-event-dot"></div>
+              <div class="detail-event-info">
+                <div class="detail-event-date text-muted">{{ e.month }} {{ e.day }} &middot; {{ e.time }}</div>
+                <div class="detail-event-title text-heading">{{ e.title }}</div>
+                <div class="detail-event-loc text-muted">&#x1F4CD; {{ e.location }}</div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {{ events|json_script:"events-data" }}
+  </section>
+{% endblock %}

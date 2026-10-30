@@ -35,7 +35,7 @@ class Event(models.Model):
         return t.strftime('%I:%M %p').lstrip('0')
 
     def to_template_dict(self):
-        """Format event data the way landing/index.html expects it."""
+        """Format event data the way landing/home.html expects it."""
         return {
             'month': self.date.strftime('%b'),
             'day': str(self.date.day),

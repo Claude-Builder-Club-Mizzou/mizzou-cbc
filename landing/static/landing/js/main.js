@@ -127,23 +127,6 @@ if (backToTop) {
   });
 }
 
-// ===== Scroll Spy — active nav link =====
-const sections = document.querySelectorAll('section[id]');
-const navAnchors = document.querySelectorAll('.nav-links a[href^="#"]');
-
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(section => {
-    const top = section.offsetTop - 100;
-    if (window.scrollY >= top) {
-      current = section.getAttribute('id');
-    }
-  });
-  navAnchors.forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
-});
-
 // ===== Scroll Progress Bar =====
 const scrollProgress = document.getElementById('scrollProgress');
 window.addEventListener('scroll', () => {

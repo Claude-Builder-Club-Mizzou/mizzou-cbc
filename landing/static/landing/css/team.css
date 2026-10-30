@@ -1,0 +1,61 @@
+/* ===== Team page ===== */
+
+/* ===== Team ===== */
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.team-grid .team-card {
+  flex: 0 1 calc(33.333% - 1rem);
+  min-width: 240px;
+}
+@media (max-width: 640px) {
+  .team-grid .team-card {
+    flex: 0 1 100%;
+    min-width: 0;
+  }
+}
+
+.team-card { text-align: center; }
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 4px;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--terracotta);
+  transition: border-color 0.2s;
+}
+.avatar-img {
+  object-fit: cover;
+  background: none;
+  border-radius: 4px;
+}
+.team-card:hover .avatar { border-color: var(--terracotta); }
+.team-card .role {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--terracotta);
+  margin: 0.2rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.team-card .major {
+  font-size: 0.8rem;
+  margin-bottom: 0.875rem;
+  color: var(--text-secondary);
+}
+.team-card .linkedin-link {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  transition: color 0.2s;
+}
+.team-card .linkedin-link:hover { color: var(--terracotta); }

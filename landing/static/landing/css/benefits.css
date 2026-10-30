@@ -1,0 +1,12 @@
+/* ===== Benefits page ===== */
+
+/* ===== Pixelated Icon ===== */
+.pixel-icon {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  margin-bottom: 0.875rem;
+}

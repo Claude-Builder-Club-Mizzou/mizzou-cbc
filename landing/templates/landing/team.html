@@ -1,0 +1,37 @@
+{% extends "landing/base.html" %}
+{% load static %}
+
+{% block title %}Team | CBC Mizzou{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'landing/css/team.css' %}?v=19">
+{% endblock %}
+
+{% block content %}
+  <!-- ===== Team ===== -->
+  <section id="team" class="section bg-cream">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="text-heading">Our <span class="text-terracotta">Team</span></h2>
+        <p class="text-muted">The student leaders <span class="accent">making it happen.</span></p>
+      </div>
+      <div class="team-grid stagger-container">
+        {% for m in team %}
+        <div class="card team-card stagger-item">
+          {% if m.image_url %}
+          <img src="{{ m.image_url }}" alt="{{ m.name }}" class="avatar avatar-img" loading="lazy">
+          {% else %}
+          <div class="avatar">{{ m.initials }}</div>
+          {% endif %}
+          <h3 class="text-heading" style="margin:0 0 0.25rem 0;">{{ m.name }}</h3>
+          <div class="role">{{ m.role }}</div>
+          <div class="major text-muted">{{ m.major }}</div>
+          {% if m.linkedin %}
+          <a href="{{ m.linkedin }}" target="_blank" rel="noopener noreferrer" class="linkedin-link">LinkedIn →</a>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}
