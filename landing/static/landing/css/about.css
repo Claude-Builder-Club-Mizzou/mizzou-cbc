@@ -82,7 +82,7 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-heading);
 }
 
 .faq-icon {

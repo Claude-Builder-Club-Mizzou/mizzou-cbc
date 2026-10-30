@@ -21,6 +21,11 @@
   --border-subtle:  #252220;
   --border-strong:  #403730;
 
+  /* Typography: Poppins = headings, Lora = body text, mono = terminal-style decoration */
+  --font-heading: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:    'Lora', Georgia, 'Times New Roman', serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
   /* Legacy aliases — keeps all existing var(--gold) references working */
   --gold:       var(--terracotta);
   --gold-dark:  var(--terracotta-dim);
@@ -38,8 +43,8 @@ html {
 }
 
 body {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-  font-size: 15px;
+  font-family: var(--font-body);
+  font-size: 16px;
   margin: 0;
   background: var(--surface-base);
   color: var(--text-primary);
@@ -56,7 +61,7 @@ body {
 a { text-decoration: none; color: inherit; }
 
 h1, h2, h3, h4 {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-heading);
   letter-spacing: -0.03em;
 }
 
@@ -78,7 +83,7 @@ h1, h2, h3, h4 {
 /* gradient-text → plain terracotta */
 .gradient-text { color: var(--terracotta); }
 
-/* accent → italic monospace (was Playfair Display) */
+/* accent → italic emphasis */
 .accent { font-style: italic; }
 
 /* Terminal prefix utility */
@@ -97,7 +102,7 @@ h1, h2, h3, h4 {
   border-radius: 3px;
   font-weight: 700;
   font-size: 0.8rem;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   transition: background 0.2s;
@@ -118,7 +123,7 @@ h1, h2, h3, h4 {
   border-radius: 3px;
   font-weight: 700;
   font-size: 0.8rem;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   transition: background 0.2s;
@@ -138,7 +143,7 @@ h1, h2, h3, h4 {
   border-radius: 3px;
   font-weight: 600;
   font-size: 0.8rem;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   transition: border-color 0.2s, color 0.2s;
 }
 .btn-outline:hover {
@@ -385,7 +390,7 @@ h1, h2, h3, h4 {
   padding: 0 0.5rem;
   font-size: 0.6rem;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: lowercase;
   color: var(--terracotta);
@@ -540,4 +545,18 @@ h1, h2, h3, h4 {
 /* ===== Page top offset (pages without a hero sit below the fixed navbar) ===== */
 main > .section:first-child {
   padding-top: 8rem;
+}
+
+/* ===== Terminal-style text (monospace) ===== */
+.term-prefix,
+.btn-gold, .btn-gold-outline, .btn-outline,
+.nav-brand, .nav-links a, .mobile-menu a,
+.terminal-frame-label,
+.section-header h2::before, .claude-intro-copy h2::before,
+.hero-badge, .date-badge, .tech-tag, .coming-soon-badge,
+.stat-label, .team-card .role,
+.calendar-today-btn, .calendar-weekdays, .calendar-month-label,
+.detail-date-label, .detail-all-heading, .detail-event-date,
+.event-meta {
+  font-family: var(--font-mono);
 }
