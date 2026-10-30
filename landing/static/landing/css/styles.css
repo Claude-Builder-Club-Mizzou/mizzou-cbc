@@ -58,37 +58,6 @@ h1, h2, h3, h4 {
   letter-spacing: -0.03em;
 }
 
-/* ===== Light Mode Override ===== */
-body.light {
-  --surface-base:    #FAFAF8;
-  --surface-raised:  #FFFFFF;
-  --surface-overlay: #F3F0EB;
-  --surface-subtle:  #F0EDE8;
-  --text-primary:    #1C1917;
-  --text-secondary:  #6B5E54;
-  --text-faint:      #A89A8A;
-  --border-default:  #E2DDD7;
-  --border-subtle:   #EDE9E4;
-  --border-strong:   #C9C0B8;
-  --terracotta-muted:  rgba(217, 119, 87, 0.08);
-  --terracotta-border: rgba(217, 119, 87, 0.20);
-}
-body.light .navbar.scrolled {
-  background: var(--surface-base);
-  border-bottom-color: var(--border-default);
-}
-body.light .mobile-menu {
-  background: var(--surface-raised);
-  border-top-color: var(--border-default);
-}
-body.light .footer {
-  background: var(--surface-raised);
-}
-body.light .calendar-widget { background: var(--surface-raised); }
-body.light .event-detail-panel { background: var(--surface-raised); }
-body.light .stat-card { background: var(--surface-raised); }
-body.light .faq-item { background: transparent; }
-
 /* ===== Utility ===== */
 .container {
   max-width: 1280px;
@@ -224,7 +193,7 @@ body.light .faq-item { background: transparent; }
 .nav-links a:hover { color: var(--terracotta); }
 
 /* Active state — no underline animation */
-.nav-links a.active:not(.nav-cta):not(.dark-toggle) {
+.nav-links a.active:not(.nav-cta) {
   color: var(--terracotta);
 }
 
@@ -247,20 +216,6 @@ body.light .faq-item { background: transparent; }
   border: 1px solid var(--terracotta);
 }
 .nav-cta-outline:hover { background: var(--terracotta-muted) !important; }
-
-/* Dark mode toggle */
-.dark-toggle {
-  background: none;
-  border: 1px solid var(--border-strong);
-  border-radius: 3px;
-  padding: 0.35rem 0.5rem;
-  cursor: pointer;
-  font-size: 1rem;
-  line-height: 1;
-  transition: border-color 0.2s;
-  color: var(--text-secondary);
-}
-.dark-toggle:hover { border-color: var(--terracotta); }
 
 /* Hamburger */
 .hamburger {
@@ -304,7 +259,6 @@ body.light .faq-item { background: transparent; }
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .hamburger { display: flex; }
-  .mobile-dark { display: block !important; }
 }
 
 /* ===== Hero ===== */
@@ -589,9 +543,6 @@ body.light .faq-item { background: transparent; }
   letter-spacing: 0.08em;
   text-transform: lowercase;
   color: var(--terracotta);
-}
-body.light .terminal-frame-label {
-  background: var(--surface-base);
 }
 
 /* Frame on dark sections where the bg is surface-raised */

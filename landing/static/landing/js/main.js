@@ -21,27 +21,6 @@ mobileMenu.querySelectorAll('a').forEach(link => {
   });
 });
 
-// ===== Theme toggle — dark is default, light is the toggled state =====
-const allDarkToggles = document.querySelectorAll('.dark-toggle');
-const savedTheme = localStorage.getItem('theme');
-
-function applyTheme(isDark) {
-  document.body.classList.toggle('light', !isDark);
-  document.documentElement.classList.toggle('light', !isDark);
-  allDarkToggles.forEach(btn => btn.textContent = isDark ? '☀️' : '🌙');
-}
-
-const shouldBeDark = savedTheme !== 'light';
-applyTheme(shouldBeDark);
-
-allDarkToggles.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const nowDark = document.body.classList.contains('light');
-    localStorage.setItem('theme', nowDark ? 'dark' : 'light');
-    applyTheme(nowDark);
-  });
-});
-
 // ===== FAQ Accordion =====
 document.querySelectorAll('.faq-btn').forEach(btn => {
   btn.addEventListener('click', () => {

@@ -77,7 +77,7 @@ def index(request):
             'instagram': 'https://www.instagram.com/claude.miz/',
             'linkedin': 'https://www.linkedin.com/groups/18313009/',
             'email': 'mailto:cbcmizzou@gmail.com',
-            'signup': 'https://forms.gle/K6WxeEaavtafNjAP7',
+            'signup': 'https://www.jotform.com/253555944387168',
             'claude_ai': 'https://claude.ai',
             'anthropic': 'https://anthropic.com',
             'api_docs': 'https://docs.anthropic.com',

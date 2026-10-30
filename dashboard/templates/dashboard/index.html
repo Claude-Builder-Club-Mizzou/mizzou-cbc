@@ -25,16 +25,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'landing/css/styles.css' %}?v=16">
+  <link rel="stylesheet" href="{% static 'landing/css/styles.css' %}?v=17">
   <style>body{opacity:0;transition:opacity 0.5s ease}body.loaded{opacity:1}</style>
-  <script>
-    // Apply light mode override before paint — dark is the default
-    (function() {
-      if (localStorage.getItem('theme') === 'light') {
-        document.documentElement.classList.add('light');
-      }
-    })();
-  </script>
 </head>
 <body>
 
@@ -52,13 +44,11 @@
         <a href="#projects">Projects</a>
         <a href="#faq">FAQ</a>
         <a href="#connect">Connect</a>
-        <button class="dark-toggle" aria-label="Toggle dark mode">🌙</button>
         <a href="{{ links.signup }}" target="_blank" rel="noopener noreferrer" class="nav-cta">Sign Up</a>
         <a href="{{ links.groupme }}" target="_blank" rel="noopener noreferrer" class="nav-cta nav-cta-outline">Join GroupMe</a>
       </div>
 
       <div style="display:flex;align-items:center;gap:0.5rem;">
-        <button class="dark-toggle mobile-dark" aria-label="Toggle dark mode" style="display:none;">🌙</button>
         <button class="hamburger" aria-label="Toggle menu">
           <span></span><span></span><span></span>
         </button>
@@ -415,6 +405,6 @@
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4L4 10h4v6h4v-6h4L10 4z" fill="currentColor"/></svg>
   </button>
 
-  <script src="{% static 'landing/js/main.js' %}?v=16"></script>
+  <script src="{% static 'landing/js/main.js' %}?v=17"></script>
 </body>
 </html>
