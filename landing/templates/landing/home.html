@@ -99,4 +99,23 @@
     </div>
     {{ events|json_script:"events-data" }}
   </section>
+
+  <!-- ===== Feature intro ===== -->
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="terminal-frame fade-up">
+        <span class="terminal-frame-label">think_mode v1.0.0</span>
+        <div class="feature-intro">
+          <div class="feature-intro-copy">
+            <h2 class="text-heading">Think it <span class="text-terracotta">Through</span></h2>
+            <p class="text-muted">Every project at CBC starts with an idea. <span class="accent">Sample text:</span> we help you turn a rough thought into a clear plan before you write a single line.</p>
+            <p class="text-muted">Sample text: use Claude as a thinking partner to question assumptions, weigh tradeoffs, and find the next step.</p>
+          </div>
+          <div class="feature-intro-art">
+            <img src="{% static 'landing/images/icons/think.png' %}" alt="" class="feature-intro-img">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}

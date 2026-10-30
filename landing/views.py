@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.templatetags.static import static
 from dashboard.models import GalleryImage, Event, Project, TeamMember
 
 NAV_ITEMS = [
@@ -24,24 +25,24 @@ LINKS = {
 
 BENEFITS = [
     {
-        'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 21h14" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        'title': '3 Months of Claude Pro',
+        'description': 'Members get 3 months of Claude Pro free, so you can write, research, and code with Claude every day.',
+    },
+    {
+        'icon': '<img src="' + static('landing/images/icons/claude-code-guy.svg') + '" alt="">',
+        'title': '$25 in API Credits',
+        'description': 'Get $25 in API credits each fall ($50 each spring) to build real applications, automate workflows, and experiment freely.',
+    },
+    {
+        'icon': '<img src="' + static('landing/images/icons/claude-logo.svg') + '" alt="">',
         'title': 'Merchandise',
-        'description': 'Earn Claude Builder Club merchandise, including stickers and apparel, through club activities, events, and projects.',
+        'description': 'Earn stickers and hats through club activities, events, and projects.',
     },
     {
-        'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l2-2-2-2M8 18l-2-2 2-2M14 4l-4 16" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-        'title': 'Claude Pro & API Credits',
-        'description': 'Members get 3 months of Claude Pro free, plus $25 in API credits each fall and $50 each spring to build real applications powered by Claude. Ship projects, automate workflows, and experiment freely.',
-    },
-    {
-        'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-        'title': 'Workshops & Hackathons',
-        'description': 'Hands-on workshops, weekend hackathons, and demo nights. Learn prompt engineering, AI app development, and more.',
-    },
-    {
-        'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-        'title': 'Community & Networking',
-        'description': 'Connect with fellow builders across all majors. Guest speakers from Anthropic and industry leaders share insights.',
+        'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="7" r="4" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 21v-2a4 4 0 014-4h6a4 4 0 014 4v2z" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="7.5" r="2.5" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 14.5a4 4 0 016 3.5v3h-4" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        'title': 'Community, Workshops & Hackathons',
+        'description': 'Hands-on workshops, weekend hackathons, and demo nights, plus guest speakers from Anthropic and industry. Connect with builders across all majors.',
     },
 ]
 

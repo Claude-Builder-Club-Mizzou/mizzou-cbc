@@ -5,7 +5,7 @@
   --terracotta:        #D97757;
   --terracotta-dim:    #B85F42;
   --terracotta-muted:  rgba(217, 119, 87, 0.12);
-  --terracotta-border: rgba(217, 119, 87, 0.25);
+  --terracotta-border: rgba(217, 119, 87, 0.50);
 
   --surface-base:    #1C1917;
   --surface-raised:  #231F1D;
@@ -448,21 +448,15 @@ h1, h2, h3, h4 {
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 3px;
-  border: 1px solid var(--border-strong);
   background: transparent;
-  transition: border-color 0.2s;
-}
-.social-icon:hover {
-  border-color: var(--terracotta);
 }
 .social-icon svg {
-  width: 16px;
-  height: 16px;
-  fill: var(--text-faint);
+  width: 25px;
+  height: 25px;
+  fill: var(--terracotta);
   transition: fill 0.2s;
 }
-.social-icon:hover svg { fill: var(--terracotta); }
+.social-icon:hover svg { fill: #fff; }
 
 .footer-bottom {
   max-width: 1280px;
@@ -545,6 +539,51 @@ h1, h2, h3, h4 {
 /* ===== Page top offset (pages without a hero sit below the fixed navbar) ===== */
 main > .section:first-child {
   padding-top: 8rem;
+}
+
+/* ===== Feature intro (text 2/3 + art 1/3; mirror of .claude-intro) ===== */
+.feature-intro {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0;
+  align-items: stretch;
+}
+.feature-intro-copy {
+  /* Extend the divider through the terminal-frame padding to touch its top/bottom border */
+  border-right: 1px solid var(--terracotta-border);
+  padding: 2rem 3rem 1.5rem 0;
+  margin: -2rem 0 -1.5rem;
+}
+.feature-intro-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 3rem;
+}
+.feature-intro-img { width: 100%; max-width: 260px; height: auto; display: block; }
+.feature-intro-copy h2 {
+  font-size: clamp(1.4rem, 3vw, 1.875rem);
+  font-weight: 700;
+  margin: 0 0 1.25rem 0;
+  letter-spacing: -0.03em;
+}
+.feature-intro-copy h2::before { content: '~/ '; color: var(--terracotta); font-weight: 400; font-family: var(--font-mono); }
+.feature-intro-copy p {
+  font-size: 0.875rem;
+  line-height: 1.85;
+  margin: 0 0 1rem 0;
+}
+.feature-intro-copy p:last-child { margin-bottom: 0; }
+@media (max-width: 768px) {
+  .feature-intro { grid-template-columns: 1fr; gap: 2rem; }
+  .feature-intro-copy {
+    border-right: 0;
+    border-bottom: 1px solid var(--terracotta-border);
+    padding: 1.5rem 1.5rem 2rem;
+    margin: -2rem -1.5rem 0;
+  }
+  .feature-intro-art { padding-left: 0; }
+  .feature-intro-img { max-width: 200px; }
 }
 
 /* ===== Terminal-style text (monospace) ===== */
