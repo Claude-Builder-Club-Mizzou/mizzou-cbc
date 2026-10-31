@@ -65,31 +65,35 @@ STATS = [
 FAQ_ITEMS = [
     {
         'question': 'Who can join CBC Mizzou?',
-        'answer': "Any currently enrolled Mizzou student can join, regardless of major or coding experience. Engineers, journalists, business students, and artists are all welcome. If you're interested in building with AI, you can join.",
+        'answer': "Any currently enrolled Mizzou student can join, whether you're an undergrad or a grad student and whatever your major or coding experience. Engineers, journalists, business students, and artists are all welcome. If you're curious about building with AI, you're in.",
     },
     {
         'question': 'Do I need coding experience?',
-        'answer': "Not at all! We have tracks for all skill levels. Our workshops start from the basics, and Claude itself is a great tool for learning to code. Many of our most creative projects come from non-CS majors.",
+        'answer': "No. Our workshops start with Claude itself, then move to Claude Code and the Claude API, so you can begin with a simple prompt and go as far as you want. Claude is also a good way to learn to code.",
     },
     {
-        'question': 'How do I get merchandise?',
-        'answer': "Join the club by filling out our sign-up form. Once you're a member, you'll be eligible for Claude hats and stickers. Check our GroupMe for details on how and when they're handed out.",
+        'question': 'What do members get?',
+        'answer': "Through Anthropic's Campus Program, members get 3 months of Claude Pro, API credits, and Claude hats and stickers, along with workshops, hackathons, and demo nights. Sign up with the form on this site, then watch our GroupMe for how and when perks are handed out.",
     },
     {
         'question': "What's the time commitment?",
-        'answer': "Totally flexible. We host events 2-3 times per month, and attendance is optional. Come to whatever interests you, whether that's every workshop or only the hackathons.",
+        'answer': "As much or as little as you want. Come to the workshops that interest you, the hackathon, or just a demo night to see what others are building. Check our upcoming events on the homepage calendar.",
     },
     {
-        'question': 'How are the API credits distributed?',
-        'answer': "Active members receive $25 in API credits in the fall and $50 in the spring through Anthropic's program. You'll get access to the Claude API to build personal projects, class assignments, or hackathon submissions.",
+        'question': 'How do the API credits work?',
+        'answer': "Members receive $25 in API credits in the fall and $50 in the spring. Use them for personal projects, class assignments, or hackathon entries. Credit amounts can change from term to term, so check the GroupMe for the latest.",
+    },
+    {
+        'question': 'Is there a hackathon?',
+        'answer': "Yes. We host one every spring. Teams spend a weekend building with Claude, and the best projects win API credits. Dates and details go out on our GroupMe and the events page once they're confirmed.",
     },
     {
         'question': 'Can I join the leadership team?',
-        'answer': "Yes! We're always looking for motivated students to help lead workshops, organize events, manage social media, and grow the community. Reach out to any current leader to learn more.",
+        'answer': "Yes. We're always looking for students who want to help run workshops, plan events, manage social media, and grow the community. Message any current board member or email us to learn more.",
     },
     {
-        'question': 'Where do meetings take place?',
-        'answer': 'We rotate between rooms in Lafferre Hall, the Engineering Building, and the Student Center. Check our GroupMe and events calendar for specific locations each week.',
+        'question': 'Where and when are meetings?',
+        'answer': 'Locations and times change by event, so the events page and our GroupMe always have the current details.',
     },
 ]
 

@@ -223,7 +223,7 @@
 <div class="team-header">
   <div class="page-header" style="margin-bottom:0;">
     <h1>Team</h1>
-    <p>Manage the executive board for each term. The latest board is shown on the public site.</p>
+    <p>Add and update officers for each term. Visitors see the latest board on the public site.</p>
   </div>
   <a href="{% url 'dashboard:team_create' %}?term={{ current_board.key }}" class="btn btn-gold">+ New Member</a>
 </div>
@@ -236,7 +236,7 @@
 {% include "dashboard/_team_cards.html" with members=current_board.members %}
 {% else %}
 <div class="empty-state">
-  <p>No one on the {{ current_board.label }} board yet. Add the first member.</p>
+  <p>Nobody is listed for the {{ current_board.label }} board yet. Add the first member.</p>
 </div>
 {% endif %}
 
@@ -261,7 +261,7 @@
         {% if board.members %}
         {% include "dashboard/_team_cards.html" with members=board.members %}
         {% else %}
-        <div class="empty-state"><p>No members recorded for this board.</p></div>
+        <div class="empty-state"><p>No members added to this board yet.</p></div>
         {% endif %}
       </div>
     </details>
