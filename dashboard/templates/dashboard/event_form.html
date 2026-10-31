@@ -4,9 +4,9 @@
 {% block extra_css %}
 <style>
   .form-card {
-    background: #141414;
-    border: 1px solid #1f1f1f;
-    border-radius: 12px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
     padding: 1.5rem;
     max-width: 600px;
   }
@@ -17,24 +17,24 @@
     display: block;
     font-size: 0.8125rem;
     font-weight: 500;
-    color: #9ca3af;
+    color: var(--text-secondary);
     margin-bottom: 0.25rem;
   }
   .form-group input,
   .form-group textarea {
     width: 100%;
     padding: 0.5rem 0.75rem;
-    background: #0a0a0a;
-    border: 1px solid #2a2a2a;
-    border-radius: 8px;
-    color: #fff;
+    background: var(--surface-base);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    color: var(--text-primary);
     font-size: 0.8125rem;
     font-family: inherit;
   }
   .form-group input:focus,
   .form-group textarea:focus {
     outline: none;
-    border-color: #F1B82D;
+    border-color: var(--terracotta);
   }
   .form-group textarea {
     resize: vertical;
@@ -57,7 +57,7 @@
     border: 1px solid rgba(239, 68, 68, 0.3);
     color: #f87171;
     padding: 0.5rem 0.75rem;
-    border-radius: 8px;
+    border-radius: 3px;
     font-size: 0.8125rem;
     margin-bottom: 1rem;
   }

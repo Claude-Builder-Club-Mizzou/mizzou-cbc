@@ -4,16 +4,16 @@
 {% block extra_css %}
 <style>
   .upload-form {
-    background: #141414;
-    border: 1px solid #1f1f1f;
-    border-radius: 12px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
     padding: 1.5rem;
     margin-bottom: 2rem;
   }
   .upload-form h3 {
     font-size: 0.9375rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 1rem;
   }
   .form-row {
@@ -32,29 +32,29 @@
   .form-field label {
     font-size: 0.75rem;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--text-faint);
   }
   .form-field input {
     padding: 0.5rem 0.75rem;
-    background: #0a0a0a;
-    border: 1px solid #2a2a2a;
-    border-radius: 8px;
-    color: #fff;
+    background: var(--surface-base);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    color: var(--text-primary);
     font-size: 0.8125rem;
     font-family: inherit;
   }
   .form-field input:focus {
     outline: none;
-    border-color: #F1B82D;
+    border-color: var(--terracotta);
   }
   .form-field input[type="file"] {
     padding: 0.375rem;
   }
   .form-field input[type="file"]::file-selector-button {
-    background: #1f1f1f;
-    color: #e5e7eb;
-    border: 1px solid #333;
-    border-radius: 6px;
+    background: var(--border-default);
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
     padding: 0.25rem 0.75rem;
     font-size: 0.75rem;
     cursor: pointer;
@@ -76,14 +76,14 @@
     flex: var(--r) 1 calc(var(--r) * var(--row-h));
     max-width: calc(var(--r) * var(--row-h) * 1.5);
     min-width: 170px;
-    background: #141414;
-    border: 1px solid #1f1f1f;
-    border-radius: 8px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    border-radius: 3px;
     overflow: hidden;
     transition: border-color 0.15s;
   }
   .gallery-item:hover {
-    border-color: #2a2a2a;
+    border-color: var(--border-strong);
   }
   .gallery-item img {
     width: 100%;
@@ -112,26 +112,26 @@
     max-width: 100%;
     max-height: calc(100vh - 8rem);
     object-fit: contain;
-    border-radius: 8px;
+    border-radius: 3px;
   }
   .lightbox-caption {
-    color: #e5e7eb;
+    color: var(--text-primary);
     font-size: 0.875rem;
     min-height: 1.25rem;
   }
   .lightbox-btn {
     position: absolute;
-    background: #1f1f1f;
-    border: 1px solid #333;
-    border-radius: 8px;
+    background: var(--border-default);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
     width: 40px;
     height: 40px;
-    color: #e5e7eb;
+    color: var(--text-primary);
     font-size: 1.125rem;
     cursor: pointer;
     transition: border-color 0.15s, color 0.15s;
   }
-  .lightbox-btn:hover { border-color: #F1B82D; color: #F1B82D; }
+  .lightbox-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
   .lightbox-close { top: 1rem; right: 1rem; }
   .lightbox-prev { left: 1rem; top: 50%; transform: translateY(-50%); }
   .lightbox-next { right: 1rem; top: 50%; transform: translateY(-50%); }
@@ -144,14 +144,14 @@
   }
   .gallery-item-caption {
     font-size: 0.8125rem;
-    color: #e5e7eb;
+    color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .gallery-item-order {
     font-size: 0.6875rem;
-    color: #6b7280;
+    color: var(--text-faint);
     flex-shrink: 0;
   }
   .delete-form {
@@ -160,7 +160,7 @@
   .delete-btn {
     background: none;
     border: none;
-    color: #6b7280;
+    color: var(--text-faint);
     cursor: pointer;
     font-size: 0.8125rem;
     padding: 0.25rem;
@@ -173,7 +173,7 @@
   .empty-state {
     text-align: center;
     padding: 3rem;
-    color: #6b7280;
+    color: var(--text-faint);
   }
   .empty-state p {
     font-size: 0.875rem;
@@ -184,7 +184,7 @@
     border: 1px solid rgba(239, 68, 68, 0.3);
     color: #f87171;
     padding: 0.5rem 0.75rem;
-    border-radius: 8px;
+    border-radius: 3px;
     font-size: 0.8125rem;
     margin-bottom: 1rem;
   }

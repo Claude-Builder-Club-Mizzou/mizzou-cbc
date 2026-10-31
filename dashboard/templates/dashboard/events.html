@@ -13,9 +13,9 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    background: #141414;
-    border: 1px solid #1f1f1f;
-    border-radius: 12px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
     overflow: hidden;
   }
   .events-table th {
@@ -23,17 +23,17 @@
     padding: 0.75rem 1rem;
     font-size: 0.6875rem;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--text-faint);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid #1f1f1f;
-    background: #111;
+    border-bottom: 1px solid var(--border-default);
+    background: var(--surface-raised);
   }
   .events-table td {
     padding: 0.75rem 1rem;
     font-size: 0.8125rem;
-    border-bottom: 1px solid #1a1a1a;
-    color: #e5e7eb;
+    border-bottom: 1px solid var(--surface-overlay);
+    color: var(--text-primary);
   }
   .events-table tr:last-child td {
     border-bottom: none;
@@ -43,11 +43,11 @@
   }
   .event-title {
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
   }
   .event-desc {
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--text-faint);
     margin-top: 0.125rem;
     max-width: 300px;
     white-space: nowrap;
@@ -60,19 +60,19 @@
     align-items: center;
   }
   .event-actions a {
-    color: #9ca3af;
+    color: var(--text-secondary);
     text-decoration: none;
     font-size: 0.8125rem;
     transition: color 0.15s;
   }
   .event-actions a:hover {
-    color: #F1B82D;
+    color: var(--terracotta);
   }
   .delete-form { display: inline; }
   .delete-btn {
     background: none;
     border: none;
-    color: #6b7280;
+    color: var(--text-faint);
     cursor: pointer;
     font-size: 0.8125rem;
     padding: 0;
@@ -82,10 +82,10 @@
   .empty-state {
     text-align: center;
     padding: 3rem;
-    color: #6b7280;
-    background: #141414;
-    border: 1px solid #1f1f1f;
-    border-radius: 12px;
+    color: var(--text-faint);
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
   }
   .past-event td { opacity: 0.5; }
 </style>

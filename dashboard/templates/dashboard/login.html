@@ -6,13 +6,29 @@
   <title>CBC Mizzou — Exec Login</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --terracotta: #D97757; --terracotta-dim: #B85F42;
+      --terracotta-muted: rgba(217,119,87,0.12); --terracotta-border: rgba(217,119,87,0.50);
+      --surface-base: #1C1917; --surface-raised: #231F1D; --surface-overlay: #2C2724; --surface-subtle: #292421;
+      --text-primary: #E8E3DC; --text-secondary: #A89A8A; --text-faint: #8a7e76; --text-inverse: #1C1917;
+      --border-default: #2E2926; --border-subtle: #252220; --border-strong: #403730;
+      --font-heading: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+      --font-body: 'Lora', Georgia, 'Times New Roman', serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+    h1, h2, h3, h4 { font-family: var(--font-heading); letter-spacing: -0.03em; }
+    button, input, select, textarea { font-family: inherit; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--surface-raised); }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--terracotta); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: #0a0a0a;
-      color: #fff;
+      font-family: var(--font-body);
+      background: var(--surface-base);
+      color: var(--text-primary);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -22,9 +38,9 @@
       width: 100%;
       max-width: 380px;
       padding: 2.5rem;
-      background: #141414;
-      border: 1px solid #2a2a2a;
-      border-radius: 16px;
+      background: var(--surface-raised);
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
     }
     .login-brand {
       text-align: center;
@@ -34,10 +50,10 @@
       font-size: 1.25rem;
       font-weight: 700;
     }
-    .login-brand h1 span { color: #F1B82D; }
+    .login-brand h1 span { color: var(--terracotta); }
     .login-brand p {
       font-size: 0.8125rem;
-      color: #6b7280;
+      color: var(--text-faint);
       margin-top: 0.25rem;
     }
     .form-group {
@@ -47,31 +63,31 @@
       display: block;
       font-size: 0.8125rem;
       font-weight: 500;
-      color: #9ca3af;
+      color: var(--text-secondary);
       margin-bottom: 0.375rem;
     }
     .form-group input {
       width: 100%;
       padding: 0.625rem 0.875rem;
-      background: #0a0a0a;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      color: #fff;
+      background: var(--surface-base);
+      border: 1px solid var(--border-strong);
+      border-radius: 3px;
+      color: var(--text-primary);
       font-size: 0.875rem;
       font-family: inherit;
       transition: border-color 0.2s;
     }
     .form-group input:focus {
       outline: none;
-      border-color: #F1B82D;
+      border-color: var(--terracotta);
     }
     .login-btn {
       width: 100%;
       padding: 0.625rem;
-      background: #F1B82D;
-      color: #000;
+      background: var(--terracotta);
+      color: var(--text-inverse);
       border: none;
-      border-radius: 8px;
+      border-radius: 3px;
       font-size: 0.875rem;
       font-weight: 600;
       font-family: inherit;
@@ -79,13 +95,13 @@
       margin-top: 0.5rem;
       transition: background 0.2s;
     }
-    .login-btn:hover { background: #D4A128; }
+    .login-btn:hover { background: var(--terracotta-dim); }
     .error-msg {
       background: rgba(239, 68, 68, 0.1);
       border: 1px solid rgba(239, 68, 68, 0.3);
       color: #f87171;
       padding: 0.5rem 0.75rem;
-      border-radius: 8px;
+      border-radius: 3px;
       font-size: 0.8125rem;
       margin-bottom: 1rem;
     }
@@ -94,11 +110,11 @@
       text-align: center;
       margin-top: 1.5rem;
       font-size: 0.8125rem;
-      color: #6b7280;
+      color: var(--text-faint);
       text-decoration: none;
       transition: color 0.2s;
     }
-    .back-link:hover { color: #F1B82D; }
+    .back-link:hover { color: var(--terracotta); }
   </style>
 </head>
 <body>

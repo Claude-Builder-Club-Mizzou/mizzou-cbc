@@ -15,15 +15,15 @@
     gap: 1rem;
   }
   .team-card {
-    background: #141414;
-    border: 1px solid #1f1f1f;
-    border-radius: 12px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
     transition: border-color 0.15s;
   }
-  .team-card:hover { border-color: #2a2a2a; }
+  .team-card:hover { border-color: var(--border-strong); }
   .team-top {
     display: flex;
     align-items: center;
@@ -31,7 +31,7 @@
     margin-bottom: 0.75rem;
   }
   .team-link { text-decoration: none; color: inherit; }
-  .team-link:hover .team-name { color: #F1B82D; }
+  .team-link:hover .team-name { color: var(--terracotta); }
   .team-name { transition: color 0.15s; }
   .team-avatar {
     width: 72px;
@@ -39,8 +39,8 @@
     border-radius: 50%;
     flex-shrink: 0;
     object-fit: cover;
-    background: rgba(241, 184, 45, 0.1);
-    color: #F1B82D;
+    background: rgba(217, 119, 87, 0.1);
+    color: var(--terracotta);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,12 +50,12 @@
   .team-name {
     font-size: 1rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
   }
   .team-role {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #F1B82D;
+    color: var(--terracotta);
     margin-top: 0.125rem;
   }
   .team-ambassador {
@@ -67,9 +67,9 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #F1B82D;
-    background: rgba(241, 184, 45, 0.1);
-    border: 1px solid rgba(241, 184, 45, 0.35);
+    color: var(--terracotta);
+    background: rgba(217, 119, 87, 0.1);
+    border: 1px solid rgba(217, 119, 87, 0.35);
     padding: 0.0625rem 0.5rem;
     border-radius: 999px;
   }
@@ -82,7 +82,7 @@
   }
   .team-major {
     font-size: 0.8125rem;
-    color: #9ca3af;
+    color: var(--text-secondary);
     flex: 1;
   }
   .team-meta {
@@ -91,11 +91,11 @@
     justify-content: space-between;
     margin-top: 0.75rem;
     padding-top: 0.75rem;
-    border-top: 1px solid #1a1a1a;
+    border-top: 1px solid var(--surface-overlay);
   }
   .team-order {
     font-size: 0.6875rem;
-    color: #6b7280;
+    color: var(--text-faint);
   }
   .team-actions {
     display: flex;
@@ -103,17 +103,17 @@
     align-items: center;
   }
   .team-actions a {
-    color: #9ca3af;
+    color: var(--text-secondary);
     text-decoration: none;
     font-size: 0.8125rem;
     transition: color 0.15s;
   }
-  .team-actions a:hover { color: #F1B82D; }
+  .team-actions a:hover { color: var(--terracotta); }
   .delete-form { display: inline; }
   .delete-btn {
     background: none;
     border: none;
-    color: #6b7280;
+    color: var(--text-faint);
     cursor: pointer;
     font-size: 0.8125rem;
     padding: 0;
@@ -130,16 +130,16 @@
   .board-title h2 {
     font-size: 1.125rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
   }
   .past-boards {
     margin-top: 2.5rem;
-    background: #141414;
-    border: 1px solid #1f1f1f;
-    border-radius: 12px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
     transition: border-color 0.15s;
   }
-  .past-boards[open] { border-color: #2a2a2a; }
+  .past-boards[open] { border-color: var(--border-strong); }
   .past-boards > summary,
   .past-board > summary {
     display: flex;
@@ -155,20 +155,20 @@
     padding: 0.875rem 1.25rem;
     font-size: 0.9375rem;
     font-weight: 600;
-    color: #e5e7eb;
+    color: var(--text-primary);
   }
-  .past-boards > summary:hover { color: #F1B82D; }
+  .past-boards > summary:hover { color: var(--terracotta); }
   .summary-count {
     font-size: 0.75rem;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--text-faint);
   }
   .chevron {
     margin-left: auto;
     width: 0.5rem;
     height: 0.5rem;
-    border-right: 2px solid #6b7280;
-    border-bottom: 2px solid #6b7280;
+    border-right: 2px solid var(--text-faint);
+    border-bottom: 2px solid var(--text-faint);
     transform: rotate(45deg);
     transition: transform 0.2s;
   }
@@ -180,44 +180,44 @@
     gap: 0.75rem;
   }
   .past-board {
-    background: #0f0f0f;
-    border: 1px solid #1a1a1a;
-    border-radius: 10px;
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-overlay);
+    border-radius: 4px;
   }
-  .past-board[open] { border-color: #2a2a2a; }
+  .past-board[open] { border-color: var(--border-strong); }
   .past-board > summary {
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #d1d5db;
+    color: var(--text-primary);
   }
-  .past-board > summary:hover { color: #F1B82D; }
+  .past-board > summary:hover { color: var(--terracotta); }
   .past-board-body { padding: 0.25rem 1rem 1rem; }
   .board-add {
     display: inline-block;
     margin-bottom: 0.75rem;
     font-size: 0.8125rem;
-    color: #9ca3af;
+    color: var(--text-secondary);
     text-decoration: none;
   }
-  .board-add:hover { color: #F1B82D; }
+  .board-add:hover { color: var(--terracotta); }
   .tag-upcoming {
     font-size: 0.5625rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: #9ca3af;
-    border: 1px solid #333;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
     padding: 0.0625rem 0.375rem;
     border-radius: 999px;
   }
   .empty-state {
     text-align: center;
     padding: 3rem;
-    color: #6b7280;
-    background: #141414;
-    border: 1px solid #1f1f1f;
-    border-radius: 12px;
+    color: var(--text-faint);
+    background: var(--surface-raised);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
   }
 </style>
 {% endblock %}
