@@ -174,7 +174,7 @@
   background: var(--terracotta);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.35s ease-out;
+  transition: transform 0.3s ease;
 }
 .connect-card:hover::before,
 .connect-card:focus-visible::before { transform: scaleX(1); }
@@ -186,7 +186,7 @@
   height: 24px;
   fill: var(--text-faint);
   flex-shrink: 0;
-  transition: fill 0.35s ease-out;
+  transition: fill 0.3s ease;
 }
 
 .connect-card-text {
@@ -199,19 +199,19 @@
   font-weight: 700;
   font-size: 0.875rem;
   color: var(--text-primary);
-  transition: color 0.35s ease-out;
+  transition: color 0.3s ease;
 }
 .connect-desc {
   font-size: 0.75rem;
   color: var(--text-secondary);
   margin-top: 0.1rem;
-  transition: color 0.35s ease-out;
+  transition: color 0.3s ease;
 }
 .connect-arrow {
   font-size: 1.125rem;
   color: var(--text-faint);
   flex-shrink: 0;
-  transition: color 0.35s ease-out;
+  transition: color 0.3s ease;
 }
 
 /* Icon and text flip to the dark surface color once the orange fill is behind them */
