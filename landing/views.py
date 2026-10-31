@@ -1,8 +1,8 @@
 from collections import defaultdict
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.templatetags.static import static
-from dashboard.models import GalleryImage, Event, Project, TeamMember
+from dashboard.models import Builder, GalleryImage, Event, Project, TeamMember
 from dashboard.terms import all_terms, current_term, term_label, term_status
 
 NAV_ITEMS = [
@@ -141,7 +141,43 @@ def team(request):
 
 
 def projects(request):
-    return _render(request, 'landing/projects.html', 'projects', projects=Project.objects.all())
+    return _render(request, 'landing/projects.html', 'projects',
+                   projects=Project.objects.prefetch_related('builders'))
+
+
+def _related_projects(project, limit=3):
+    """Other projects ranked by shared builders and tech tags, topped up with the newest."""
+    mine = {t.lower() for t in project.tech}
+    builder_ids = {b.pk for b in project.builders.all()}
+    others = list(Project.objects.exclude(pk=project.pk).prefetch_related('builders'))
+
+    def score(p):
+        shared_tech = len(mine & {t.lower() for t in p.tech})
+        shared_builders = len(builder_ids & {b.pk for b in p.builders.all()})
+        return shared_builders * 3 + shared_tech
+
+    ranked = sorted(others, key=score, reverse=True)
+    return ranked[:limit]
+
+
+def project_detail(request, slug):
+    project = get_object_or_404(Project.objects.prefetch_related('builders', 'images'), slug=slug)
+    return _render(
+        request, 'landing/project_detail.html', 'projects',
+        project=project,
+        builders=project.builders.all(),
+        images=project.images.all(),
+        related=_related_projects(project),
+    )
+
+
+def builder_detail(request, slug):
+    builder = get_object_or_404(Builder, slug=slug)
+    return _render(
+        request, 'landing/builder_detail.html', 'projects',
+        builder=builder,
+        projects=builder.projects.prefetch_related('builders'),
+    )
 
 
 def connect(request):

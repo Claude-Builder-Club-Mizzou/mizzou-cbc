@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import EventForm, GalleryImageForm, ProjectForm, TeamMemberForm
-from .models import Event, GalleryImage, Project, TeamMember
+from .forms import BuilderForm, EventForm, GalleryImageForm, ProjectForm, ProjectImageFormSet, TeamMemberForm
+from .models import Builder, Event, GalleryImage, Project, TeamMember
 from .terms import all_terms, current_term, term_label, term_status
 
 LOGIN_URL = '/cb-exec/'
@@ -146,7 +146,7 @@ def event_delete(request, pk):
 
 @login_required(login_url=LOGIN_URL)
 def project_list(request):
-    projects = Project.objects.all()
+    projects = Project.objects.prefetch_related('builders')
     context = {
         'active_page': 'projects',
         'projects': projects,
@@ -158,15 +158,19 @@ def project_list(request):
 def project_create(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
-        if form.is_valid():
+        formset = ProjectImageFormSet(request.POST, request.FILES, instance=form.instance)
+        if form.is_valid() and formset.is_valid():
             form.save()
+            formset.save()
             return redirect('dashboard:projects')
     else:
         form = ProjectForm(initial={'order': Project.objects.count()})
+        formset = ProjectImageFormSet(instance=form.instance)
 
     context = {
         'active_page': 'projects',
         'form': form,
+        'formset': formset,
         'editing': False,
     }
     return render(request, 'dashboard/project_form.html', context)
@@ -177,15 +181,19 @@ def project_edit(request, pk):
     project = get_object_or_404(Project, pk=pk)
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES, instance=project)
-        if form.is_valid():
+        formset = ProjectImageFormSet(request.POST, request.FILES, instance=project)
+        if form.is_valid() and formset.is_valid():
             form.save()
+            formset.save()
             return redirect('dashboard:projects')
     else:
         form = ProjectForm(instance=project)
+        formset = ProjectImageFormSet(instance=project)
 
     context = {
         'active_page': 'projects',
         'form': form,
+        'formset': formset,
         'project': project,
         'editing': True,
     }
@@ -196,8 +204,61 @@ def project_edit(request, pk):
 def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk)
     if request.method == 'POST':
+        for img in project.images.all():
+            img.image.delete(save=False)
+        project.image.delete(save=False)
         project.delete()
     return redirect('dashboard:projects')
+
+
+# ── Builders ─────────────────────────────────────────────────────────────
+
+
+@login_required(login_url=LOGIN_URL)
+def builder_list(request):
+    context = {
+        'active_page': 'builders',
+        'builders': Builder.objects.prefetch_related('projects'),
+    }
+    return render(request, 'dashboard/builders.html', context)
+
+
+@login_required(login_url=LOGIN_URL)
+def builder_create(request):
+    if request.method == 'POST':
+        form = BuilderForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard:builders')
+    else:
+        form = BuilderForm()
+
+    context = {'active_page': 'builders', 'form': form, 'editing': False}
+    return render(request, 'dashboard/builder_form.html', context)
+
+
+@login_required(login_url=LOGIN_URL)
+def builder_edit(request, pk):
+    builder = get_object_or_404(Builder, pk=pk)
+    if request.method == 'POST':
+        form = BuilderForm(request.POST, request.FILES, instance=builder)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard:builders')
+    else:
+        form = BuilderForm(instance=builder)
+
+    context = {'active_page': 'builders', 'form': form, 'builder': builder, 'editing': True}
+    return render(request, 'dashboard/builder_form.html', context)
+
+
+@login_required(login_url=LOGIN_URL)
+def builder_delete(request, pk):
+    builder = get_object_or_404(Builder, pk=pk)
+    if request.method == 'POST':
+        builder.photo.delete(save=False)
+        builder.delete()
+    return redirect('dashboard:builders')
 
 
 # ── Team ─────────────────────────────────────────────────────────────────

@@ -1,0 +1,185 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{% if editing %}Edit Builder{% else %}New Builder{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .form-card {
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 600px;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  .form-group label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #9ca3af;
+    margin-bottom: 0.25rem;
+  }
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.8125rem;
+    font-family: inherit;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #F1B82D;
+  }
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  .form-hint {
+    font-size: 0.6875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+  }
+  .form-row {
+    display: flex;
+    gap: 1rem;
+  }
+  .form-row .form-group {
+    flex: 1;
+  }
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .checkbox-group input[type="checkbox"] {
+    width: auto;
+    accent-color: #F1B82D;
+  }
+  .checkbox-group label {
+    margin-bottom: 0;
+  }
+  .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .form-section {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #F1B82D;
+    margin: 1.75rem 0 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #1f1f1f;
+  }
+  .form-section:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+  .builder-checks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.375rem 1rem;
+  }
+  .builder-checks ul { list-style: none; display: contents; }
+  .builder-checks label {
+    display: flex; align-items: center; gap: 0.5rem;
+    color: #e5e7eb; margin: 0; cursor: pointer;
+  }
+  .builder-checks input { width: auto; accent-color: #F1B82D; }
+  .shot-row {
+    display: grid;
+    grid-template-columns: 72px 1fr 1fr 80px auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.75rem;
+    background: #0f0f0f;
+    border: 1px solid #1f1f1f;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  .shot-row img { width: 72px; height: 54px; object-fit: cover; border-radius: 6px; }
+  .shot-thumb-empty { width: 72px; height: 54px; border-radius: 6px; background: #1a1a1a; }
+  .shot-row input[type="file"] { padding: 0.25rem; font-size: 0.75rem; }
+  .shot-delete { display: flex; align-items: center; gap: 0.375rem; font-size: 0.75rem; color: #9ca3af; margin: 0; }
+  .shot-delete input { width: auto; accent-color: #f87171; }
+  @media (max-width: 700px) { .shot-row { grid-template-columns: 1fr; } }
+  .form-errors {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    margin-bottom: 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% if editing %}Edit Builder{% else %}New Builder{% endif %}</h1>
+  <p>{% if editing %}Update this builder's profile.{% else %}Add a member whose projects you want to credit.{% endif %}</p>
+</div>
+
+<div class="form-card">
+  {% if form.errors %}
+  <div class="form-errors">
+    {% for field, errors in form.errors.items %}
+      {% for error in errors %}{{ field }}: {{ error }}<br>{% endfor %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_name">Name</label>
+      {{ form.name }}
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="id_major">Major</label>
+        {{ form.major }}
+      </div>
+      <div class="form-group">
+        <label for="id_year">Year</label>
+        {{ form.year }}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="id_bio">Bio</label>
+      {{ form.bio }}
+    </div>
+    <div class="form-group">
+      <label for="id_photo">Photo</label>
+      {% if editing and builder.photo %}
+      <div style="margin-bottom:0.5rem;">
+        <img src="{{ builder.photo.url }}" alt="{{ builder.name }}" style="max-width:120px;border-radius:8px;">
+      </div>
+      {% endif %}
+      {{ form.photo }}
+    </div>
+    <div class="form-group">
+      <label for="id_github">GitHub</label>
+      {{ form.github }}
+    </div>
+    <div class="form-group">
+      <label for="id_linkedin">LinkedIn</label>
+      {{ form.linkedin }}
+    </div>
+    <div class="form-group">
+      <label for="id_website">Website</label>
+      {{ form.website }}
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-gold">{% if editing %}Save Changes{% else %}Add Builder{% endif %}</button>
+      <a href="{% url 'dashboard:builders' %}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

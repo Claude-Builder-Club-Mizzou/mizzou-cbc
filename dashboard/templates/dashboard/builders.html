@@ -1,0 +1,84 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Builders{% endblock %}
+
+{% block extra_css %}
+<style>
+  .builders-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+  .builders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #141414;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .builders-table th, .builders-table td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .builders-table th { color: #6b7280; font-weight: 500; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .builders-table tr:last-child td { border-bottom: none; }
+  .builder-name { display: flex; align-items: center; gap: 0.75rem; color: #fff; font-weight: 600; }
+  .builder-name img, .builder-initials {
+    width: 32px; height: 32px; border-radius: 8px; object-fit: cover; flex-shrink: 0;
+  }
+  .builder-initials {
+    display: flex; align-items: center; justify-content: center;
+    background: #1f1f1f; color: #F1B82D; font-size: 0.6875rem; font-weight: 700;
+  }
+  .muted { color: #9ca3af; }
+  .row-actions { display: flex; gap: 0.75rem; align-items: center; justify-content: flex-end; }
+  .row-actions a { color: #9ca3af; text-decoration: none; }
+  .row-actions a:hover { color: #F1B82D; }
+  .delete-btn { background: none; border: none; color: #6b7280; cursor: pointer; font-size: 0.8125rem; padding: 0; }
+  .delete-btn:hover { color: #f87171; }
+  .empty-state {
+    text-align: center; padding: 3rem; color: #6b7280;
+    background: #141414; border: 1px solid #1f1f1f; border-radius: 12px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="builders-header">
+  <div class="page-header" style="margin-bottom:0;">
+    <h1>Builders</h1>
+    <p>Members who build projects. Credit them on a project to give them a profile page.</p>
+  </div>
+  <a href="{% url 'dashboard:builder_create' %}" class="btn btn-gold">+ New Builder</a>
+</div>
+
+{% if builders %}
+<table class="builders-table">
+  <thead><tr><th>Name</th><th>Major / Year</th><th>Projects</th><th></th></tr></thead>
+  <tbody>
+    {% for b in builders %}
+    <tr>
+      <td>
+        <div class="builder-name">
+          {% if b.photo %}<img src="{{ b.photo.url }}" alt="">{% else %}<span class="builder-initials">{{ b.initials }}</span>{% endif %}
+          {{ b.name }}
+        </div>
+      </td>
+      <td class="muted">{{ b.subtitle|default:"-" }}</td>
+      <td class="muted">{{ b.projects.all|length }}</td>
+      <td>
+        <div class="row-actions">
+          <a href="{% url 'builder_detail' b.slug %}" target="_blank">View</a>
+          <a href="{% url 'dashboard:builder_edit' b.pk %}">Edit</a>
+          <form method="post" action="{% url 'dashboard:builder_delete' b.pk %}" onsubmit="return confirm('Delete this builder? Their projects stay, but lose the credit.');">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn">Delete</button>
+          </form>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state"><p>No builders yet. Add your first one.</p></div>
+{% endif %}
+{% endblock %}

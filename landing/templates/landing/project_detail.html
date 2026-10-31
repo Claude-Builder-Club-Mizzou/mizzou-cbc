@@ -1,0 +1,243 @@
+{% extends "landing/base.html" %}
+{% load static %}
+
+{% block title %}{{ project.title }} | CBC Mizzou{% endblock %}
+
+{% block meta_description %}
+  <meta name="description" content="{{ project.description|truncatechars:160 }}">
+  {% if project.image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.image.url }}">{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'landing/css/gallery.css' %}">
+  <link rel="stylesheet" href="{% static 'landing/css/projects.css' %}?v=22">
+{% endblock %}
+
+{% block content %}
+  <section class="section bg-white-section">
+    <div class="container">
+      <a href="{% url 'projects' %}" class="back-link">&#x2190; All projects</a>
+
+      <header class="pd-header">
+        <div class="pd-badges">
+          {% if project.featured %}<span class="featured-badge">Featured</span>{% endif %}
+          {% if project.coming_soon %}<span class="coming-soon-badge">Coming Soon</span>{% endif %}
+          {% if project.built_at %}<span class="built-at">Built at {{ project.built_at }}</span>{% endif %}
+        </div>
+        <h1 class="pd-title text-heading">{{ project.title }}</h1>
+        <p class="pd-lede text-muted">{{ project.description }}</p>
+        {% if project.tech %}
+        <div class="tech-tags pd-tags">
+          {% for t in project.tech %}<span class="tech-tag">{{ t }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        <div class="pd-actions">
+          {% if project.link %}
+          <a href="{{ project.link }}" target="_blank" rel="noopener noreferrer" class="btn-gold">Visit project &#x2197;</a>
+          {% endif %}
+          {% if project.github_url %}
+          <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer" class="btn-gold-outline">View code &#x2197;</a>
+          {% endif %}
+          {% if project.coming_soon and not project.link %}
+          <span class="project-link project-link-disabled">Launching soon</span>
+          {% endif %}
+        </div>
+      </header>
+
+      {% if project.image %}
+      <img src="{{ project.image.url }}" alt="{{ project.title }} cover" class="pd-cover">
+      {% endif %}
+
+      <div class="pd-layout">
+        <div class="pd-main">
+          {% if project.story %}
+          <section class="pd-block">
+            <h2 class="pd-h2">About this project</h2>
+            <div class="pd-prose">{{ project.story|linebreaks }}</div>
+          </section>
+          {% endif %}
+
+          {% if project.video_embed_url %}
+          <section class="pd-block">
+            <h2 class="pd-h2">Demo</h2>
+            <div class="pd-video">
+              <iframe src="{{ project.video_embed_url }}" title="{{ project.title }} demo" loading="lazy" allowfullscreen
+                      allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+            </div>
+          </section>
+          {% elif project.demo_video_url %}
+          <section class="pd-block">
+            <h2 class="pd-h2">Demo</h2>
+            <a href="{{ project.demo_video_url }}" target="_blank" rel="noopener noreferrer" class="project-link">Watch the demo &#x2197;</a>
+          </section>
+          {% endif %}
+
+          {% if images %}
+          <section class="pd-block">
+            <h2 class="pd-h2">Screenshots</h2>
+            <div class="pd-gallery">
+              {% for img in images %}
+              <button type="button" class="pd-shot" data-full="{{ img.image.url }}" data-caption="{{ img.caption }}" aria-label="Enlarge image{% if img.caption %}: {{ img.caption }}{% endif %}">
+                <img src="{{ img.image.url }}" alt="{{ img.caption|default:project.title }}" loading="lazy">
+                {% if img.caption %}<span class="pd-shot-caption">{{ img.caption }}</span>{% endif %}
+              </button>
+              {% endfor %}
+            </div>
+          </section>
+          {% endif %}
+
+          {% if project.claude_usage %}
+          <section class="pd-block">
+            <h2 class="pd-h2">How Claude was used</h2>
+            <div class="pd-prose">{{ project.claude_usage|linebreaks }}</div>
+          </section>
+          {% endif %}
+
+          {% if project.challenges %}
+          <section class="pd-block">
+            <h2 class="pd-h2">Challenges &amp; lessons</h2>
+            <div class="pd-prose">{{ project.challenges|linebreaks }}</div>
+          </section>
+          {% endif %}
+
+          {% if not project.story and not images and not project.claude_usage and not project.challenges and not project.video_embed_url %}
+          <p class="text-muted">The full write-up for this project is on its way.</p>
+          {% endif %}
+        </div>
+
+        <aside class="pd-side">
+          {% if builders %}
+          <div class="pd-side-block">
+            <h2 class="pd-side-h">Built by</h2>
+            {% for b in builders %}
+            <a href="{% url 'builder_detail' b.slug %}" class="builder-chip">
+              {% if b.photo %}
+              <img src="{{ b.photo.url }}" alt="" class="builder-avatar">
+              {% else %}
+              <span class="builder-avatar builder-avatar-initials">{{ b.initials }}</span>
+              {% endif %}
+              <span class="builder-chip-text">
+                <span class="builder-chip-name">{{ b.name }}</span>
+                {% if b.subtitle %}<span class="builder-chip-sub">{{ b.subtitle }}</span>{% endif %}
+              </span>
+            </a>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <div class="pd-side-block">
+            <h2 class="pd-side-h">Details</h2>
+            <dl class="pd-facts">
+              <dt>Status</dt>
+              <dd>{% if project.coming_soon %}Coming soon{% elif project.link %}Live{% else %}In the showcase{% endif %}</dd>
+              {% if project.built_at %}
+              <dt>Built at</dt>
+              <dd>{{ project.built_at }}</dd>
+              {% endif %}
+              <dt>Added</dt>
+              <dd>{{ project.created_at|date:"M Y" }}</dd>
+              {% if project.updated_at.date != project.created_at.date %}
+              <dt>Updated</dt>
+              <dd>{{ project.updated_at|date:"M j, Y" }}</dd>
+              {% endif %}
+            </dl>
+          </div>
+
+          <div class="pd-side-block pd-cta">
+            <h2 class="pd-side-h">Built something?</h2>
+            <p class="text-muted">Show it off in the showcase. Tell an officer at the next meeting or reach out on GroupMe.</p>
+            <a href="{{ links.groupme }}" target="_blank" rel="noopener noreferrer" class="btn-gold-outline">Join GroupMe</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  {% if related %}
+  <section class="section bg-cream">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="text-heading">More <span class="text-terracotta">Projects</span></h2>
+      </div>
+      <div class="terminal-frame fade-up">
+        <span class="terminal-frame-label">project_catalog v1.0.0</span>
+        <div class="grid-3">
+          {% for p in related %}
+          {% include 'landing/_project_card.html' with p=p %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ===== Lightbox ===== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged screenshot">
+    <button type="button" class="lightbox-btn lightbox-close" id="lbClose" aria-label="Close">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button type="button" class="lightbox-btn lightbox-prev" id="lbPrev" aria-label="Previous">
+      <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="terminal-frame lightbox-frame">
+      <span class="terminal-frame-label" id="lbLabel"></span>
+      <img class="lightbox-img" id="lbImg" src="" alt="">
+    </div>
+    <button type="button" class="lightbox-btn lightbox-next" id="lbNext" aria-label="Next">
+      <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    (function () {
+      var box = document.getElementById('lightbox');
+      var shots = Array.prototype.slice.call(document.querySelectorAll('.pd-shot'));
+      if (!box || !shots.length) return;
+      var img = document.getElementById('lbImg');
+      var label = document.getElementById('lbLabel');
+      var fallback = '{{ project.slug|escapejs }}';
+      var idx = 0;
+      var opener = null;
+
+      function show(i) {
+        idx = (i + shots.length) % shots.length;
+        var s = shots[idx];
+        img.src = s.dataset.full;
+        img.alt = s.dataset.caption || '';
+        // "Login Screen" -> "login-screen"
+        var slug = (s.dataset.caption || fallback).trim().toLowerCase().replace(/\s+/g, '-');
+        label.textContent = slug;
+        label.hidden = !slug;
+        var many = shots.length > 1;
+        document.getElementById('lbPrev').hidden = !many;
+        document.getElementById('lbNext').hidden = !many;
+      }
+      function open(i) {
+        opener = shots[i];
+        show(i);
+        box.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('lbClose').focus();
+      }
+      function close() {
+        box.classList.remove('open');
+        document.body.style.overflow = '';
+        if (opener) opener.focus();
+      }
+
+      shots.forEach(function (s, i) { s.addEventListener('click', function () { open(i); }); });
+      document.getElementById('lbClose').addEventListener('click', close);
+      document.getElementById('lbPrev').addEventListener('click', function () { show(idx - 1); });
+      document.getElementById('lbNext').addEventListener('click', function () { show(idx + 1); });
+      box.addEventListener('click', function (e) { if (e.target === box) close(); });
+      document.addEventListener('keydown', function (e) {
+        if (!box.classList.contains('open')) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === 'ArrowLeft') show(idx - 1);
+        else if (e.key === 'ArrowRight') show(idx + 1);
+      });
+    })();
+  </script>
+{% endblock %}

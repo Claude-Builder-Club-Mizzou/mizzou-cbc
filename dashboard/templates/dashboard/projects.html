@@ -9,6 +9,31 @@
     align-items: center;
     margin-bottom: 1.5rem;
   }
+  /* Terminal frame, matching the public site: a bordered panel whose label sits on the top edge */
+  .terminal-frame {
+    position: relative;
+    border: 1px solid rgba(241, 184, 45, 0.45);
+    padding: 2rem 1.5rem 1.5rem;
+    background-color: #0d0d0d;
+    background-image:
+      repeating-linear-gradient(to bottom, transparent 0, transparent 3px, rgba(0, 0, 0, 0.18) 3px, rgba(0, 0, 0, 0.18) 4px),
+      radial-gradient(circle, #1c1c1c 1px, transparent 1px);
+    background-size: auto, 24px 24px;
+  }
+  .terminal-frame-label {
+    position: absolute;
+    top: 0;
+    left: 1.25rem;
+    transform: translateY(-50%);
+    padding: 0.2rem 0.625rem;
+    background: #0a0a0a;
+    color: #F1B82D;
+    font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Code', Menlo, monospace;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+  }
   .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -56,6 +81,26 @@
     margin-top: 0.75rem;
     padding-top: 0.75rem;
     border-top: 1px solid #1a1a1a;
+  }
+  .project-badge {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(241, 184, 45, 0.1);
+    color: #F1B82D;
+    align-self: flex-start;
+    margin-bottom: 0.5rem;
+  }
+  .project-builders {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 0.375rem;
+  }
+  .project-detail-missing {
+    font-size: 0.6875rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
   }
   .project-status {
     font-size: 0.6875rem;
@@ -109,11 +154,13 @@
 <div class="projects-header">
   <div class="page-header" style="margin-bottom:0;">
     <h1>Projects</h1>
-    <p>Manage member projects shown on the public site.</p>
+    <p>Manage member projects shown on the public site. Each one gets its own page.</p>
   </div>
   <a href="{% url 'dashboard:project_create' %}" class="btn btn-gold">+ New Project</a>
 </div>
 
+<div class="terminal-frame">
+  <span class="terminal-frame-label">projects</span>
 {% if projects %}
 <div class="projects-grid">
   {% for project in projects %}
@@ -121,7 +168,12 @@
     {% if project.image %}
     <img src="{{ project.image.url }}" alt="{{ project.title }}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:0.75rem;">
     {% endif %}
+    {% if project.featured %}<span class="project-badge">Featured</span>{% endif %}
     <div class="project-title">{{ project.title }}</div>
+    {% if project.builders.all %}
+    <div class="project-builders">by {% for b in project.builders.all %}{{ b.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+    {% endif %}
+    {% if project.built_at %}<div class="project-builders">Built at {{ project.built_at }}</div>{% endif %}
     <div class="project-desc">{{ project.description }}</div>
     {% if project.tech %}
     <div class="project-tags">
@@ -130,6 +182,7 @@
       {% endfor %}
     </div>
     {% endif %}
+    {% if not project.story %}<div class="project-detail-missing">No write-up yet. The detail page is sparse.</div>{% endif %}
     <div class="project-meta">
       {% if project.coming_soon %}
         <span class="project-status status-soon">Coming Soon</span>
@@ -139,6 +192,7 @@
         <span class="project-status" style="color:#6b7280;">No Link</span>
       {% endif %}
       <div class="project-actions">
+        <a href="{% url 'project_detail' project.slug %}" target="_blank">View</a>
         <a href="{% url 'dashboard:project_edit' project.pk %}">Edit</a>
         <form method="post" action="{% url 'dashboard:project_delete' project.pk %}" class="delete-form" onsubmit="return confirm('Delete this project?');">
           {% csrf_token %}
@@ -154,4 +208,5 @@
   <p>No projects yet. Add your first one.</p>
 </div>
 {% endif %}
+</div>
 {% endblock %}

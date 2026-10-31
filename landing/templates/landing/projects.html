@@ -4,7 +4,7 @@
 {% block title %}Projects | CBC Mizzou{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'landing/css/projects.css' %}?v=19">
+  <link rel="stylesheet" href="{% static 'landing/css/projects.css' %}?v=26">
 {% endblock %}
 
 {% block content %}
@@ -15,27 +15,15 @@
         <h2 class="text-heading">Member <span class="text-terracotta">Projects</span></h2>
         <p class="text-muted">Check out what our members are <span class="accent">building with Claude.</span></p>
       </div>
-      <div class="grid-3 stagger-container">
-        {% for p in projects %}
-        <div class="card project-card stagger-item{% if p.coming_soon %} coming-soon{% endif %}">
-          {% if p.coming_soon %}<span class="coming-soon-badge">Coming Soon</span>{% endif %}
-          {% if p.image %}
-          <img src="{{ p.image.url }}" alt="{{ p.title }}" class="project-card-img" loading="lazy">
-          {% endif %}
-          <h3 class="text-heading">{{ p.title }}</h3>
-          <p class="text-muted">{{ p.description }}</p>
-          <div class="tech-tags">
-            {% for t in p.tech %}
-            <span class="tech-tag">{{ t }}</span>
-            {% endfor %}
-          </div>
-          {% if p.link %}
-          <a href="{{ p.link }}" target="_blank" rel="noopener noreferrer" class="project-link">View Project &#x2192;</a>
-          {% elif p.coming_soon %}
-          <span class="project-link project-link-disabled">Coming Soon &#x2192;</span>
-          {% endif %}
+      <div class="terminal-frame fade-up">
+        <span class="terminal-frame-label">projects-showcase v1.0.0</span>
+        <div class="grid-3 stagger-container" id="project-grid">
+          {% for p in projects %}
+          {% include 'landing/_project_card.html' with p=p stagger=True %}
+          {% empty %}
+          <p class="text-muted">No projects yet. Check back soon.</p>
+          {% endfor %}
         </div>
-        {% endfor %}
       </div>
     </div>
   </section>
@@ -45,11 +33,13 @@
     <div class="container">
       <div class="terminal-frame fade-up">
         <span class="terminal-frame-label">write_it_up v1.0.0</span>
-        <div class="feature-intro feature-intro-flip">
+        <div class="feature-intro feature-intro-flip projects-intro">
           <div class="feature-intro-copy">
             <h2 class="text-heading">Ship What You <span class="text-terracotta">Write</span></h2>
-            <p class="text-muted">Sample text: projects begin as a prompt and end as something real. Members write, iterate, and demo their work with Claude.</p>
-            <p class="text-muted">Sample text: share your project at an upcoming demo night.</p>
+            <p class="text-muted">Every project on this page started as a <span class="accent">first prompt</span>. Members write, iterate with Claude, and keep going until it's something real.</p>
+            <p class="text-muted">Built a site, a tool, or a bot? Share it with the club and it can be <span class="accent">featured here,</span> with its own page, screenshots, and credit to the people who built it.</p>
+            <p class="text-muted">We also want to <span class="accent">send member projects to Anthropic.</span> The best ones go in front of the team at Anthropic, so what you build here can reach the people who made the tools.</p>
+            <p class="text-muted">You don't need to be a developer to ship. Start small, show people what you made, and learn from the other student builders around you.</p>
           </div>
           <div class="feature-intro-art">
             <img src="{% static 'landing/images/icons/write_am.gif' %}" alt="" class="feature-intro-img">
@@ -59,3 +49,4 @@
     </div>
   </section>
 {% endblock %}
+

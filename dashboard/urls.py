@@ -25,6 +25,12 @@ urlpatterns = [
     path('dashboard/projects/<int:pk>/edit/', views.project_edit, name='project_edit'),
     path('dashboard/projects/<int:pk>/delete/', views.project_delete, name='project_delete'),
 
+    # Builders
+    path('dashboard/builders/', views.builder_list, name='builders'),
+    path('dashboard/builders/new/', views.builder_create, name='builder_create'),
+    path('dashboard/builders/<int:pk>/edit/', views.builder_edit, name='builder_edit'),
+    path('dashboard/builders/<int:pk>/delete/', views.builder_delete, name='builder_delete'),
+
     # Team
     path('dashboard/team/', views.team_list, name='team'),
     path('dashboard/team/new/', views.team_create, name='team_create'),

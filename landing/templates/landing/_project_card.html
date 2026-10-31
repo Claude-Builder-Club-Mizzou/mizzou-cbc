@@ -1,0 +1,21 @@
+<article class="card project-card{% if stagger %} stagger-item{% endif %}{% if p.coming_soon %} coming-soon{% endif %}{% if p.featured %} is-featured{% endif %}">
+  {% if p.featured %}<span class="featured-badge">Featured</span>{% endif %}
+  {% if p.coming_soon %}<span class="coming-soon-badge">Coming Soon</span>{% endif %}
+  {% if p.built_at %}<span class="built-at">{{ p.built_at }}</span>{% endif %}
+  {% if p.image %}
+  <img src="{{ p.image.url }}" alt="" class="project-card-img" loading="lazy">
+  {% endif %}
+  <h3 class="text-heading"><a href="{% url 'project_detail' p.slug %}" class="project-card-link">{{ p.title }}</a></h3>
+  <p class="text-muted">{{ p.description }}</p>
+  <div class="tech-tags">
+    {% for t in p.tech %}
+    <span class="tech-tag">{{ t }}</span>
+    {% endfor %}
+  </div>
+  <div class="project-card-foot">
+    {% if p.builders.all %}
+    <span class="project-card-by">by {% for b in p.builders.all %}{{ b.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
+    {% endif %}
+    <span class="project-link">Details &#x2192;</span>
+  </div>
+</article>

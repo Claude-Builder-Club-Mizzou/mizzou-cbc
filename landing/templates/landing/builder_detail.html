@@ -1,0 +1,47 @@
+{% extends "landing/base.html" %}
+{% load static %}
+
+{% block title %}{{ builder.name }} | CBC Mizzou{% endblock %}
+
+{% block meta_description %}
+  <meta name="description" content="{{ builder.name }}, builder at Claude Builders Club @ Mizzou.{% if builder.bio %} {{ builder.bio|truncatechars:120 }}{% endif %}">
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'landing/css/projects.css' %}?v=22">
+{% endblock %}
+
+{% block content %}
+  <section class="section bg-white-section">
+    <div class="container">
+      <a href="{% url 'projects' %}" class="back-link">&#x2190; All projects</a>
+
+      <header class="bd-header">
+        {% if builder.photo %}
+        <img src="{{ builder.photo.url }}" alt="{{ builder.name }}" class="bd-photo">
+        {% else %}
+        <div class="bd-photo bd-photo-initials">{{ builder.initials }}</div>
+        {% endif %}
+        <div>
+          <h1 class="pd-title text-heading">{{ builder.name }}</h1>
+          {% if builder.subtitle %}<p class="text-muted bd-sub">{{ builder.subtitle }}</p>{% endif %}
+          {% if builder.bio %}<p class="pd-lede text-muted">{{ builder.bio }}</p>{% endif %}
+          <div class="pd-actions">
+            {% if builder.github %}<a href="{{ builder.github }}" target="_blank" rel="noopener noreferrer" class="btn-gold-outline">GitHub &#x2197;</a>{% endif %}
+            {% if builder.linkedin %}<a href="{{ builder.linkedin }}" target="_blank" rel="noopener noreferrer" class="btn-gold-outline">LinkedIn &#x2197;</a>{% endif %}
+            {% if builder.website %}<a href="{{ builder.website }}" target="_blank" rel="noopener noreferrer" class="btn-gold-outline">Website &#x2197;</a>{% endif %}
+          </div>
+        </div>
+      </header>
+
+      <h2 class="pd-h2">Projects ({{ projects|length }})</h2>
+      <div class="grid-3">
+        {% for p in projects %}
+        {% include 'landing/_project_card.html' with p=p %}
+        {% empty %}
+        <p class="text-muted">No projects yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}
