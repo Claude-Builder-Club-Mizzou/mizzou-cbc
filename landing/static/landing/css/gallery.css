@@ -174,9 +174,24 @@
 @media (max-width: 640px) {
   .gallery-collage { --row-h: 130px; --gap: 0.375rem; }
 
-  .lightbox { padding: 3.5rem 0.75rem; }
-  .lightbox-prev { left: 0.5rem; }
-  .lightbox-next { right: 0.5rem; }
+  /* Arrows go underneath the photo frame instead of floating over it */
+  .lightbox {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 1rem 1.25rem;
+    padding: 3.5rem 0.75rem 1.5rem;
+  }
+  .lightbox-frame { order: 1; flex: 0 0 100%; box-sizing: border-box; }
+  .lightbox-img { max-height: calc(100vh - 14rem); max-height: calc(100dvh - 14rem); margin: 0 auto; }
+  .lightbox-prev, .lightbox-next {
+    position: static;
+    transform: none;
+    order: 2;
+    width: 48px;
+    height: 48px;
+  }
+  .lightbox-next { order: 3; }
 }
 
 /* no auto-scroll for reduced motion: rows become swipeable instead */

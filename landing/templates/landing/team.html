@@ -4,7 +4,7 @@
 {% block title %}Team | CBC Mizzou{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'landing/css/team.css' %}?v=51">
+  <link rel="stylesheet" href="{% static 'landing/css/team.css' %}?v=52">
 {% endblock %}
 
 {% block extra_js %}
@@ -49,10 +49,10 @@
 
         <div class="exec-banner">
           <h2 class="exec-banner-title">
-            <img src="{% static 'landing/images/exec-board-text.svg' %}" alt="Executive Board" class="exec-banner-img" data-decode-reveal="2200">
+            <img src="{% static 'landing/images/exec-board-text.png' %}" alt="Executive Board" class="exec-banner-img" data-decode-reveal="2200">
             <span class="exec-banner-fallback" aria-hidden="true">EXECUTIVE BOARD</span>
           </h2>
-          {% with term_svg="landing/images/exec-terms/"|add:current_board.key|add:".svg" %}
+          {% with term_svg="landing/images/exec-terms/"|add:current_board.key|add:".png" %}
           <p class="exec-banner-term">
             <img src="{% static term_svg %}" alt="{{ current_board.label }}" class="exec-banner-term-img" data-decode-reveal="2900"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">

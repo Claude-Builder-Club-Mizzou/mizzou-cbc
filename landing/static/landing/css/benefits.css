@@ -51,8 +51,31 @@
   color: var(--terracotta);
   letter-spacing: 0.08em;
 }
-/* Merch reveal: expands inside the card on hover/focus */
-.benefit-card.has-merch { flex-wrap: wrap; outline: none; }
+/* Merch reveal: a chevron toggles it open and closed */
+.benefit-card.has-merch { flex-wrap: wrap; row-gap: 0; }
+/* Pin the step number to the header row (card padding + half the icon) so it doesn't drift as the merch opens */
+.benefit-card.has-merch .benefit-step { top: calc(1.25rem + 32px); }
+.benefit-card.has-merch .benefit-body { flex: 1 1 0; min-width: 0; }
+.merch-toggle {
+  /* Thin full-width bar along the bottom of the row; hints at the merch beneath */
+  --bleed: 2.25rem; /* card's extra right padding (3.5rem - 1.25rem), so the bar reaches the right inset */
+  flex: 0 0 auto;
+  width: calc(100% + var(--bleed));
+  height: 22px;
+  margin: 0.75rem calc(var(--bleed) * -1) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--terracotta-muted);
+  border: 1px solid var(--terracotta-border);
+  border-radius: 3px;
+  color: var(--terracotta);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.merch-toggle:hover { border-color: var(--terracotta); background: var(--terracotta-muted); }
+.merch-toggle svg { transition: transform 0.3s ease; }
+.benefit-card.merch-open .merch-toggle svg { transform: rotate(180deg); }
 .benefit-merch {
   flex-basis: 100%;
   display: grid;
@@ -62,14 +85,12 @@
   opacity: 0;
   overflow: hidden;
   transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.4s ease;
-  margin-top: -1.25rem; /* cancels the flex row gap while collapsed */
+  margin-top: 0;
 }
-.benefit-card.has-merch:hover .benefit-merch,
-.benefit-card.has-merch:focus-within .benefit-merch,
-.benefit-card.has-merch:focus .benefit-merch {
+.benefit-card.merch-open .benefit-merch {
   max-height: 130px;
   opacity: 1;
-  margin-top: 0;
+  margin-top: 0.75rem;
 }
 .merch-item {
   margin: 0;
@@ -95,5 +116,11 @@
 @media (max-width: 768px) {
   .benefits-intro .feature-intro-copy { padding: 1.5rem 1.5rem 2rem; margin: -2rem -1.5rem 0; }
   .benefits-intro .feature-intro-art { padding-left: 0; }
-  .benefit-card { padding-right: 3rem; }
+  .benefit-card { padding-right: 3rem; column-gap: 1rem; }
+  .merch-toggle { --bleed: 1.75rem; }
+  .benefit-icon { width: 52px; height: 52px; }
+  .benefit-card.has-merch .benefit-step { top: calc(1.25rem + 26px); }
+  .benefit-merch { grid-template-columns: repeat(2, 1fr); }
+  .benefit-card.merch-open .benefit-merch { max-height: 260px; }
+  .merch-item { height: 100px; }
 }

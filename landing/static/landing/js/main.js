@@ -21,6 +21,15 @@ mobileMenu.querySelectorAll('a').forEach(link => {
   });
 });
 
+// ===== Benefits merch dropdown =====
+document.querySelectorAll('.merch-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('.benefit-card');
+    const open = card.classList.toggle('merch-open');
+    btn.setAttribute('aria-expanded', open);
+  });
+});
+
 // ===== FAQ Accordion =====
 document.querySelectorAll('.faq-btn').forEach(btn => {
   btn.addEventListener('click', () => {

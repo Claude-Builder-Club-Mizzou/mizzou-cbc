@@ -4,7 +4,7 @@
 {% block title %}Benefits | CBC Mizzou{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'landing/css/benefits.css' %}?v=25">
+  <link rel="stylesheet" href="{% static 'landing/css/benefits.css' %}?v=29">
 {% endblock %}
 
 {% block content %}
@@ -21,12 +21,17 @@
           <div class="feature-intro-copy">
             <div class="benefits-grid stagger-container">
               {% for b in benefits %}
-              <div class="card benefit-card stagger-item{% if b.merch %} has-merch{% endif %}"{% if b.merch %} tabindex="0"{% endif %}>
+              <div class="card benefit-card stagger-item{% if b.merch %} has-merch{% endif %}">
                 <div class="benefit-icon">{{ b.icon|safe }}</div>
                 <div class="benefit-body">
                   <h3 class="text-heading">{{ b.title }}</h3>
                   <p class="text-muted">{{ b.description }}</p>
                 </div>
+                {% if b.merch %}
+                <button type="button" class="merch-toggle" aria-expanded="false" aria-label="Show {{ b.title }} merchandise">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                {% endif %}
                 <span class="benefit-step">{{ forloop.counter|stringformat:"02d" }}</span>
                 {% if b.merch %}
                 <div class="benefit-merch" aria-label="Available merchandise">

@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'landing/css/base.css' %}?v=28">
+  <link rel="stylesheet" href="{% static 'landing/css/base.css' %}?v=29">
   {% block extra_css %}{% endblock %}
   <style>body{opacity:0;transition:opacity 0.5s ease}body.loaded{opacity:1}</style>
 </head>
@@ -36,7 +36,7 @@
   <!-- ===== Navbar ===== -->
   <nav class="navbar">
     <div class="navbar-inner">
-      <a href="{% url 'home' %}" class="nav-brand" aria-label="CBC Mizzou"><img class="nav-logo" src="{% static 'landing/images/cbc-mizzou-nav.svg' %}" alt="CBC Mizzou"></a>
+      <a href="{% url 'home' %}" class="nav-brand" aria-label="CBC Mizzou"><img class="nav-logo" src="{% static 'landing/images/cbc-mizzou-nav.png' %}" alt="CBC Mizzou"></a>
 
       <div class="nav-links">
         {% for item in nav_items %}
@@ -53,12 +53,19 @@
       </div>
     </div>
 
-    <div class="mobile-menu">
-      {% for item in nav_items %}
-      <a href="{% url item.url_name %}"{% if item.url_name == current_page %} class="active" aria-current="page"{% endif %}>{{ item.label }}</a>
-      {% endfor %}
-      <a href="{{ links.signup }}" target="_blank" rel="noopener noreferrer" class="nav-cta" style="display:inline-block;text-align:center;margin-top:0.5rem;">Sign Up</a>
-      <a href="{{ links.groupme }}" target="_blank" rel="noopener noreferrer" class="nav-cta nav-cta-outline" style="display:inline-block;text-align:center;margin-top:0.5rem;">Join GroupMe</a>
+    <div class="mobile-menu terminal-frame">
+      <span class="terminal-frame-label">menu v1.0.0</span>
+      <div class="mobile-menu-body">
+        <div class="mobile-menu-links">
+          {% for item in nav_items %}
+          <a href="{% url item.url_name %}"{% if item.url_name == current_page %} class="active" aria-current="page"{% endif %}>{{ item.label }}</a>
+          {% endfor %}
+        </div>
+        <div class="mobile-menu-actions">
+          <a href="{{ links.signup }}" target="_blank" rel="noopener noreferrer" class="nav-cta">Sign Up</a>
+          <a href="{{ links.groupme }}" target="_blank" rel="noopener noreferrer" class="nav-cta nav-cta-outline">Join GroupMe</a>
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -75,7 +82,7 @@
       <span class="terminal-frame-label">footer_links v1.0.0</span>
     <div class="footer-grid">
       <div>
-        <h3><a href="/cb-exec/" aria-label="Claude Builder Club @ Mizzou"><img class="footer-logo" src="{% static 'landing/images/cbc-mizzou-footer.svg' %}" alt="Claude Builder Club @ Mizzou"></a></h3>
+        <h3><a href="/cb-exec/" aria-label="Claude Builder Club @ Mizzou"><img class="footer-logo" src="{% static 'landing/images/cbc-mizzou-footer.png' %}" alt="Claude Builder Club @ Mizzou"></a></h3>
         <p>The Claude Builders Club at the University of Missouri. Part of Anthropic's Campus Program empowering students to build with AI.</p>
       </div>
       <div>
@@ -122,7 +129,7 @@
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4L4 10h4v6h4v-6h4L10 4z" fill="currentColor"/></svg>
   </button>
 
-  <script src="{% static 'landing/js/main.js' %}?v=21"></script>
+  <script src="{% static 'landing/js/main.js' %}?v=22"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>
