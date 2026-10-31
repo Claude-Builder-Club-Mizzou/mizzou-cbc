@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'landing/css/base.css' %}?v=23">
+  <link rel="stylesheet" href="{% static 'landing/css/base.css' %}?v=24">
   {% block extra_css %}{% endblock %}
   <style>body{opacity:0;transition:opacity 0.5s ease}body.loaded{opacity:1}</style>
 </head>
@@ -113,7 +113,7 @@
     </div>
     <div class="footer-bottom">
       <p>&copy; 2026 Claude Builders Club @ Mizzou. Part of <a href="{{ links.anthropic }}" target="_blank" rel="noopener noreferrer">Anthropic's Campus Program</a>.</p>
-      <p>&#x2736; built with claude</p>
+      <p class="footer-built"><img src="{% static 'landing/images/icons/claude-logo.svg' %}" alt="" class="footer-built-logo"> built with claude</p>
     </div>
   </footer>
 

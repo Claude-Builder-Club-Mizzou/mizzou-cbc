@@ -34,13 +34,13 @@ BENEFITS = [
     },
     {
         'icon': '<img src="' + static('landing/images/icons/claude-code-guy.svg') + '" alt="">',
-        'title': '$25 in API Credits',
-        'description': 'Get $25 in API credits each fall ($50 each spring) to build real applications, automate workflows, and experiment freely.',
+        'title': 'API Credits Every Semester',
+        'description': 'Get $25 in API credits in the fall and $50 in the spring to build real applications, automate workflows, and experiment freely.',
     },
     {
         'icon': '<img src="' + static('landing/images/icons/claude-logo.svg') + '" alt="">',
-        'title': 'Merchandise',
-        'description': 'Earn stickers and hats through club activities, events, and projects.',
+        'title': 'Hats & Stickers',
+        'description': 'Members get Claude hats and stickers on top of everything else.',
     },
     {
         'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="7" r="4" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 21v-2a4 4 0 014-4h6a4 4 0 014 4v2z" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="7.5" r="2.5" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 14.5a4 4 0 016 3.5v3h-4" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -50,16 +50,16 @@ BENEFITS = [
 ]
 
 STATS = [
-    {'value': '60+', 'num': 60, 'label': 'Universities Nationwide'},
+    {'value': '82', 'num': 82, 'label': 'Schools Worldwide'},
     {'value': '15K+', 'num': 15000, 'label': 'Student Builders'},
-    {'value': '7', 'num': 7, 'label': 'Ivy League Schools'},
+    {'value': '8', 'num': 8, 'label': 'Countries & Regions'},
     {'value': '∞', 'num': 0, 'label': 'Projects to Build'},
 ]
 
 FAQ_ITEMS = [
     {
         'question': 'Who can join CBC Mizzou?',
-        'answer': 'Any currently enrolled Mizzou student can join, regardless of major or coding experience. We welcome engineers, journalists, business students, artists — anyone interested in building with AI.',
+        'answer': "Any currently enrolled Mizzou student can join, regardless of major or coding experience. Engineers, journalists, business students, and artists are all welcome. If you're interested in building with AI, you can join.",
     },
     {
         'question': 'Do I need coding experience?',
@@ -67,11 +67,11 @@ FAQ_ITEMS = [
     },
     {
         'question': 'How do I get merchandise?',
-        'answer': "Join the club by filling out our sign-up form. Once you're a member, you'll be eligible for merchandise opportunities through club events and activities. Check our GroupMe for details.",
+        'answer': "Join the club by filling out our sign-up form. Once you're a member, you'll be eligible for Claude hats and stickers. Check our GroupMe for details on how and when they're handed out.",
     },
     {
         'question': "What's the time commitment?",
-        'answer': "Totally flexible. We host events 2-3 times per month, and attendance is optional. Come to what interests you — whether that's every workshop or just the hackathons.",
+        'answer': "Totally flexible. We host events 2-3 times per month, and attendance is optional. Come to whatever interests you, whether that's every workshop or only the hackathons.",
     },
     {
         'question': 'How are the API credits distributed?',
