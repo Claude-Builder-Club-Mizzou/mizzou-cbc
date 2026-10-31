@@ -139,6 +139,48 @@
     transition: color 0.15s;
   }
   .delete-btn:hover { color: #f87171; }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+  .pagination a {
+    color: var(--terracotta);
+    text-decoration: none;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid rgba(217, 119, 87, 0.45);
+    border-radius: 4px;
+  }
+  .pagination a:hover { background: rgba(217, 119, 87, 0.1); }
+  .pagination .disabled {
+    color: var(--text-faint);
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+  }
+  .show-more-btn {
+    display: none;
+    margin: 1rem auto 0;
+    background: none;
+    border: 1px solid rgba(217, 119, 87, 0.45);
+    color: var(--terracotta);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  /* Mobile: show 6 cards at a time within each page */
+  @media (max-width: 640px) {
+    .projects-grid:not(.expanded) .project-card:nth-child(n+7) { display: none; }
+    .show-more-btn { display: block; }
+    .show-more-btn[hidden] { display: none; }
+  }
   .empty-state {
     text-align: center;
     padding: 3rem;
@@ -204,6 +246,22 @@
   </div>
   {% endfor %}
 </div>
+{% if projects|length > 6 %}
+<button type="button" class="show-more-btn" id="show-more-btn">Show {{ projects|length|add:"-6" }} more</button>
+<script>
+  document.getElementById('show-more-btn').addEventListener('click', function () {
+    document.querySelector('.projects-grid').classList.add('expanded');
+    this.hidden = true;
+  });
+</script>
+{% endif %}
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="pagination" aria-label="Projects pages">
+  {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">&larr; Prev</a>{% else %}<span class="disabled">&larr; Prev</span>{% endif %}
+  <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next &rarr;</a>{% else %}<span class="disabled">Next &rarr;</span>{% endif %}
+</nav>
+{% endif %}
 {% else %}
 <div class="empty-state">
   <p>No projects yet. Add your first one.</p>

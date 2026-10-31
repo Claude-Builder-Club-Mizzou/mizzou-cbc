@@ -3,6 +3,7 @@ from collections import defaultdict
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -11,6 +12,7 @@ from .models import Builder, Event, GalleryImage, Project, TeamMember
 from .terms import all_terms, current_term, term_label, term_status
 
 LOGIN_URL = '/cb-exec/'
+PROJECTS_PER_PAGE = 12
 
 
 def dashboard_login(request):
@@ -147,10 +149,12 @@ def event_delete(request, pk):
 
 @login_required(login_url=LOGIN_URL)
 def project_list(request):
-    projects = Project.objects.prefetch_related('builders')
+    paginator = Paginator(Project.objects.prefetch_related('builders'), PROJECTS_PER_PAGE)
+    page = paginator.get_page(request.GET.get('page'))
     context = {
         'active_page': 'projects',
-        'projects': projects,
+        'projects': page,
+        'page_obj': page,
     }
     return render(request, 'dashboard/projects.html', context)
 

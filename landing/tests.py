@@ -5,7 +5,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from dashboard.models import Event
+from dashboard.models import Event, Project
 
 
 class HomeEventsTests(TestCase):
@@ -253,3 +253,33 @@ class SubmissionReviewTests(TestCase):
         self.client.logout()
         self.client.post(reverse('dashboard:submission_delete', args=[self.project.pk]))
         self.assertTrue(Project.objects.filter(pk=self.project.pk).exists())
+
+
+@override_settings(SITE_URL='https://claudebuilderclub.com')
+class CrawlerFilesTests(TestCase):
+    def setUp(self):
+        Project.objects.create(title='Live One', description='Does a thing.\nWith Claude.')
+        Project.objects.create(title='Hidden One', description='Pending.', status=Project.PENDING)
+
+    def test_llms_txt_lists_approved_projects_only(self):
+        r = self.client.get('/llms.txt')
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(r['Content-Type'].startswith('text/plain'))
+        text = r.content.decode()
+        self.assertTrue(text.startswith('# Claude Builder Club @ Mizzou'))
+        self.assertIn('https://claudebuilderclub.com/projects/live-one/', text)
+        self.assertIn('Does a thing. With Claude.', text)
+        self.assertNotIn('Hidden One', text)
+
+    def test_robots_txt_points_at_sitemap_and_blocks_admin(self):
+        text = self.client.get('/robots.txt').content.decode()
+        self.assertIn('Disallow: /cb-exec/', text)
+        self.assertIn('Sitemap: https://claudebuilderclub.com/sitemap.xml', text)
+
+    def test_sitemap_has_pages_and_approved_projects(self):
+        r = self.client.get('/sitemap.xml')
+        self.assertEqual(r['Content-Type'], 'application/xml')
+        text = r.content.decode()
+        self.assertIn('<loc>https://claudebuilderclub.com/benefits/</loc>', text)
+        self.assertIn('/projects/live-one/', text)
+        self.assertNotIn('hidden-one', text)
