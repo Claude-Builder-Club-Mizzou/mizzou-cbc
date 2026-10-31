@@ -4,7 +4,7 @@
 {% block title %}Gallery | CBC Mizzou{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'landing/css/gallery.css' %}?v=19">
+  <link rel="stylesheet" href="{% static 'landing/css/gallery.css' %}?v=24">
 {% endblock %}
 
 {% block content %}
@@ -15,33 +15,40 @@
         <h2 class="text-heading">Club <span class="text-terracotta">Gallery</span></h2>
         <p class="text-muted">Moments from our meetings, workshops, and <span class="accent">events.</span></p>
       </div>
-      <div class="gallery fade-up">
-        <button class="gallery-arrow gallery-prev" id="galPrev" aria-label="Previous">
-          <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="gallery-collage fade-up" id="galCollage">
+        {% for photo in gallery %}
+        {% if photo.image %}
+        <button type="button" class="gallery-tile" data-full="{{ photo.image.url }}" data-caption="{{ photo.caption }}" aria-label="Enlarge photo{% if photo.caption %}: {{ photo.caption }}{% endif %}">
+          <img src="{{ photo.image.url }}" alt="{{ photo.caption }}">
         </button>
-        <div class="gallery-window">
-          <div class="gallery-track" id="galTrack">
-            {% for photo in gallery %}
-            <div class="gallery-slide">
-              {% if photo.image %}
-              <img src="{{ photo.image.url }}" alt="{{ photo.caption }}" class="gallery-img" loading="lazy">
-              {% else %}
-              <div class="gallery-placeholder">
-                <svg>...</svg>
-                <span>{{ photo.caption }}</span>
-              </div>
-              {% endif %}
-            </div>
-            {% endfor %}
+        {% else %}
+        <div class="gallery-tile">
+          <div class="gallery-placeholder">
+            <span>{{ photo.caption }}</span>
           </div>
         </div>
-        <button class="gallery-arrow gallery-next" id="galNext" aria-label="Next">
-          <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+        {% endif %}
+        {% endfor %}
       </div>
-      <div class="gallery-dots" id="galDots"></div>
     </div>
   </section>
+
+  <!-- ===== Lightbox ===== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged photo">
+    <button type="button" class="lightbox-btn lightbox-close" id="lbClose" aria-label="Close">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button type="button" class="lightbox-btn lightbox-prev" id="lbPrev" aria-label="Previous">
+      <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="terminal-frame lightbox-frame">
+      <span class="terminal-frame-label" id="lbLabel"></span>
+      <img class="lightbox-img" id="lbImg" src="" alt="">
+    </div>
+    <button type="button" class="lightbox-btn lightbox-next" id="lbNext" aria-label="Next">
+      <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
 
   <!-- ===== Feature intro ===== -->
   <section class="section bg-cream">
@@ -51,8 +58,9 @@
         <div class="feature-intro">
           <div class="feature-intro-copy">
             <h2 class="text-heading">Map Our <span class="text-terracotta">Journey</span></h2>
-            <p class="text-muted">Sample text: every meeting, workshop, and hackathon adds a point on the map of what we have built together.</p>
-            <p class="text-muted">Sample text: check back as new photos are added each semester.</p>
+            <p class="text-muted">Every meeting, workshop, and hackathon we run ends up as a pin on this map. Some of it is people building their first project, some of it is a room full of laptops at 11pm.</p>
+            <p class="text-muted">You'll find photos from our presentations, hands-on workshops, and the projects we've done with other groups around Mizzou. Each one is a small piece of how the club has grown.</p>
+            <p class="text-muted">We add new photos after each event, so check back and see where we've been.</p>
           </div>
           <div class="feature-intro-art">
             <img src="{% static 'landing/images/icons/map_am.gif' %}" alt="" class="feature-intro-img">

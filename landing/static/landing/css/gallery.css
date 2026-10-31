@@ -1,36 +1,84 @@
 /* ===== Gallery page ===== */
 
-/* ===== Gallery ===== */
-.gallery {
+/* ===== Marquee collage =====
+   main.js splits the tiles across three rows and loops each one. Rows scroll in
+   alternating directions and pause on hover. Before the script runs (or with
+   JS off) the tiles just wrap as a plain grid. */
+.gallery-collage {
+  --row-h: 220px;
+  --gap: 0.5rem;
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  max-width: 56rem;
-  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: var(--gap);
 }
 
-.gallery-window {
-  flex: 1;
+.gallery-collage.gallery-marquee {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
   overflow: hidden;
-  border-radius: 4px;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+
+.gallery-row {
+  overflow: hidden;
 }
 
 .gallery-track {
   display: flex;
-  transition: transform 0.35s ease;
+  width: max-content;
+  animation: gallery-scroll var(--dur, 60s) linear infinite;
 }
 
-.gallery-slide {
-  min-width: 100%;
-  padding: 0 0.25rem;
+.gallery-row.reverse .gallery-track { animation-direction: reverse; }
+.gallery-row:hover .gallery-track { animation-play-state: paused; }
+
+/* each track holds two identical halves, so -50% is a seamless loop */
+@keyframes gallery-scroll {
+  to { transform: translateX(-50%); }
+}
+
+.gallery-tile {
+  flex: none;
+  height: var(--row-h);
+  margin-right: var(--gap);
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  padding: 0;
+  border: 1px solid var(--terracotta);
+  background: var(--surface-raised);
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.gallery-marquee .gallery-row + .gallery-row { margin-top: var(--gap); }
+
+.gallery-tile:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: -2px;
+}
+
+.gallery-tile img {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.gallery-tile:hover img,
+.gallery-tile:focus-visible img {
+  transform: scale(1.04);
+  filter: brightness(1.08);
 }
 
 .gallery-placeholder {
-  width: 100%;
-  height: 500px;
-  background: var(--surface-raised);
+  width: calc(var(--row-h) * 1.4);
+  height: 100%;
   border: 1px dashed var(--border-strong);
-  border-radius: 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,24 +94,63 @@
   color: var(--text-faint);
 }
 
-.gallery-placeholder:hover {
-  border-color: var(--terracotta);
-  color: var(--terracotta);
+.gallery-tile:hover .gallery-placeholder { border-color: var(--terracotta); color: var(--terracotta); }
+.gallery-tile:hover .gallery-placeholder span { color: var(--terracotta); }
+
+/* ===== Lightbox ===== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: rgba(10, 10, 10, 0.9);
+  padding: 3rem 4rem;
 }
 
-.gallery-placeholder:hover span { color: var(--terracotta); }
+.lightbox.open {
+  display: flex;
+  animation: lightbox-in 0.2s ease;
+}
 
-.gallery-slide img {
-  width: 100%;
-  height: 500px;
-  object-fit: cover;
-  border-radius: 4px;
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Enlarged photo sits inside the site's terminal frame; the caption is its label,
+   centered on the top border */
+.lightbox-frame {
+  --frame-page-bg: #0a0a0a;
+  max-width: 100%;
+  padding: 1.5rem 1rem 1rem;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+}
+
+.lightbox-frame .terminal-frame-label {
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  max-width: calc(100% - 1.5rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.7rem;
+}
+
+.lightbox-img {
   display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 11rem);
+  object-fit: contain;
 }
 
-.gallery-arrow {
-  background: var(--surface-raised);
-  border: 1px solid var(--border-default);
+.lightbox-btn {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 3px;
   width: 40px;
   height: 40px;
@@ -71,40 +158,30 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--text-secondary);
-  flex-shrink: 0;
+  color: #fff;
   transition: border-color 0.2s, color 0.2s;
 }
 
-.gallery-arrow:hover {
+.lightbox-btn:hover {
   border-color: var(--terracotta);
   color: var(--terracotta);
 }
 
-.gallery-dots {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
-}
-
-.gallery-dot {
-  width: 8px;
-  height: 2px;
-  border-radius: 1px;
-  background: var(--border-strong);
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: background 0.2s, width 0.25s;
-}
-
-.gallery-dot.active {
-  background: var(--terracotta);
-  width: 24px;
-}
+.lightbox-close { top: 1rem; right: 1rem; }
+.lightbox-prev  { left: 1rem;  top: 50%; transform: translateY(-50%); }
+.lightbox-next  { right: 1rem; top: 50%; transform: translateY(-50%); }
 
 @media (max-width: 640px) {
-  .gallery-placeholder, .gallery-slide img { height: 280px; }
-  .gallery-arrow { width: 32px; height: 32px; }
+  .gallery-collage { --row-h: 130px; --gap: 0.375rem; }
+
+  .lightbox { padding: 3.5rem 0.75rem; }
+  .lightbox-prev { left: 0.5rem; }
+  .lightbox-next { right: 0.5rem; }
+}
+
+/* no auto-scroll for reduced motion: rows become swipeable instead */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-track { animation: none; }
+  .gallery-row { overflow-x: auto; }
+  .gallery-tile img, .lightbox.open { transition: none; animation: none; }
 }

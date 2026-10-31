@@ -136,49 +136,121 @@ window.addEventListener('scroll', () => {
   scrollProgress.style.width = progress + '%';
 });
 
-// ===== Gallery Carousel =====
+// ===== Gallery Lightbox =====
 (function() {
-  var track = document.getElementById('galTrack');
-  var dots = document.getElementById('galDots');
-  if (!track) return;
+  var collage = document.getElementById('galCollage');
+  var box = document.getElementById('lightbox');
+  if (!collage || !box) return;
 
-  var slides = track.querySelectorAll('.gallery-slide');
-  var total = slides.length;
+  var ROWS = 3;
+  var SPEED_DESKTOP = 22; // px per second
+  var SPEED_MOBILE = 12;
+
+  var sources = Array.prototype.slice.call(collage.children);
+  var tiles = sources.filter(function(t) { return t.tagName === 'BUTTON'; });
+  var img = document.getElementById('lbImg');
+  var label = document.getElementById('lbLabel');
   var idx = 0;
+  var opener = null;
+  var rows = [];
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function buildDots() {
-    dots.innerHTML = '';
-    for (var i = 0; i < total; i++) {
-      var d = document.createElement('button');
-      d.classList.add('gallery-dot');
-      if (i === 0) d.classList.add('active');
-      d.dataset.i = i;
-      d.addEventListener('click', function() { goTo(parseInt(this.dataset.i)); });
-      dots.appendChild(d);
-    }
+  // Clones keep data-index, so every copy of a photo opens the same lightbox slide
+  tiles.forEach(function(t, i) { t.dataset.index = i; });
+
+  // Deal tiles across the rows round-robin
+  collage.textContent = '';
+  collage.classList.add('gallery-marquee');
+  for (var r = 0; r < ROWS; r++) {
+    var group = sources.filter(function(s, i) { return i % ROWS === r; });
+    if (!group.length) continue;
+    var row = document.createElement('div');
+    row.className = 'gallery-row' + (r % 2 ? ' reverse' : '');
+    var track = document.createElement('div');
+    track.className = 'gallery-track';
+    group.forEach(function(t) { track.appendChild(t); });
+    row.appendChild(track);
+    collage.appendChild(row);
+    rows.push({ track: track, group: group });
   }
 
-  function goTo(i) {
-    idx = i;
-    if (idx < 0) idx = total - 1;
-    if (idx >= total) idx = 0;
-    track.style.transform = 'translateX(-' + (idx * 100) + '%)';
-    dots.querySelectorAll('.gallery-dot').forEach(function(d, j) {
-      d.classList.toggle('active', j === idx);
+  // Repeat each row's photos until one half of the track is wider than the
+  // viewport, then double it: the animation scrolls exactly one half.
+  function fill() {
+    if (reduceMotion) return;
+    var speed = window.innerWidth <= 640 ? SPEED_MOBILE : SPEED_DESKTOP;
+    rows.forEach(function(o) {
+      o.track.querySelectorAll('[data-clone]').forEach(function(c) { c.remove(); });
+      var setW = o.track.offsetWidth;
+      if (!setW) return;
+      var copies = Math.max(1, Math.ceil(collage.clientWidth / setW));
+      for (var c = 0; c < copies * 2 - 1; c++) {
+        o.group.forEach(function(t) {
+          var cl = t.cloneNode(true);
+          cl.dataset.clone = '1';
+          cl.setAttribute('aria-hidden', 'true');
+          cl.tabIndex = -1;
+          o.track.appendChild(cl);
+        });
+      }
+      o.track.style.setProperty('--dur', (setW * copies / speed) + 's');
     });
   }
 
-  document.getElementById('galPrev').addEventListener('click', function() { goTo(idx - 1); });
-  document.getElementById('galNext').addEventListener('click', function() { goTo(idx + 1); });
+  var fillTimer;
+  function refill() {
+    clearTimeout(fillTimer);
+    fillTimer = setTimeout(fill, 100);
+  }
 
-  // Auto-advance every 5s
-  var timer = setInterval(function() { goTo(idx + 1); }, 5000);
-  track.closest('.gallery').addEventListener('mouseenter', function() { clearInterval(timer); });
-  track.closest('.gallery').addEventListener('mouseleave', function() {
-    timer = setInterval(function() { goTo(idx + 1); }, 5000);
+  collage.querySelectorAll('img').forEach(function(im) {
+    if (!im.complete) im.addEventListener('load', refill);
+  });
+  window.addEventListener('resize', refill);
+  fill();
+
+  function show(i) {
+    idx = (i + tiles.length) % tiles.length;
+    img.src = tiles[idx].dataset.full;
+    img.alt = tiles[idx].dataset.caption;
+    // "Project Picture" -> "project-picture"
+    var slug = tiles[idx].dataset.caption.trim().toLowerCase().replace(/\s+/g, '-');
+    label.textContent = slug;
+    label.hidden = !slug;
+  }
+
+  function open(i) {
+    opener = tiles[i];
+    show(i);
+    box.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lbClose').focus();
+  }
+
+  function close() {
+    box.classList.remove('open');
+    document.body.style.overflow = '';
+    if (opener) opener.focus();
+  }
+
+  collage.addEventListener('click', function(e) {
+    var t = e.target.closest('button.gallery-tile');
+    if (t) open(parseInt(t.dataset.index, 10));
   });
 
-  buildDots();
+  document.getElementById('lbClose').addEventListener('click', close);
+  document.getElementById('lbPrev').addEventListener('click', function() { show(idx - 1); });
+  document.getElementById('lbNext').addEventListener('click', function() { show(idx + 1); });
+
+  // click on the backdrop (not the image or buttons) closes
+  box.addEventListener('click', function(e) { if (e.target === box) close(); });
+
+  document.addEventListener('keydown', function(e) {
+    if (!box.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') show(idx - 1);
+    else if (e.key === 'ArrowRight') show(idx + 1);
+  });
 })();
 
 // ===== Events Calendar =====
