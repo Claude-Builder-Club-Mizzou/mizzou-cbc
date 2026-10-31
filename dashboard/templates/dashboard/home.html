@@ -21,8 +21,12 @@
     <div class="stat-label">Projects</div>
   </div>
   <div class="stat-card">
+    <div class="stat-num">{{ past_board_count }}</div>
+    <div class="stat-label">Past Boards</div>
+  </div>
+  <div class="stat-card">
     <div class="stat-num">{{ team_count }}</div>
-    <div class="stat-label">Team Members</div>
+    <div class="stat-label">Current Board ({{ current_term_label }})</div>
   </div>
 </div>
 {% endblock %}

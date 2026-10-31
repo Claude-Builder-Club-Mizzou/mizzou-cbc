@@ -20,7 +20,8 @@
     color: #9ca3af;
     margin-bottom: 0.25rem;
   }
-  .form-group input {
+  .form-group input,
+  .form-group select {
     width: 100%;
     padding: 0.5rem 0.75rem;
     background: #0a0a0a;
@@ -30,7 +31,8 @@
     font-size: 0.8125rem;
     font-family: inherit;
   }
-  .form-group input:focus {
+  .form-group input:focus,
+  .form-group select:focus {
     outline: none;
     border-color: #F1B82D;
   }
@@ -46,6 +48,19 @@
     font-size: 0.75rem;
     cursor: pointer;
     margin-right: 0.5rem;
+  }
+  .check-row {
+    display: flex !important;
+    align-items: center;
+    gap: 0.625rem;
+    color: #e5e7eb !important;
+    cursor: pointer;
+  }
+  .check-row input {
+    width: 1rem !important;
+    height: 1rem;
+    padding: 0;
+    accent-color: #F1B82D;
   }
   .form-hint {
     font-size: 0.6875rem;
@@ -113,13 +128,25 @@
         {{ form.role }}
       </div>
       <div class="form-group">
-        <label for="id_order">Display Order</label>
-        {{ form.order }}
+        <label for="id_term">Board Term</label>
+        {{ form.term }}
       </div>
+    </div>
+    <div class="form-group">
+      <label for="id_order">Display Order</label>
+      {{ form.order }}
+      <div class="form-hint">Lower numbers appear first within the board.</div>
     </div>
     <div class="form-group">
       <label for="id_major">Major &amp; Year</label>
       {{ form.major }}
+    </div>
+    <div class="form-group">
+      <label class="check-row" for="id_is_ambassador">
+        {{ form.is_ambassador }}
+        <span>Anthropic Campus Ambassador</span>
+      </label>
+      <div class="form-hint">Adds an ambassador badge and a highlighted card on the public Team page.</div>
     </div>
     <div class="form-group">
       <label for="id_linkedin">LinkedIn URL</label>
@@ -136,7 +163,7 @@
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-gold">{% if editing %}Save Changes{% else %}Add Member{% endif %}</button>
-      <a href="{% url 'dashboard:team' %}" class="btn btn-outline">Cancel</a>
+      <a href="{% url 'dashboard:team' %}?term={{ back_term }}" class="btn btn-outline">Cancel</a>
     </div>
   </form>
 </div>

@@ -1,5 +1,330 @@
 /* ===== Team page ===== */
 
+/* ===== Darker terminal interior (the label cutouts match the darker fill) ===== */
+#team .terminal-frame {
+  background-color: var(--surface-base);
+  /* Dot grid, same as the home hero */
+  background-image: radial-gradient(circle, var(--border-strong) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+/* Vignette fades the grid toward the edges */
+#team .terminal-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, var(--surface-base) 85%);
+  pointer-events: none;
+  z-index: 0;
+}
+/* Scanlines sit above the grid, below the content */
+#team .terminal-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.07) 3px,
+    rgba(0, 0, 0, 0.07) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+#team .terminal-frame > :not(.terminal-frame-label) {
+  position: relative;
+  z-index: 2;
+}
+/* Only the outer frame's label becomes an outlined tag centered on the border line */
+#team .terminal-frame > .terminal-frame-label {
+  top: 0;
+  padding: 0.2rem 0.625rem;
+  background: var(--surface-base);
+  border: 1px solid var(--terracotta-border);
+  border-radius: 4px;
+  line-height: 1.2;
+  transform: translateY(-50%);
+}
+/* Card labels stay plain, with a cutout matching the dark interior */
+#team .team-card .terminal-frame-label { background: var(--surface-base); }
+
+/* ===== Terminal prompt lines ===== */
+.term-line {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+.term-prompt { color: var(--terracotta); font-weight: 700; }
+.term-cmd { color: var(--text-primary); }
+.term-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: -0.25rem;
+  background: var(--terracotta);
+  animation: term-blink 1.1s steps(1) infinite;
+}
+@keyframes term-blink { 50% { opacity: 0; } }
+
+/* ===== Boot sequence: cat -> launch line -> banner -> term -> cards ===== */
+.term-type {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+.term-launch {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0.625rem 0 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+}
+.term-arrow { color: var(--terracotta); font-weight: 700; }
+/* Terminal progress bar: [ ████████████ ] 100% */
+@property --pct {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+.term-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.term-bracket { color: var(--text-faint); font-weight: 700; }
+.term-blocks {
+  --blocks: 12;
+  --gap: 0.12em;
+  position: relative;
+  display: inline-block;
+  letter-spacing: var(--gap);
+  line-height: 1;
+  white-space: nowrap;
+}
+.term-blocks-track { color: var(--border-strong); }
+.term-blocks-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  width: calc(var(--blocks) * (1ch + var(--gap)));
+  color: var(--terracotta);
+}
+/* Percent label and the final [ 100% ] share one slot */
+.term-status {
+  display: inline-grid;
+  min-width: 6ch;
+}
+.term-status > * { grid-area: 1 / 1; }
+.term-pct {
+  counter-reset: pct var(--pct);
+  color: var(--text-secondary);
+}
+.term-pct::before { content: counter(pct) '%'; }
+.term-ok { color: var(--terracotta); font-weight: 700; white-space: nowrap; }
+
+.exec-banner {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 2rem;
+  padding: 1.125rem 1.75rem;
+  /* Darker than the frame interior, with just a warm orange tint */
+  background: linear-gradient(rgba(217, 119, 87, 0.07), rgba(217, 119, 87, 0.07)), #120F0E;
+  border: 1px solid var(--terracotta-border);
+  border-radius: 4px;
+  text-align: center;
+}
+.exec-banner-title { margin: 0; line-height: 0; }
+.exec-banner-img {
+  display: block;
+  /* A real width, not a percentage: the panel is fit-content, so a % width would be circular */
+  width: 34rem;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+.exec-banner-fallback {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: clamp(1.25rem, 6vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  color: var(--terracotta);
+}
+.exec-banner-term {
+  margin: 1rem 0 0;
+  line-height: 0;
+}
+/* Sized by height so every term's SVG has the same letter size, whatever its length */
+.exec-banner-term-img {
+  display: block;
+  height: 1.35rem;
+  width: auto;
+  margin: 0 auto;
+}
+.exec-banner-term-text {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+@media (max-width: 768px) {
+  .exec-banner { width: auto; padding: 1rem; }
+  .exec-banner-img,
+  .exec-banner-term-img { display: none; }
+  .exec-banner-fallback { display: block; }
+  .exec-banner-term-text { display: inline; }
+}
+
+/* Each step starts when the frame scrolls into view (JS adds .visible) */
+@keyframes term-type-cmd {
+  from { width: 0; }
+  to { width: calc(var(--n) * 1ch); }
+}
+@keyframes term-pop { from { opacity: 0; } to { opacity: 1; } }
+@keyframes term-fill { from { width: 0; } to { width: calc(var(--blocks) * (1ch + var(--gap))); } }
+@keyframes term-count { from { --pct: 0; } to { --pct: 100; } }
+@keyframes term-hide { to { opacity: 0; visibility: hidden; } }
+@keyframes term-wipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* Hidden until their turn */
+#team .terminal-frame:not(.visible) .term-launch,
+#team .terminal-frame:not(.visible) .exec-banner,
+#team .terminal-frame:not(.visible) .term-type,
+#team .terminal-frame:not(.visible) .term-cursor { visibility: hidden; }
+
+#team .terminal-frame.visible .term-line .term-type {
+  animation: term-type-cmd 0.7s steps(var(--n)) 0.3s both;
+}
+#team .terminal-frame.visible .term-launch {
+  animation: term-pop 0.01s linear 1.1s both;
+}
+#team .terminal-frame.visible .term-blocks-fill {
+  animation: term-fill 0.8s steps(12) 1.2s both;
+}
+#team .terminal-frame.visible .term-pct {
+  animation: term-count 0.8s steps(12) 1.2s both, term-hide 0.01s linear 2s forwards;
+}
+#team .terminal-frame.visible .term-ok {
+  animation: term-pop 0.01s linear 2s both;
+}
+#team .terminal-frame.visible .exec-banner {
+  animation: term-wipe 0.8s steps(28) 2.2s both;
+}
+#team .terminal-frame.visible .exec-banner-term {
+  animation: term-wipe 0.7s steps(24) 2.9s both;
+}
+#team .terminal-frame.visible > .team-grid,
+#team .terminal-frame.visible > .past-boards {
+  animation: term-pop 0.6s ease-out 3.4s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .term-cursor { animation: none; }
+  #team .terminal-frame.visible .term-type,
+  #team .terminal-frame.visible .term-launch,
+  #team .terminal-frame.visible .term-blocks-fill,
+  #team .terminal-frame.visible .term-pct,
+  #team .terminal-frame.visible .term-ok,
+  #team .terminal-frame.visible .exec-banner,
+  #team .terminal-frame.visible .exec-banner-term,
+  #team .terminal-frame.visible > .team-grid,
+  #team .terminal-frame.visible > .past-boards { animation: none; }
+  .past-boards-body, .past-board-body, .past-board .team-card { animation: none !important; }
+}
+
+/* ===== Past boards dropdown ===== */
+.past-boards {
+  /* Extend the divider through the terminal-frame padding to touch its left/right border */
+  margin: 2.5rem -1.5rem 0;
+  padding: 1.5rem 1.5rem 0;
+  border-top: 1px solid var(--terracotta-border);
+}
+.past-boards > summary,
+.past-board > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  font-family: var(--font-mono);
+  transition: color 0.15s, border-color 0.15s;
+}
+.past-boards > summary::-webkit-details-marker,
+.past-board > summary::-webkit-details-marker { display: none; }
+.past-boards > summary { font-size: 0.875rem; }
+.past-boards > summary:hover .term-cmd { color: var(--terracotta); }
+.past-boards-count,
+.past-board-count {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+.chevron {
+  margin-left: auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--text-faint);
+  border-bottom: 2px solid var(--text-faint);
+  transform: rotate(45deg);
+  transition: transform 0.2s, border-color 0.15s;
+}
+details[open] > summary > .chevron { transform: rotate(-135deg); }
+summary:hover > .chevron { border-color: var(--terracotta); }
+.past-boards-body {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.past-board {
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  transition: border-color 0.15s;
+}
+.past-board:hover,
+.past-board[open] { border-color: var(--terracotta-border); }
+.past-board > summary { padding: 0.875rem 1rem; font-size: 0.8125rem; }
+.past-board-name { color: var(--terracotta); font-weight: 700; }
+.past-board-label { color: var(--text-secondary); }
+.past-board-count { margin-left: auto; }
+.past-board > summary .chevron { margin-left: 0; }
+.past-board-body { padding: 1rem 1rem 1.5rem; }
+@media (max-width: 640px) {
+  .past-board-label { display: none; }
+}
+
+/* ===== Past board open animations ===== */
+@keyframes board-open {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.past-boards[open] > .past-boards-body { animation: board-open 0.3s ease-out both; }
+.past-board[open] > .past-board-body { animation: board-open 0.3s ease-out both; }
+/* Cards cascade in each time a board is opened */
+.past-board[open] .team-card { animation: card-in 0.4s ease-out both; }
+.past-board[open] .team-card:nth-child(1) { animation-delay: 0.1s; }
+.past-board[open] .team-card:nth-child(2) { animation-delay: 0.18s; }
+.past-board[open] .team-card:nth-child(3) { animation-delay: 0.26s; }
+.past-board[open] .team-card:nth-child(4) { animation-delay: 0.34s; }
+.past-board[open] .team-card:nth-child(n+5) { animation-delay: 0.42s; }
+
 /* ===== Team ===== */
 .team-grid {
   display: flex;
@@ -18,18 +343,39 @@
   }
 }
 
-.team-card { text-align: center; }
+.team-card {
+  position: relative;
+  text-align: center;
+  padding: 2.25rem 1.5rem 1.5rem;
+  /* Solid, so the frame's dot grid doesn't show through; the tint layers on top */
+  background-color: var(--surface-base);
+  background-image: linear-gradient(transparent, transparent);
+  border: 1px solid var(--terracotta-border);
+  transition: border-color 0.2s, background-image 0.2s;
+}
+.team-card:hover {
+  border-color: var(--terracotta);
+  background-image: linear-gradient(var(--terracotta-muted), var(--terracotta-muted));
+}
+.team-card .terminal-frame-label {
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  max-width: calc(100% - 1.5rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .avatar {
-  width: 80px;
-  height: 80px;
+  width: 140px;
+  height: 140px;
   border-radius: 4px;
   background: var(--surface-overlay);
   border: 1px solid var(--border-default);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1rem;
-  font-size: 1.5rem;
+  margin: 0 auto 1.25rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: var(--terracotta);
   transition: border-color 0.2s;
@@ -40,22 +386,84 @@
   border-radius: 4px;
 }
 .team-card:hover .avatar { border-color: var(--terracotta); }
-.team-card .role {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--terracotta);
-  margin: 0.2rem 0;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
 .team-card .major {
   font-size: 0.8rem;
   margin-bottom: 0.875rem;
   color: var(--text-secondary);
 }
 .team-card .linkedin-link {
-  font-size: 0.8rem;
-  color: var(--text-faint);
-  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--terracotta);
+  background: var(--terracotta-muted);
+  border: 1px solid var(--terracotta-border);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
 }
-.team-card .linkedin-link:hover { color: var(--terracotta); }
+.team-card .linkedin-arrow { transition: transform 0.2s; }
+.team-card .linkedin-link:hover {
+  color: var(--text-inverse);
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+}
+.team-card .linkedin-link:hover .linkedin-arrow { transform: translateX(3px); }
+
+/* ===== Anthropic Campus Ambassador ===== */
+.team-card.is-ambassador {
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 1px var(--terracotta-border), 0 0 24px rgba(217, 119, 87, 0.18);
+}
+/* Corner brackets, like a highlighted target */
+.team-card.is-ambassador::before,
+.team-card.is-ambassador::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  border: 2px solid var(--terracotta);
+}
+.team-card.is-ambassador::before {
+  top: 8px;
+  left: 8px;
+  border-right: 0;
+  border-bottom: 0;
+}
+.team-card.is-ambassador::after {
+  bottom: 8px;
+  right: 8px;
+  border-left: 0;
+  border-top: 0;
+}
+.team-card.is-ambassador .avatar { border-color: var(--terracotta); }
+.ambassador-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+  padding: 0.3rem 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-inverse);
+  background: var(--terracotta);
+  border-radius: 4px;
+}
+.ambassador-logo {
+  flex: none;
+  width: .75rem;
+  height: .75rem;
+  /* The logo SVG has no fill of its own, so it's drawn as a mask in a dark color that contrasts the orange badge */
+  background-color: var(--surface-base);
+  -webkit-mask: url('../images/icons/claude-logo.svg') center / contain no-repeat;
+  mask: url('../images/icons/claude-logo.svg') center / contain no-repeat;
+}

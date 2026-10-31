@@ -1,5 +1,6 @@
 from django import forms
 from .models import Event, GalleryImage, Project, TeamMember
+from .terms import all_terms, term_label
 
 
 class GalleryImageForm(forms.ModelForm):
@@ -64,7 +65,7 @@ class ProjectForm(forms.ModelForm):
 class TeamMemberForm(forms.ModelForm):
     class Meta:
         model = TeamMember
-        fields = ['name', 'role', 'major', 'linkedin', 'photo', 'order']
+        fields = ['name', 'role', 'term', 'major', 'is_ambassador', 'linkedin', 'photo', 'order']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Full name'}),
             'role': forms.TextInput(attrs={'placeholder': 'e.g. President'}),
@@ -72,3 +73,11 @@ class TeamMemberForm(forms.ModelForm):
             'linkedin': forms.URLInput(attrs={'placeholder': 'https://www.linkedin.com/in/...'}),
             'order': forms.NumberInput(attrs={'min': 0}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = all_terms()
+        # Keep an out-of-range term selectable so editing never silently changes it.
+        if self.instance.pk and self.instance.term not in dict(choices):
+            choices.append((self.instance.term, term_label(self.instance.term)))
+        self.fields['term'] = forms.ChoiceField(choices=choices, initial=self.fields['term'].initial)

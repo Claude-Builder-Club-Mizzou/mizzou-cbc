@@ -1,9 +1,13 @@
+from collections import defaultdict
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from .forms import EventForm, GalleryImageForm, ProjectForm, TeamMemberForm
 from .models import Event, GalleryImage, Project, TeamMember
+from .terms import all_terms, current_term, term_label, term_status
 
 LOGIN_URL = '/cb-exec/'
 
@@ -38,7 +42,9 @@ def dashboard_home(request):
         'gallery_count': GalleryImage.objects.count(),
         'event_count': Event.objects.count(),
         'project_count': Project.objects.count(),
-        'team_count': TeamMember.objects.count(),
+        'team_count': TeamMember.objects.filter(term=current_term()).count(),
+        'current_term_label': term_label(current_term()),
+        'past_board_count': TeamMember.objects.exclude(term=current_term()).values('term').distinct().count(),
     }
     return render(request, 'dashboard/home.html', context)
 
@@ -197,30 +203,66 @@ def project_delete(request, pk):
 # ── Team ─────────────────────────────────────────────────────────────────
 
 
+def _team_redirect(term):
+    return redirect(f"{reverse('dashboard:team')}?term={term}")
+
+
+def _requested_term(request):
+    """The ?term= key if it's a known term, else the current board."""
+    keys = [key for key, _ in all_terms()]
+    term = request.GET.get('term')
+    return term if term in keys else current_term()
+
+
 @login_required(login_url=LOGIN_URL)
 def team_list(request):
-    members = TeamMember.objects.all()
+    by_term = defaultdict(list)
+    for member in TeamMember.objects.all():
+        by_term[member.term].append(member)
+
+    current_board = None
+    past_boards = []
+    # Newest first, so the dropdown reads as a timeline going back.
+    for key, label in reversed(all_terms()):
+        status = term_status(key)
+        members = by_term.get(key, [])
+        if status == 'upcoming' and not members:
+            continue
+        board = {'key': key, 'label': label, 'members': members, 'status': status}
+        if status == 'current':
+            current_board = board
+        else:
+            past_boards.append(board)
+
     context = {
         'active_page': 'team',
-        'members': members,
+        'current_board': current_board,
+        'past_boards': past_boards,
+        # Keep the board you just edited open after the redirect.
+        'open_term': _requested_term(request),
     }
     return render(request, 'dashboard/team.html', context)
 
 
 @login_required(login_url=LOGIN_URL)
 def team_create(request):
+    term = _requested_term(request)
     if request.method == 'POST':
         form = TeamMemberForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('dashboard:team')
+            member = form.save()
+            return _team_redirect(member.term)
     else:
-        form = TeamMemberForm(initial={'order': TeamMember.objects.count()})
+        form = TeamMemberForm(initial={
+            'term': term,
+            'order': TeamMember.objects.filter(term=term).count(),
+        })
 
     context = {
         'active_page': 'team',
         'form': form,
         'editing': False,
+        'back_term': term,
     }
     return render(request, 'dashboard/team_form.html', context)
 
@@ -231,8 +273,8 @@ def team_edit(request, pk):
     if request.method == 'POST':
         form = TeamMemberForm(request.POST, request.FILES, instance=member)
         if form.is_valid():
-            form.save()
-            return redirect('dashboard:team')
+            member = form.save()
+            return _team_redirect(member.term)
     else:
         form = TeamMemberForm(instance=member)
 
@@ -241,6 +283,7 @@ def team_edit(request, pk):
         'form': form,
         'member': member,
         'editing': True,
+        'back_term': member.term,
     }
     return render(request, 'dashboard/team_form.html', context)
 
@@ -248,7 +291,8 @@ def team_edit(request, pk):
 @login_required(login_url=LOGIN_URL)
 def team_delete(request, pk):
     member = get_object_or_404(TeamMember, pk=pk)
+    term = member.term
     if request.method == 'POST':
         member.photo.delete(save=False)
         member.delete()
-    return redirect('dashboard:team')
+    return _team_redirect(term)

@@ -1,6 +1,9 @@
+from collections import defaultdict
+
 from django.shortcuts import render
 from django.templatetags.static import static
 from dashboard.models import GalleryImage, Event, Project, TeamMember
+from dashboard.terms import all_terms, current_term, term_label, term_status
 
 NAV_ITEMS = [
     {'url_name': 'home', 'label': 'Home'},
@@ -109,7 +112,22 @@ def benefits(request):
 
 
 def team(request):
-    return _render(request, 'landing/team.html', 'team', team=TeamMember.objects.all())
+    by_term = defaultdict(list)
+    for member in TeamMember.objects.all():
+        by_term[member.term].append(member)
+
+    # Past boards only, newest first; upcoming boards stay hidden until they take office.
+    past_boards = [
+        {'key': key, 'label': label, 'members': by_term[key]}
+        for key, label in reversed(all_terms())
+        if term_status(key) == 'past' and by_term.get(key)
+    ]
+    current = current_term()
+    return _render(
+        request, 'landing/team.html', 'team',
+        current_board={'key': current, 'label': term_label(current), 'members': by_term.get(current, [])},
+        past_boards=past_boards,
+    )
 
 
 def projects(request):

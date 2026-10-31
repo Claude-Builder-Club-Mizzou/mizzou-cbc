@@ -1,6 +1,8 @@
 from django.db import models
 from django.templatetags.static import static
 
+from .terms import current_term_key, term_label
+
 
 class GalleryImage(models.Model):
     caption = models.CharField(max_length=200)
@@ -73,7 +75,10 @@ class Project(models.Model):
 class TeamMember(models.Model):
     name = models.CharField(max_length=200)
     role = models.CharField(max_length=100, help_text='e.g. President, Treasurer')
+    term = models.CharField(max_length=20, default=current_term_key, db_index=True,
+                            help_text='Which executive board this member served on')
     major = models.CharField(max_length=200, blank=True, help_text='e.g. Computer Science, Senior')
+    is_ambassador = models.BooleanField(default=False, help_text='Official Anthropic Campus Ambassador')
     linkedin = models.URLField(blank=True, default='')
     photo = models.ImageField(upload_to='team/', blank=True)
     # Only used for the original members whose photos live in static files.
@@ -87,6 +92,10 @@ class TeamMember(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.role})"
+
+    @property
+    def term_label(self):
+        return term_label(self.term)
 
     @property
     def initials(self):
