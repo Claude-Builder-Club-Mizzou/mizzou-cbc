@@ -392,6 +392,51 @@ window.addEventListener('scroll', () => {
     nextEl.appendChild(body);
   }
 
+  // ----- Past events log (newest first) -----
+  var PAST_PREVIEW = 5;
+  var pastEl = document.getElementById('eventPast');
+  var past = sorted.filter(function(e) { return eventDate(e) < todayStart; }).reverse();
+  var pastExpanded = false;
+
+  function renderPast() {
+    if (!pastEl) return;
+    if (!past.length) { pastEl.hidden = true; return; }
+    pastEl.hidden = false;
+    pastEl.innerHTML = '';
+    pastEl.appendChild(titleBar('git log --past', past.length + (past.length === 1 ? ' event' : ' events'), true));
+
+    var body = el('div', 'event-body');
+    var list = el('ul', 'past-list');
+    var shown = pastExpanded ? past : past.slice(0, PAST_PREVIEW);
+
+    shown.forEach(function(ev) {
+      var li = el('li');
+      var btn = el('button', 'past-item' + (ev === selected ? ' active' : ''));
+      btn.type = 'button';
+      btn.appendChild(el('span', 'past-date', pad(ev.month_num) + '/' + pad(ev.day_num) + '/' + ev.year));
+      btn.appendChild(el('span', 'past-title', ev.title));
+      btn.appendChild(el('span', 'past-loc', ev.location));
+      btn.addEventListener('click', function() {
+        selectEvent(ev);
+        mainEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      li.appendChild(btn);
+      list.appendChild(li);
+    });
+    body.appendChild(list);
+
+    if (past.length > PAST_PREVIEW) {
+      var toggle = el('button', 'past-toggle', pastExpanded ? '# show less' : '# show all ' + past.length + ' past events');
+      toggle.type = 'button';
+      toggle.addEventListener('click', function() {
+        pastExpanded = !pastExpanded;
+        renderPast();
+      });
+      body.appendChild(toggle);
+    }
+    pastEl.appendChild(body);
+  }
+
   function selectEvent(ev, keepMonth) {
     selected = ev;
     if (!keepMonth) {
@@ -401,6 +446,7 @@ window.addEventListener('scroll', () => {
     renderCalendar(currentYear, currentMonth);
     renderMain(ev);
     renderNext(ev);
+    renderPast();
   }
 
   // ----- Navigation -----

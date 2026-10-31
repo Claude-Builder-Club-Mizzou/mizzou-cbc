@@ -4,7 +4,7 @@
 {% block title %}Claude Builders Club @ Mizzou{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'landing/css/home.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'landing/css/home.css' %}?v=23">
 {% endblock %}
 
 {% block content %}
@@ -82,6 +82,9 @@
           <article class="term-window event-next" id="eventNext"></article>
         </div>
       </div>
+
+      <!-- Past events (full width, below calendar + cards) -->
+      <article class="term-window event-past fade-up" id="eventPast" hidden></article>
     </div>
     {{ events|json_script:"events-data" }}
   </section>
