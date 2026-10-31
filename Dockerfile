@@ -20,4 +20,4 @@ ENV PORT=8080
 EXPOSE 8080
 
 # Run migrations and create superuser at startup, then start gunicorn
-CMD python manage.py migrate --noinput && python manage.py createsuperuser --noinput 2>/dev/null; exec gunicorn mizzou_cbc.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4
+CMD python manage.py migrate --noinput || exit 1; python manage.py createsuperuser --noinput 2>/dev/null; exec gunicorn mizzou_cbc.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4

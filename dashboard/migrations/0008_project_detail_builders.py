@@ -77,7 +77,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='slug',
-            field=models.SlugField(blank=True, default='', editable=False, max_length=60),
+            # db_index=False: the unique AlterField below creates the index (and its
+            # Postgres "_like" twin); indexing here too makes them collide.
+            field=models.SlugField(blank=True, db_index=False, default='', editable=False, max_length=60),
             preserve_default=False,
         ),
         migrations.RunPython(fill_project_slugs, migrations.RunPython.noop),
