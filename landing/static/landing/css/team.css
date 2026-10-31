@@ -51,11 +51,6 @@
   .term-launch { font-size: 0.75rem; }
 }
 /* Terminal progress bar: [ ████████████ ] 100% */
-@property --pct {
-  syntax: '<integer>';
-  inherits: false;
-  initial-value: 0;
-}
 .term-progress {
   display: inline-flex;
   align-items: center;
@@ -86,10 +81,8 @@
 }
 .term-status > * { grid-area: 1 / 1; }
 .term-pct {
-  counter-reset: pct var(--pct);
   color: var(--text-secondary);
 }
-.term-pct::before { content: counter(pct) '%'; }
 .term-ok { color: var(--terracotta); font-weight: 700; white-space: nowrap; }
 
 .exec-banner {
@@ -151,7 +144,6 @@
 }
 @keyframes term-pop { from { opacity: 0; } to { opacity: 1; } }
 @keyframes term-fill { from { width: 0; } to { width: calc(var(--blocks) * (1ch + var(--gap))); } }
-@keyframes term-count { from { --pct: 0; } to { --pct: 100; } }
 @keyframes term-hide { to { opacity: 0; visibility: hidden; } }
 
 /* Hidden until their turn */
@@ -170,7 +162,7 @@
   animation: term-fill 0.8s steps(12) 1.2s both;
 }
 #team .terminal-frame.visible .term-pct {
-  animation: term-count 0.8s steps(12) 1.2s both, term-hide 0.01s linear 2s forwards;
+  animation: term-hide 0.01s linear 2s forwards;
 }
 #team .terminal-frame.visible .term-ok {
   animation: term-pop 0.01s linear 2s both;

@@ -30,6 +30,32 @@ document.querySelectorAll('.merch-toggle').forEach(btn => {
   });
 });
 
+// ===== Launch bar percentage =====
+// Counts 0 -> 100 in the same 12 steps (and on the same delay) as the CSS fill bar.
+document.querySelectorAll('.term-pct').forEach(pct => {
+  const frame = pct.closest('.terminal-frame');
+  const fill = frame && frame.querySelector('.term-blocks-fill');
+  if (!fill) return;
+  const STEPS = 12;
+  let started = false;
+
+  function start() {
+    if (started || !frame.classList.contains('visible')) return;
+    const cs = getComputedStyle(fill);
+    const delay = parseFloat(cs.animationDelay) * 1000;
+    const dur = parseFloat(cs.animationDuration) * 1000;
+    if (!dur) return; // reduced motion: no animation, no counter
+    started = true;
+    pct.textContent = '0%';
+    for (let i = 1; i <= STEPS; i++) {
+      setTimeout(() => { pct.textContent = Math.round(i * 100 / STEPS) + '%'; }, delay + dur * i / STEPS);
+    }
+  }
+
+  start();
+  new MutationObserver(start).observe(frame, { attributes: true, attributeFilter: ['class'] });
+});
+
 // ===== FAQ Accordion =====
 document.querySelectorAll('.faq-btn').forEach(btn => {
   btn.addEventListener('click', () => {
