@@ -41,6 +41,12 @@ BENEFITS = [
         'icon': '<img src="' + static('landing/images/icons/claude-logo.svg') + '" alt="">',
         'title': 'Hats & Stickers',
         'description': 'Members get Claude hats and stickers on top of everything else.',
+        'merch': [
+            {'src': static('landing/images/claude-hat.png'), 'label': 'Hat'},
+            {'src': static('landing/images/claude-sticker.png'), 'label': 'Sticker'},
+            {'src': static('landing/images/claude-eyes.png'), 'label': 'Sticker'},
+            {'src': static('landing/images/claude-coffe.png'), 'label': 'Sticker'},
+        ],
     },
     {
         'icon': '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="7" r="4" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 21v-2a4 4 0 014-4h6a4 4 0 014 4v2z" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="7.5" r="2.5" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 14.5a4 4 0 016 3.5v3h-4" fill="#D97757" stroke="#D97757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',

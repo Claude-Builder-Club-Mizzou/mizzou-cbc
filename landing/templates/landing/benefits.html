@@ -4,7 +4,7 @@
 {% block title %}Benefits | CBC Mizzou{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'landing/css/benefits.css' %}?v=23">
+  <link rel="stylesheet" href="{% static 'landing/css/benefits.css' %}?v=25">
 {% endblock %}
 
 {% block content %}
@@ -21,13 +21,22 @@
           <div class="feature-intro-copy">
             <div class="benefits-grid stagger-container">
               {% for b in benefits %}
-              <div class="card benefit-card stagger-item">
+              <div class="card benefit-card stagger-item{% if b.merch %} has-merch{% endif %}"{% if b.merch %} tabindex="0"{% endif %}>
                 <div class="benefit-icon">{{ b.icon|safe }}</div>
                 <div class="benefit-body">
                   <h3 class="text-heading">{{ b.title }}</h3>
                   <p class="text-muted">{{ b.description }}</p>
                 </div>
                 <span class="benefit-step">{{ forloop.counter|stringformat:"02d" }}</span>
+                {% if b.merch %}
+                <div class="benefit-merch" aria-label="Available merchandise">
+                  {% for m in b.merch %}
+                  <figure class="merch-item">
+                    <img src="{{ m.src }}" alt="Claude {{ m.label|lower }}" loading="lazy">
+                  </figure>
+                  {% endfor %}
+                </div>
+                {% endif %}
               </div>
               {% endfor %}
             </div>
