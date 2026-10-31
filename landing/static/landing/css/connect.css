@@ -1,56 +1,193 @@
 /* ===== Connect page ===== */
 
-/* ===== Connect Section ===== */
+/* ===== Terminal prompt + boot line (same pattern as the team page) ===== */
+.connect-term .term-line {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+.connect-term .term-prompt { color: var(--terracotta); font-weight: 700; }
+.connect-term .term-cmd { color: var(--text-primary); }
+.connect-term .term-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: -0.25rem;
+  background: var(--terracotta);
+  animation: term-blink 1.1s steps(1) infinite;
+}
+@keyframes term-blink { 50% { opacity: 0; } }
+.connect-term .term-type {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+.connect-term .term-launch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin: 0.625rem 0 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+}
+.connect-term .term-arrow { color: var(--terracotta); font-weight: 700; }
+@property --pct {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+.connect-term .term-progress { display: inline-flex; align-items: center; gap: 0.375rem; }
+.connect-term .term-bracket { color: var(--text-faint); font-weight: 700; }
+.connect-term .term-blocks {
+  --blocks: 12;
+  --gap: 0.12em;
+  position: relative;
+  display: inline-block;
+  letter-spacing: var(--gap);
+  line-height: 1;
+  white-space: nowrap;
+}
+.connect-term .term-blocks-track { color: var(--border-strong); }
+.connect-term .term-blocks-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  width: calc(var(--blocks) * (1ch + var(--gap)));
+  color: var(--terracotta);
+}
+.connect-term .term-status { display: inline-grid; min-width: 6ch; }
+.connect-term .term-status > * { grid-area: 1 / 1; }
+.connect-term .term-pct { counter-reset: pct var(--pct); color: var(--text-secondary); }
+.connect-term .term-pct::before { content: counter(pct) '%'; }
+.connect-term .term-ok { color: var(--terracotta); font-weight: 700; white-space: nowrap; }
+
+@keyframes term-type-cmd {
+  from { width: 0; }
+  to { width: calc(var(--n) * 1ch); }
+}
+@keyframes term-pop { from { opacity: 0; } to { opacity: 1; } }
+@keyframes term-fill { from { width: 0; } to { width: calc(var(--blocks) * (1ch + var(--gap))); } }
+@keyframes term-count { from { --pct: 0; } to { --pct: 100; } }
+@keyframes term-hide { to { opacity: 0; visibility: hidden; } }
+
+/* Each step starts when the frame scrolls into view (JS adds .visible) */
+.connect-term:not(.visible) .term-launch,
+.connect-term:not(.visible) .connect-banner,
+.connect-term:not(.visible) .term-type,
+.connect-term:not(.visible) .term-cursor { visibility: hidden; }
+.connect-term:not(.visible) .connect-grid { opacity: 0; }
+
+.connect-term.visible .term-type { animation: term-type-cmd 0.6s steps(11) 0.3s both; }
+.connect-term.visible .term-launch { animation: term-pop 0.01s linear 1s both; }
+.connect-term.visible .term-blocks-fill { animation: term-fill 0.8s steps(12) 1.1s both; }
+.connect-term.visible .term-pct {
+  animation: term-count 0.8s steps(12) 1.1s both, term-hide 0.01s linear 1.9s forwards;
+}
+.connect-term.visible .term-ok { animation: term-pop 0.01s linear 1.9s both; }
+.connect-term.visible .connect-banner { animation: term-pop 0.01s linear 2.1s both; }
+.connect-term.visible .connect-grid { animation: term-pop 0.6s ease-out 3.6s both; }
+
+/* ===== Banner ===== */
+.connect-banner {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+.connect-banner-title { margin: 0; line-height: 0; }
+.connect-banner-img {
+  display: block;
+  width: 28rem;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+.connect-banner-fallback {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: clamp(1.25rem, 6vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  color: var(--terracotta);
+}
+.connect-banner-sub { margin: 1rem 0 0; line-height: 0; }
+/* Sized by height so the letters stay small whatever the text length */
+.connect-banner-sub-img {
+  display: block;
+  height: 1.35rem;
+  width: auto;
+  margin: 0 auto;
+}
+.connect-banner-sub-text {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+@media (max-width: 768px) {
+  .connect-banner { width: auto; }
+  .connect-banner-img,
+  .connect-banner-sub-img { display: none; }
+  .connect-banner-fallback { display: block; }
+  .connect-banner-sub-text { display: inline; }
+}
+
+/* Banner images are decoded in by decode-reveal.js; hidden until it runs */
+[data-decode-reveal]:not(.decode-done) { visibility: hidden; }
+
+/* ===== Buttons: signup as a full-width row, the rest in a 2x2 ===== */
 .connect-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  max-width: 44rem;
-  margin: 0 auto;
+  gap: 1.5rem 1rem;
+  padding-top: 0.5rem;
 }
 .connect-card {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 1.25rem;
-  border-radius: 3px;
-  border: 1px solid var(--border-default);
-  background: var(--surface-raised);
+  padding: 1.125rem 1.25rem;
+  /* Solid fill: drop the frame's scanline/vignette layers */
+  background-image: none;
+  background-color: var(--surface-raised);
   transition: border-color 0.2s;
   cursor: pointer;
 }
-.connect-card:hover {
-  border-color: var(--terracotta);
+.connect-card:hover,
+.connect-card:focus-visible { border-color: var(--terracotta); }
+
+/* Hover fill: orange sweeps in from the left behind the content */
+.connect-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--terracotta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease-out;
 }
-.connect-card-primary {
-  grid-column: 1 / -1;
-  background: var(--surface-overlay);
-  border-color: var(--border-strong);
-}
-.connect-card-primary:hover { border-color: var(--terracotta); }
-.connect-card-primary .connect-desc { color: var(--text-secondary); }
-.connect-card-primary .connect-arrow { color: var(--terracotta); }
-.connect-card-signup {
-  grid-column: 1 / -1;
-  border-color: var(--terracotta-border);
-  background: var(--terracotta-muted);
-}
-.connect-card-signup:hover {
-  background: rgba(217, 119, 87, 0.18);
-  border-color: var(--terracotta);
-}
-.connect-card-signup .connect-icon { fill: var(--terracotta); }
-.connect-card-signup .connect-arrow { color: var(--terracotta); }
+.connect-card:hover::before,
+.connect-card:focus-visible::before { transform: scaleX(1); }
+.connect-card > * { position: relative; }
+.connect-card-primary { grid-column: 1 / -1; }
 
 .connect-icon {
   width: 24px;
   height: 24px;
   fill: var(--text-faint);
   flex-shrink: 0;
-  transition: fill 0.2s;
+  transition: fill 0.35s ease-out;
 }
-.connect-card-primary .connect-icon { fill: var(--terracotta); }
-.connect-card:hover .connect-icon { fill: var(--terracotta); }
 
 .connect-card-text {
   display: flex;
@@ -62,22 +199,43 @@
   font-weight: 700;
   font-size: 0.875rem;
   color: var(--text-primary);
+  transition: color 0.35s ease-out;
 }
 .connect-desc {
   font-size: 0.75rem;
   color: var(--text-secondary);
   margin-top: 0.1rem;
+  transition: color 0.35s ease-out;
 }
 .connect-arrow {
   font-size: 1.125rem;
   color: var(--text-faint);
   flex-shrink: 0;
-  transition: color 0.2s;
+  transition: color 0.35s ease-out;
 }
-.connect-card:hover .connect-arrow { color: var(--terracotta); }
+
+/* Icon and text flip to the dark surface color once the orange fill is behind them */
+.connect-card:hover .connect-icon,
+.connect-card:focus-visible .connect-icon { fill: var(--surface-base); }
+.connect-card:hover .connect-label,
+.connect-card:hover .connect-arrow,
+.connect-card:focus-visible .connect-label,
+.connect-card:focus-visible .connect-arrow { color: var(--surface-base); }
+.connect-card:hover .connect-desc,
+.connect-card:focus-visible .connect-desc { color: rgba(28, 25, 23, 0.8); }
 
 @media (max-width: 640px) {
-  .connect-grid {
-    grid-template-columns: 1fr;
-  }
+  .connect-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connect-term .term-cursor { animation: none; }
+  .connect-card::before { transition: none; }
+  .connect-term.visible .term-type,
+  .connect-term.visible .term-launch,
+  .connect-term.visible .term-blocks-fill,
+  .connect-term.visible .term-pct,
+  .connect-term.visible .term-ok,
+  .connect-term.visible .connect-banner,
+  .connect-term.visible .connect-grid { animation: none; }
 }

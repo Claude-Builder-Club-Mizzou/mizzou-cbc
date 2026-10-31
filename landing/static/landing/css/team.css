@@ -92,11 +92,6 @@
   width: fit-content;
   max-width: 100%;
   margin: 0 auto 2rem;
-  padding: 1.125rem 1.75rem;
-  /* Darker than the frame interior, with just a warm orange tint */
-  background: linear-gradient(rgba(217, 119, 87, 0.07), rgba(217, 119, 87, 0.07)), #120F0E;
-  border: 1px solid var(--terracotta-border);
-  border-radius: 4px;
   text-align: center;
 }
 .exec-banner-title { margin: 0; line-height: 0; }
@@ -139,12 +134,15 @@
   color: var(--text-primary);
 }
 @media (max-width: 768px) {
-  .exec-banner { width: auto; padding: 1rem; }
+  .exec-banner { width: auto; }
   .exec-banner-img,
   .exec-banner-term-img { display: none; }
   .exec-banner-fallback { display: block; }
   .exec-banner-term-text { display: inline; }
 }
+
+/* Banner images are decoded in by decode-reveal.js; hidden until it runs */
+[data-decode-reveal]:not(.decode-done) { visibility: hidden; }
 
 /* Each step starts when the frame scrolls into view (JS adds .visible) */
 @keyframes term-type-cmd {
@@ -155,10 +153,6 @@
 @keyframes term-fill { from { width: 0; } to { width: calc(var(--blocks) * (1ch + var(--gap))); } }
 @keyframes term-count { from { --pct: 0; } to { --pct: 100; } }
 @keyframes term-hide { to { opacity: 0; visibility: hidden; } }
-@keyframes term-wipe {
-  from { clip-path: inset(0 100% 0 0); }
-  to { clip-path: inset(0 0 0 0); }
-}
 
 /* Hidden until their turn */
 #team .terminal-frame:not(.visible) .term-launch,
@@ -182,10 +176,10 @@
   animation: term-pop 0.01s linear 2s both;
 }
 #team .terminal-frame.visible .exec-banner {
-  animation: term-wipe 0.8s steps(28) 2.2s both;
+  animation: term-pop 0.01s linear 2.2s both;
 }
 #team .terminal-frame.visible .exec-banner-term {
-  animation: term-wipe 0.7s steps(24) 2.9s both;
+  animation: term-pop 0.01s linear 2.9s both;
 }
 #team .terminal-frame.visible > .team-grid,
 #team .terminal-frame.visible > .past-boards {

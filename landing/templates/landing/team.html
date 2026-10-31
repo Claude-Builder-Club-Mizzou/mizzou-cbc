@@ -4,7 +4,11 @@
 {% block title %}Team | CBC Mizzou{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'landing/css/team.css' %}?v=43">
+  <link rel="stylesheet" href="{% static 'landing/css/team.css' %}?v=50">
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'landing/js/decode-reveal.js' %}?v=4"></script>
 {% endblock %}
 
 {% block content %}
@@ -45,12 +49,12 @@
 
         <div class="exec-banner">
           <h2 class="exec-banner-title">
-            <img src="{% static 'landing/images/exec-board-text.svg' %}" alt="Executive Board" class="exec-banner-img">
+            <img src="{% static 'landing/images/exec-board-text.svg' %}" alt="Executive Board" class="exec-banner-img" data-decode-reveal="2200">
             <span class="exec-banner-fallback" aria-hidden="true">EXECUTIVE BOARD</span>
           </h2>
           {% with term_svg="landing/images/exec-terms/"|add:current_board.key|add:".svg" %}
           <p class="exec-banner-term">
-            <img src="{% static term_svg %}" alt="{{ current_board.label }}" class="exec-banner-term-img"
+            <img src="{% static term_svg %}" alt="{{ current_board.label }}" class="exec-banner-term-img" data-decode-reveal="2900"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
             <span class="exec-banner-term-text" aria-hidden="true">{{ current_board.label }}</span>
           </p>
