@@ -1,52 +1,13 @@
 /* ===== Team page ===== */
 
-/* ===== Darker terminal interior (the label cutouts match the darker fill) ===== */
-#team .terminal-frame {
-  background-color: var(--surface-base);
-  /* Dot grid, same as the home hero */
-  background-image: radial-gradient(circle, var(--border-strong) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-/* Vignette fades the grid toward the edges */
-#team .terminal-frame::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 40%, var(--surface-base) 85%);
-  pointer-events: none;
-  z-index: 0;
-}
-/* Scanlines sit above the grid, below the content */
-#team .terminal-frame::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 3px,
-    rgba(0, 0, 0, 0.07) 3px,
-    rgba(0, 0, 0, 0.07) 4px
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-#team .terminal-frame > :not(.terminal-frame-label) {
-  position: relative;
-  z-index: 2;
-}
-/* Only the outer frame's label becomes an outlined tag centered on the border line */
-#team .terminal-frame > .terminal-frame-label {
-  top: 0;
-  padding: 0.2rem 0.625rem;
+/* Card labels are outlined tags centered on the card's top border (no fading backdrop) */
+#team .team-card .terminal-frame-label {
   background: var(--surface-base);
   border: 1px solid var(--terracotta-border);
   border-radius: 4px;
-  line-height: 1.2;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
 }
-/* Card labels stay plain, with a cutout matching the dark interior */
-#team .team-card .terminal-frame-label { background: var(--surface-base); }
+#team .team-card .terminal-frame-label::before { display: none; }
 
 /* ===== Terminal prompt lines ===== */
 .term-line {

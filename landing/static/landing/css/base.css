@@ -382,32 +382,55 @@ h1, h2, h3, h4 {
 }
 
 /* ===== Terminal Frame ===== */
+/* --frame-page-bg is the color behind the frame (its section); the label fades from it into the interior */
 .terminal-frame {
+  --frame-page-bg: var(--surface-base);
   position: relative;
   border: 1px solid var(--terracotta-border);
   padding: 2rem 1.5rem 1.5rem;
+  /* Dark interior: scanlines over a vignette over a dot grid (all background layers, so content is unaffected) */
+  background-color: var(--surface-base);
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0, 0, 0, 0.07) 3px,
+      rgba(0, 0, 0, 0.07) 4px
+    ),
+    radial-gradient(ellipse at center, transparent 40%, var(--surface-base) 85%),
+    radial-gradient(circle, var(--border-strong) 1px, transparent 1px);
+  background-size: auto, auto, 24px 24px;
 }
+.bg-cream .terminal-frame { --frame-page-bg: var(--surface-subtle); }
+.footer .terminal-frame { --frame-page-bg: var(--surface-raised); }
 
+/* Label is centered on the top border line; its backdrop fades from the page color
+   into the interior, and its sides fade out so the border eases into the text */
 .terminal-frame-label {
   position: absolute;
-  top: -0.6em;
+  top: 0;
   left: 1.25rem;
-  background: var(--surface-base);
-  padding: 0 0.5rem;
+  z-index: 3;
+  padding: 0.2rem 0.625rem;
   font-size: 0.6rem;
   font-weight: 700;
   font-family: var(--font-mono);
   letter-spacing: 0.08em;
+  line-height: 1.2;
   text-transform: lowercase;
   color: var(--terracotta);
+  transform: translateY(-50%);
 }
-
-/* Frame on dark sections where the bg is surface-raised */
-.footer .terminal-frame-label {
-  background: var(--surface-raised);
+.terminal-frame-label::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, var(--frame-page-bg) 30%, var(--surface-base) 70%);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 0.375rem, #000 calc(100% - 0.375rem), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 0.375rem, #000 calc(100% - 0.375rem), transparent);
 }
-
-.bg-cream .terminal-frame-label { background: var(--surface-subtle); }
 
 /* ===== Footer ===== */
 .footer {
