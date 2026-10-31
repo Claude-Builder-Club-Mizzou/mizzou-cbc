@@ -7,7 +7,7 @@
     {% else %}
     <div class="avatar">{{ m.initials }}</div>
     {% endif %}
-    <h3 class="text-heading" style="margin:0 0 0.25rem 0;">{{ m.name }}</h3>
+    <h3 class="text-heading" style="margin:0 0 0.25rem 0;">{% if m.builder %}<a href="{% url 'builder_detail' m.builder.slug %}" class="team-profile-link">{{ m.name }}</a>{% else %}{{ m.name }}{% endif %}</h3>
     <div class="major text-muted">{{ m.major }}</div>
     {% if m.is_ambassador %}
     <div class="ambassador-badge">

@@ -343,7 +343,21 @@ summary:hover > .chevron { border-color: var(--terracotta); }
   margin-bottom: 0.875rem;
   color: var(--text-secondary);
 }
+/* Name links to the builder profile; its ::after stretches the click target over the whole card */
+.team-card .team-profile-link {
+  color: inherit;
+  text-decoration: none;
+}
+.team-card .team-profile-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.team-card .team-profile-link:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 2px; }
 .team-card .linkedin-link {
+  position: relative;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;

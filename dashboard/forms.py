@@ -105,7 +105,7 @@ class BuilderForm(forms.ModelForm):
 class TeamMemberForm(forms.ModelForm):
     class Meta:
         model = TeamMember
-        fields = ['name', 'role', 'term', 'major', 'is_ambassador', 'linkedin', 'photo', 'order']
+        fields = ['name', 'role', 'term', 'major', 'is_ambassador', 'builder', 'linkedin', 'photo', 'order']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Full name'}),
             'role': forms.TextInput(attrs={'placeholder': 'e.g. President'}),

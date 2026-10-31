@@ -2,7 +2,7 @@
 <div class="team-grid">
   {% for member in members %}
   <div class="team-card">
-    <div class="team-top">
+    {% if member.builder %}<a href="{% url 'builder_detail' member.builder.slug %}" class="team-top team-link">{% else %}<div class="team-top">{% endif %}
       {% if member.image_url %}
       <img src="{{ member.image_url }}" alt="{{ member.name }}" class="team-avatar">
       {% else %}
@@ -13,7 +13,7 @@
         <div class="team-role">{{ member.role }}</div>
         {% if member.is_ambassador %}<span class="team-ambassador"><span class="team-ambassador-logo" style="-webkit-mask-image:url('{% static 'landing/images/icons/claude-logo.svg' %}');mask-image:url('{% static 'landing/images/icons/claude-logo.svg' %}');"></span>Ambassador</span>{% endif %}
       </div>
-    </div>
+    {% if member.builder %}</a>{% else %}</div>{% endif %}
     <div class="team-major">{{ member.major }}</div>
     <div class="team-meta">
       <span class="team-order">Order #{{ member.order }}</span>

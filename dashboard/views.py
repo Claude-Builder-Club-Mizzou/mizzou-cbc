@@ -278,7 +278,7 @@ def _requested_term(request):
 @login_required(login_url=LOGIN_URL)
 def team_list(request):
     by_term = defaultdict(list)
-    for member in TeamMember.objects.all():
+    for member in TeamMember.objects.select_related('builder'):
         by_term[member.term].append(member)
 
     current_board = None

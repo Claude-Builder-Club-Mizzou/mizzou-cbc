@@ -123,7 +123,7 @@ def benefits(request):
 
 def team(request):
     by_term = defaultdict(list)
-    for member in TeamMember.objects.all():
+    for member in TeamMember.objects.select_related('builder'):
         by_term[member.term].append(member)
 
     # Past boards only, newest first; upcoming boards stay hidden until they take office.

@@ -181,6 +181,9 @@ class TeamMember(models.Model):
                             help_text='Which executive board this member served on')
     major = models.CharField(max_length=200, blank=True, help_text='e.g. Computer Science, Senior')
     is_ambassador = models.BooleanField(default=False, help_text='Official Anthropic Campus Ambassador')
+    builder = models.ForeignKey('Builder', null=True, blank=True, on_delete=models.SET_NULL,
+                                related_name='team_members',
+                                help_text='Link this member\'s card to their builder profile')
     linkedin = models.URLField(blank=True, default='')
     photo = models.ImageField(upload_to='team/', blank=True)
     # Only used for the original members whose photos live in static files.
