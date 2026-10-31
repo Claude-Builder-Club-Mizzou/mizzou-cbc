@@ -59,7 +59,7 @@
       <td>
         <div class="builder-name">
           {% if b.photo %}<img src="{{ b.photo.url }}" alt="">{% else %}<span class="builder-initials">{{ b.initials }}</span>{% endif %}
-          {{ b.name }}
+          {{ b.name }}{% if not b.is_approved %} <span class="muted" style="font-size:0.6875rem;">(unapproved)</span>{% endif %}
         </div>
       </td>
       <td class="muted">{{ b.subtitle|default:"-" }}</td>

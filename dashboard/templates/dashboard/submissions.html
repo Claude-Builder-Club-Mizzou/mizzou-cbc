@@ -1,0 +1,129 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Submissions{% endblock %}
+
+{% block extra_css %}
+<style>
+  .sub-card {
+    background: var(--surface-raised); border: 1px solid var(--border-default);
+    border-radius: 4px; padding: 1.5rem; margin-bottom: 1.25rem; max-width: 900px;
+  }
+  .sub-title { font-size: 1.125rem; font-weight: 600; }
+  .sub-meta { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-faint); margin-top: 0.25rem; }
+  .sub-cover { width: 100%; max-height: 260px; object-fit: cover; border-radius: 3px; margin: 1rem 0; }
+  .sub-label {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--terracotta); margin: 1.125rem 0 0.375rem;
+  }
+  .sub-text { font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary); white-space: pre-line; }
+  .sub-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; font-size: 0.8125rem; }
+  .sub-links a, .sub-card a.inline { color: var(--terracotta); word-break: break-all; }
+  .sub-shots { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .sub-shots img { width: 120px; height: 80px; object-fit: cover; border-radius: 3px; }
+  .sub-builder { display: flex; gap: 0.875rem; align-items: flex-start; }
+  .sub-builder img { width: 56px; height: 56px; object-fit: cover; border-radius: 3px; flex-shrink: 0; }
+  .sub-actions {
+    display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
+    margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-default);
+  }
+  .sub-actions form { display: inline; }
+  .empty-state {
+    text-align: center; padding: 3rem; color: var(--text-faint); max-width: 900px;
+    background: var(--surface-raised); border: 1px solid var(--border-default); border-radius: 4px;
+  }
+  .rejected-list { max-width: 900px; margin-top: 2.5rem; }
+  .rejected-list h2 { font-size: 0.9375rem; margin-bottom: 0.75rem; color: var(--text-secondary); }
+  .rejected-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: 0.625rem 0; border-bottom: 1px solid var(--border-default); font-size: 0.8125rem;
+  }
+  .rejected-row a, .rejected-row button {
+    color: var(--text-secondary); text-decoration: none; margin-left: 1rem;
+    background: none; border: none; cursor: pointer; font-size: 0.8125rem; padding: 0;
+  }
+  .rejected-row a:hover, .rejected-row button:hover { color: var(--terracotta); }
+  .rejected-row button.danger:hover { color: #f87171; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Submissions</h1>
+  <p>Projects submitted through the site. Nothing is public until you approve it.</p>
+</div>
+
+{% for p in submissions %}
+{% with b=p.builders.all.0 %}
+<div class="sub-card">
+  <div class="sub-title">{{ p.title }}</div>
+  <div class="sub-meta">submitted {{ p.created_at|date:"M j, Y g:i A" }} UTC{% if p.built_at %} · built at {{ p.built_at }}{% endif %}</div>
+
+  {% if p.image %}<img class="sub-cover" src="{{ p.image.url }}" alt="">{% endif %}
+
+  <div class="sub-label">Summary</div>
+  <div class="sub-text">{{ p.description }}</div>
+  {% if p.tech %}<div class="sub-label">Tech</div><div class="sub-text">{{ p.tech|join:", " }}</div>{% endif %}
+  {% if p.story %}<div class="sub-label">About</div><div class="sub-text">{{ p.story }}</div>{% endif %}
+  {% if p.claude_usage %}<div class="sub-label">How Claude was used</div><div class="sub-text">{{ p.claude_usage }}</div>{% endif %}
+  {% if p.challenges %}<div class="sub-label">Challenges</div><div class="sub-text">{{ p.challenges }}</div>{% endif %}
+
+  <div class="sub-label">Links</div>
+  <div class="sub-links">
+    {% if p.link %}<a href="{{ p.link }}" target="_blank" rel="noopener noreferrer">Live: {{ p.link }}</a>{% endif %}
+    {% if p.github_url %}<a href="{{ p.github_url }}" target="_blank" rel="noopener noreferrer">GitHub: {{ p.github_url }}</a>{% endif %}
+    {% if p.demo_video_url %}<a href="{{ p.demo_video_url }}" target="_blank" rel="noopener noreferrer">Video: {{ p.demo_video_url }}</a>{% endif %}
+  </div>
+
+  {% if p.images.all %}
+  <div class="sub-label">Screenshots</div>
+  <div class="sub-shots">{% for img in p.images.all %}<img src="{{ img.image.url }}" alt="{{ img.caption }}">{% endfor %}</div>
+  {% endif %}
+
+  {% if b %}
+  <div class="sub-label">Builder profile</div>
+  <div class="sub-builder">
+    {% if b.photo %}<img src="{{ b.photo.url }}" alt="">{% endif %}
+    <div class="sub-text">
+      <strong style="color:var(--text-primary);">{{ b.name }}</strong>{% if b.subtitle %} · {{ b.subtitle }}{% endif %}<br>
+      <a class="inline" href="mailto:{{ b.email }}">{{ b.email }}</a><br>
+      {{ b.bio }}
+      {% if b.linkedin or b.github or b.website %}
+      <br>{% if b.linkedin %}<a class="inline" href="{{ b.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn</a> {% endif %}
+      {% if b.github %}<a class="inline" href="{{ b.github }}" target="_blank" rel="noopener noreferrer">GitHub</a> {% endif %}
+      {% if b.website %}<a class="inline" href="{{ b.website }}" target="_blank" rel="noopener noreferrer">Website</a>{% endif %}
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="sub-actions">
+    <form method="post" action="{% url 'dashboard:submission_approve' p.pk %}">
+      {% csrf_token %}<button type="submit" class="btn btn-gold">Approve &amp; publish</button>
+    </form>
+    <a href="{% url 'dashboard:project_edit' p.pk %}" class="btn btn-outline">Edit project</a>
+    {% if b %}<a href="{% url 'dashboard:builder_edit' b.pk %}" class="btn btn-outline">Edit builder</a>{% endif %}
+    <form method="post" action="{% url 'dashboard:submission_reject' p.pk %}" onsubmit="return confirm('Reject this submission? It stays hidden.');" style="margin-left:auto;">
+      {% csrf_token %}<button type="submit" class="btn btn-danger">Reject</button>
+    </form>
+  </div>
+</div>
+{% endwith %}
+{% empty %}
+<div class="empty-state"><p>Nothing waiting for review.</p></div>
+{% endfor %}
+
+{% if rejected %}
+<div class="rejected-list">
+  <h2>Rejected</h2>
+  {% for p in rejected %}
+  <div class="rejected-row">
+    <span>{{ p.title }}</span>
+    <span>
+      <form method="post" action="{% url 'dashboard:submission_approve' p.pk %}" style="display:inline;">{% csrf_token %}<button type="submit">Approve anyway</button></form>
+      <a href="{% url 'dashboard:project_edit' p.pk %}">Edit</a>
+      <form method="post" action="{% url 'dashboard:submission_delete' p.pk %}" style="display:inline;" onsubmit="return confirm('Permanently delete this rejected submission, its images, and the unused builder profile? This cannot be undone.');">{% csrf_token %}<button type="submit" class="danger">Delete</button></form>
+    </span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

@@ -273,3 +273,5 @@
   .projects-intro .feature-intro-art { padding: 0; }
   .projects-intro .feature-intro-img { max-width: 220px; }
 }
+
+.projects-cta { display: flex; justify-content: center; margin-top: 1.5rem; }

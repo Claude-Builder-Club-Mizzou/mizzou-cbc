@@ -8,6 +8,9 @@ urlpatterns = [
     path('benefits/', views.benefits, name='benefits'),
     path('team/', views.team, name='team'),
     path('projects/', views.projects, name='projects'),
+    # Not under projects/ so a project titled "Submit" can't shadow it.
+    path('submit-project/', views.submit_project, name='submit_project'),
+    path('submit-project/thanks/', views.submit_thanks, name='submit_thanks'),
     path('projects/<slug:slug>/', views.project_detail, name='project_detail'),
     path('builders/<slug:slug>/', views.builder_detail, name='builder_detail'),
     path('connect/', views.connect, name='connect'),

@@ -80,6 +80,10 @@ class Builder(models.Model):
     linkedin = models.URLField(blank=True, default='')
     github = models.URLField(blank=True, default='')
     website = models.URLField(blank=True, default='')
+    email = models.EmailField(blank=True, default='',
+                              help_text='Private contact address from a submission. Never shown on the site.')
+    is_approved = models.BooleanField(default=True,
+                                      help_text='Unapproved profiles (from submissions) are hidden from the public site')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -107,7 +111,18 @@ class Builder(models.Model):
         return ', '.join(x for x in (self.major, self.year) if x)
 
 
+class ProjectQuerySet(models.QuerySet):
+    def approved(self):
+        return self.filter(status=Project.APPROVED)
+
+    def pending(self):
+        return self.filter(status=Project.PENDING)
+
+
 class Project(models.Model):
+    PENDING, APPROVED, REJECTED = 'pending', 'approved', 'rejected'
+    STATUS_CHOICES = [(PENDING, 'Pending review'), (APPROVED, 'Approved'), (REJECTED, 'Rejected')]
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=60, unique=True, blank=True, editable=False)
     description = models.TextField(help_text='Short summary shown on the project card')
@@ -129,8 +144,12 @@ class Project(models.Model):
     coming_soon = models.BooleanField(default=False)
     featured = models.BooleanField(default=False, help_text='Pin to the top of the projects page')
     order = models.PositiveIntegerField(default=0)
+    # Projects added in the dashboard are live right away; member submissions start as pending.
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=APPROVED, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = ProjectQuerySet.as_manager()
 
     class Meta:
         ordering = ['-featured', 'order', '-created_at']

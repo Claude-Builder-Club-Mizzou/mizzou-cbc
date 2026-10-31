@@ -1,0 +1,17 @@
+{% autoescape off %}A new project was submitted to the CBC Mizzou site and is waiting for review.
+
+PROJECT
+{{ project.title }}
+{{ project.description }}
+{% if project.tech %}Tech: {{ project.tech|join:", " }}
+{% endif %}{% if project.link %}Live: {{ project.link }}
+{% endif %}{% if project.github_url %}GitHub: {{ project.github_url }}
+{% endif %}{% if project.demo_video_url %}Video: {{ project.demo_video_url }}
+{% endif %}
+BUILDER
+{{ builder.name }} <{{ builder.email }}>{% if builder.subtitle %}
+{{ builder.subtitle }}{% endif %}
+
+Review it in the dashboard (approve, edit, or reject):
+{{ review_url }}
+{% endautoescape %}

@@ -8,6 +8,12 @@
 </div>
 
 <div class="stat-cards">
+  {% if pending_count %}
+  <a href="{% url 'dashboard:submissions' %}" class="stat-card" style="text-decoration:none;border-color:var(--terracotta);">
+    <div class="stat-num">{{ pending_count }}</div>
+    <div class="stat-label">Awaiting review</div>
+  </a>
+  {% endif %}
   <div class="stat-card">
     <div class="stat-num">{{ gallery_count }}</div>
     <div class="stat-label">Gallery Images</div>

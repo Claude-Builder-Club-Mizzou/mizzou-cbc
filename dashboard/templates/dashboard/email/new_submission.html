@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>New project submission</title>
+</head>
+<body style="margin:0;padding:0;background-color:#F4EFE9;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">{{ builder.name }} submitted "{{ project.title }}" for review.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F4EFE9;">
+    <tr>
+      <td align="center" style="padding:32px 12px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#FFFFFF;border:1px solid #E4DBD0;border-radius:6px;overflow:hidden;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#1C1917;padding:20px 28px;border-bottom:3px solid #D97757;">
+              <span style="font-family:'Courier New',Courier,monospace;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#D97757;font-weight:bold;">CBC Mizzou</span>
+              <span style="font-family:'Courier New',Courier,monospace;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#A89A8A;">&nbsp;/&nbsp; new submission</span>
+            </td>
+          </tr>
+
+          {% if cover_url %}
+          <tr>
+            <td style="padding:0;line-height:0;">
+              <img src="{{ cover_url }}" alt="" width="600" style="display:block;width:100%;max-width:600px;height:auto;max-height:280px;object-fit:cover;border:0;">
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- Project -->
+          <tr>
+            <td style="padding:28px 28px 8px;">
+              <div style="font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#D97757;font-weight:bold;">Awaiting review</div>
+              <h1 style="margin:8px 0 10px;font-family:Helvetica,Arial,sans-serif;font-size:26px;line-height:1.25;color:#1C1917;">{{ project.title }}</h1>
+              <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.6;color:#4A413A;">{{ project.description }}</p>
+            </td>
+          </tr>
+
+          {% if project.tech %}
+          <tr>
+            <td style="padding:14px 28px 0;">
+              {% for tag in project.tech %}<span style="display:inline-block;margin:0 6px 6px 0;padding:3px 10px;background-color:#F8E7DF;color:#B85F42;border-radius:3px;font-family:'Courier New',Courier,monospace;font-size:12px;">{{ tag }}</span>{% endfor %}
+            </td>
+          </tr>
+          {% endif %}
+
+          {% if project.link or project.github_url or project.demo_video_url %}
+          <tr>
+            <td style="padding:16px 28px 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.8;">
+              {% if project.link %}<div><span style="color:#8A7E76;">Live site&nbsp;</span> <a href="{{ project.link }}" style="color:#B85F42;word-break:break-all;">{{ project.link }}</a></div>{% endif %}
+              {% if project.github_url %}<div><span style="color:#8A7E76;">GitHub&nbsp;</span> <a href="{{ project.github_url }}" style="color:#B85F42;word-break:break-all;">{{ project.github_url }}</a></div>{% endif %}
+              {% if project.demo_video_url %}<div><span style="color:#8A7E76;">Demo video&nbsp;</span> <a href="{{ project.demo_video_url }}" style="color:#B85F42;word-break:break-all;">{{ project.demo_video_url }}</a></div>{% endif %}
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- Builder -->
+          <tr>
+            <td style="padding:24px 28px 0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#FAF6F1;border:1px solid #EDE4D9;border-radius:4px;">
+                <tr>
+                  <td style="padding:16px 18px;font-family:Helvetica,Arial,sans-serif;">
+                    <div style="font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#8A7E76;margin-bottom:6px;">Submitted by</div>
+                    <div style="font-size:16px;font-weight:bold;color:#1C1917;">{{ builder.name }}</div>
+                    {% if builder.subtitle %}<div style="font-size:14px;color:#6B5F56;margin-top:2px;">{{ builder.subtitle }}</div>{% endif %}
+                    <div style="font-size:14px;margin-top:6px;"><a href="mailto:{{ builder.email }}" style="color:#B85F42;">{{ builder.email }}</a></div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Button -->
+          <tr>
+            <td align="left" style="padding:28px 28px 8px;">
+              <a href="{{ review_url }}" style="display:inline-block;background-color:#D97757;color:#1C1917;font-family:'Courier New',Courier,monospace;font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:14px 26px;border-radius:3px;">Review submission &rarr;</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 28px 28px;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5;color:#8A7E76;">
+              Nothing is public until you approve it. Hit reply to email {{ builder.name }} directly.
+            </td>
+          </tr>
+
+        </table>
+        <p style="margin:16px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#8A7E76;">Claude Builders Club @ Mizzou &middot; automated notification</p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

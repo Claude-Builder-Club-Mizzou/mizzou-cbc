@@ -121,3 +121,74 @@ class TeamMemberForm(forms.ModelForm):
         if self.instance.pk and self.instance.term not in dict(choices):
             choices.append((self.instance.term, term_label(self.instance.term)))
         self.fields['term'] = forms.ChoiceField(choices=choices, initial=self.fields['term'].initial)
+
+
+# ── Public project submissions ───────────────────────────────────────────
+
+MAX_UPLOAD_MB = 5
+
+
+def _check_image_size(f):
+    if f and f.size > MAX_UPLOAD_MB * 1024 * 1024:
+        raise forms.ValidationError(f'Images must be under {MAX_UPLOAD_MB} MB.')
+    return f
+
+
+class BuilderSubmissionForm(forms.ModelForm):
+    """The submitter's builder profile. The email is private, for the exec board only."""
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'placeholder': 'you@mail.missouri.edu'}),
+        help_text='Only the executive board sees this. We use it to follow up if needed.',
+    )
+
+    class Meta:
+        model = Builder
+        fields = ['name', 'email', 'major', 'year', 'bio', 'photo', 'linkedin', 'github', 'website']
+        widgets = BuilderForm.Meta.widgets
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['bio'].required = True
+        self.fields['bio'].widget.attrs['rows'] = 4
+
+    def clean_photo(self):
+        return _check_image_size(self.cleaned_data.get('photo'))
+
+
+class ProjectSubmissionForm(ProjectForm):
+    """ProjectForm minus the exec-only display options, with the write-up required."""
+
+    class Meta(ProjectForm.Meta):
+        fields = [
+            'title', 'description', 'image', 'story', 'claude_usage', 'challenges',
+            'link', 'github_url', 'demo_video_url', 'built_at',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name in ('image', 'story', 'claude_usage'):
+            self.fields[name].required = True
+
+    def clean_image(self):
+        return _check_image_size(self.cleaned_data.get('image'))
+
+    def clean(self):
+        cleaned = super().clean()
+        if not (cleaned.get('link') or cleaned.get('github_url') or cleaned.get('demo_video_url')):
+            raise forms.ValidationError('Add at least one link: a live site, a GitHub repo, or a demo video.')
+        return cleaned
+
+
+class SubmissionImageForm(forms.ModelForm):
+    class Meta:
+        model = ProjectImage
+        fields = ['image', 'caption']
+        widgets = {'caption': forms.TextInput(attrs={'placeholder': 'Caption (optional)'})}
+
+    def clean_image(self):
+        return _check_image_size(self.cleaned_data.get('image'))
+
+
+SubmissionImageFormSet = forms.inlineformset_factory(
+    Project, ProjectImage, form=SubmissionImageForm, extra=3, max_num=3, can_delete=False,
+)

@@ -1,0 +1,171 @@
+{% extends "landing/base.html" %}
+{% load static %}
+
+{% block title %}Submit a Project | CBC Mizzou{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'landing/css/submit.css' %}?v=1">
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'landing/js/submit.js' %}?v=1"></script>
+{% endblock %}
+
+{% block content %}
+  <section class="section bg-white-section">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="text-heading">Submit a <span class="text-terracotta">Project</span></h2>
+        <p class="text-muted">Built something with Claude? Tell us about it. <span class="accent">An executive board member reviews every submission</span> before it goes live.</p>
+      </div>
+
+      {# No fade-up here: the reveal needs 15% of the element on screen, and this form is far taller than the viewport #}
+      <div class="terminal-frame submit-frame">
+        <span class="terminal-frame-label">submit_project v1.0.0</span>
+
+        {% if builder_form.errors or project_form.errors or formset.total_error_count %}
+        <div class="submit-errors" role="alert">
+          <strong>Please fix the following:</strong>
+          <ul>
+            {% for field in builder_form %}{% for e in field.errors %}<li>{{ field.label }}: {{ e }}</li>{% endfor %}{% endfor %}
+            {% for e in builder_form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+            {% for field in project_form %}{% for e in field.errors %}<li>{{ field.label }}: {{ e }}</li>{% endfor %}{% endfor %}
+            {% for e in project_form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+            {% for f in formset %}{% for field in f %}{% for e in field.errors %}<li>Screenshot: {{ e }}</li>{% endfor %}{% endfor %}{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="submit-form" novalidate>
+          {% csrf_token %}
+          {# Honeypot: hidden from people, irresistible to bots #}
+          <div class="hp" aria-hidden="true">
+            <label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <h3 class="submit-step"><span>01</span> Your builder profile</h3>
+          <p class="submit-note">This becomes your public profile page once your project is approved.</p>
+          <div class="field">
+            <label for="{{ builder_form.name.id_for_label }}">Full name *</label>
+            {{ builder_form.name }}
+          </div>
+          <div class="field">
+            <label for="{{ builder_form.email.id_for_label }}">Email *</label>
+            {{ builder_form.email }}
+            <small>{{ builder_form.email.help_text }}</small>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="{{ builder_form.major.id_for_label }}">Major</label>
+              {{ builder_form.major }}
+            </div>
+            <div class="field">
+              <label for="{{ builder_form.year.id_for_label }}">Year</label>
+              {{ builder_form.year }}
+            </div>
+          </div>
+          <div class="field">
+            <label for="{{ builder_form.bio.id_for_label }}">Short bio *</label>
+            {{ builder_form.bio }}
+          </div>
+          <div class="field">
+            <label for="{{ builder_form.photo.id_for_label }}">Personal Headshot / Selfie</label>
+            {{ builder_form.photo }}
+            <small>Optional. Max 5 MB.</small>
+          </div>
+          <div class="field">
+            <label for="{{ builder_form.linkedin.id_for_label }}">LinkedIn</label>
+            {{ builder_form.linkedin }}
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="{{ builder_form.github.id_for_label }}">GitHub</label>
+              {{ builder_form.github }}
+            </div>
+            <div class="field">
+              <label for="{{ builder_form.website.id_for_label }}">Website</label>
+              {{ builder_form.website }}
+            </div>
+          </div>
+
+          <h3 class="submit-step"><span>02</span> Your project</h3>
+          <div class="field">
+            <label for="{{ project_form.title.id_for_label }}">Project name *</label>
+            {{ project_form.title }}
+          </div>
+          <div class="field">
+            <label for="{{ project_form.description.id_for_label }}">Short description *</label>
+            {{ project_form.description }}
+            <small>Shown on the project card.</small>
+          </div>
+          <div class="field">
+            <label for="{{ project_form.image.id_for_label }}">Cover image *</label>
+            {{ project_form.image }}
+            <small>Max 5 MB.</small>
+          </div>
+          <div class="field">
+            <label for="{{ project_form.tech_input.id_for_label }}">Technologies</label>
+            {{ project_form.tech_input }}
+            <small>Comma-separated.</small>
+          </div>
+          <div class="field">
+            <label for="{{ project_form.built_at.id_for_label }}">Built at</label>
+            {{ project_form.built_at }}
+            <small>Optional: a hackathon, demo night, or class.</small>
+          </div>
+          <div class="field">
+            <label for="{{ project_form.story.id_for_label }}">About this project *</label>
+            {{ project_form.story }}
+          </div>
+          <div class="field">
+            <label for="{{ project_form.claude_usage.id_for_label }}">How you used Claude *</label>
+            {{ project_form.claude_usage }}
+          </div>
+          <div class="field">
+            <label for="{{ project_form.challenges.id_for_label }}">Challenges &amp; lessons</label>
+            {{ project_form.challenges }}
+          </div>
+
+          <h3 class="submit-step"><span>03</span> Links &amp; screenshots</h3>
+          <p class="submit-note">Add at least one link.</p>
+          <div class="field">
+            <label for="{{ project_form.link.id_for_label }}">Live site / app</label>
+            {{ project_form.link }}
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="{{ project_form.github_url.id_for_label }}">GitHub repo</label>
+              {{ project_form.github_url }}
+            </div>
+            <div class="field">
+              <label for="{{ project_form.demo_video_url.id_for_label }}">Demo video</label>
+              {{ project_form.demo_video_url }}
+              <small>YouTube or Loom links embed on your page.</small>
+            </div>
+          </div>
+
+          {{ formset.management_form }}
+          {% for f in formset %}
+          <div class="field-row shot">
+            <div class="field">
+              <label for="{{ f.image.id_for_label }}">Screenshot {{ forloop.counter }}</label>
+              {{ f.image }}
+            </div>
+            <div class="field">
+              <label for="{{ f.caption.id_for_label }}">Caption</label>
+              {{ f.caption }}
+            </div>
+            {% for hidden in f.hidden_fields %}{{ hidden }}{% endfor %}
+          </div>
+          {% endfor %}
+
+          <div class="submit-actions">
+            <button type="submit" class="btn-gold">Submit for review</button>
+            <a href="{% url 'projects' %}" class="btn-gold-outline">Cancel</a>
+          </div>
+          <p class="submit-note">By submitting you confirm this is your work and you're happy for the club to feature it on this site.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock %}

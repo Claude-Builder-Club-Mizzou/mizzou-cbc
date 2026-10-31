@@ -78,6 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'dashboard.context_processors.pending_submissions',
             ],
         },
     },
@@ -146,3 +147,23 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+# Email
+# Set EMAIL_HOST_USER / EMAIL_HOST_PASSWORD (a Gmail app password) to send real mail.
+# Without them, emails print to the console so local dev works with no setup.
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+    EMAIL_USE_TLS = True
+    EMAIL_TIMEOUT = 10
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'cbcmizzou@gmail.com')
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+# Public base URL used for links in emails (request headers aren't reliable behind a proxy)
+SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000' if DEBUG else 'https://claudebuilderclub.com')
+SUBMISSION_NOTIFY_EMAIL =os.environ.get('SUBMISSION_NOTIFY_EMAIL', 'cbcmizzou@gmail.com')

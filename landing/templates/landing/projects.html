@@ -4,7 +4,7 @@
 {% block title %}Projects | CBC Mizzou{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'landing/css/projects.css' %}?v=26">
+  <link rel="stylesheet" href="{% static 'landing/css/projects.css' %}?v=27">
 {% endblock %}
 
 {% block content %}
@@ -25,6 +25,9 @@
           {% endfor %}
         </div>
       </div>
+      <div class="projects-cta fade-up">
+        <a href="{% url 'submit_project' %}" class="btn-gold">Submit your project</a>
+      </div>
     </div>
   </section>
 
@@ -39,6 +42,7 @@
             <p class="text-muted">Every project on this page started as a <span class="accent">first prompt</span>. Members write, iterate with Claude, and keep going until it's something real.</p>
             <p class="text-muted">Built a site, a tool, or a bot? Share it with the club and it can be <span class="accent">featured here,</span> with its own page, screenshots, and credit to the people who built it.</p>
             <p class="text-muted">We also want to <span class="accent">send member projects to Anthropic.</span> The best ones go in front of the team at Anthropic, so what you build here can reach the people who made the tools.</p>
+            <p class="text-muted"><a href="{% url 'submit_project' %}" class="text-terracotta">Submit your project</a> and an exec will review it before it goes live.</p>
             <p class="text-muted">You don't need to be a developer to ship. Start small, show people what you made, and learn from the other student builders around you.</p>
           </div>
           <div class="feature-intro-art">

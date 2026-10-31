@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
@@ -41,7 +42,7 @@ def dashboard_home(request):
         'active_page': 'home',
         'gallery_count': GalleryImage.objects.count(),
         'event_count': Event.objects.count(),
-        'project_count': Project.objects.count(),
+        'project_count': Project.objects.approved().count(),
         'team_count': TeamMember.objects.filter(term=current_term()).count(),
         'current_term_label': term_label(current_term()),
         'past_board_count': TeamMember.objects.exclude(term=current_term()).values('term').distinct().count(),
@@ -209,6 +210,55 @@ def project_delete(request, pk):
         project.image.delete(save=False)
         project.delete()
     return redirect('dashboard:projects')
+
+
+# ── Submissions ──────────────────────────────────────────────────────────
+
+
+@login_required(login_url=LOGIN_URL)
+def submission_list(request):
+    context = {
+        'active_page': 'submissions',
+        'submissions': Project.objects.pending().order_by('created_at').prefetch_related('builders', 'images'),
+        'rejected': Project.objects.filter(status=Project.REJECTED).order_by('-updated_at').prefetch_related('builders'),
+    }
+    return render(request, 'dashboard/submissions.html', context)
+
+
+@login_required(login_url=LOGIN_URL)
+def submission_review(request, pk, decision):
+    """Approve (publishes the project and its builder profile) or reject a pending submission."""
+    project = get_object_or_404(Project, pk=pk)
+    if request.method == 'POST':
+        if decision == 'approve':
+            project.status = Project.APPROVED
+            project.builders.filter(is_approved=False).update(is_approved=True)
+            messages.success(request, f'"{project.title}" is now live on the site.')
+        else:
+            project.status = Project.REJECTED
+            messages.success(request, f'"{project.title}" was rejected and stays hidden.')
+        project.save(update_fields=['status', 'updated_at'])
+    return redirect('dashboard:submissions')
+
+
+@login_required(login_url=LOGIN_URL)
+def submission_delete(request, pk):
+    """Permanently remove a rejected submission, plus the submitter's profile if nothing else uses it."""
+    project = get_object_or_404(Project, pk=pk, status=Project.REJECTED)
+    if request.method == 'POST':
+        title = project.title
+        # Unapproved profiles only exist because of a submission. Once this project goes, any that
+        # have no other project are orphans holding a private email, so remove them as well.
+        orphans = [b for b in project.builders.filter(is_approved=False) if b.projects.count() == 1]
+        for img in project.images.all():
+            img.image.delete(save=False)
+        project.image.delete(save=False)
+        project.delete()
+        for builder in orphans:
+            builder.photo.delete(save=False)
+            builder.delete()
+        messages.success(request, f'"{title}" was deleted.')
+    return redirect('dashboard:submissions')
 
 
 # ── Builders ─────────────────────────────────────────────────────────────

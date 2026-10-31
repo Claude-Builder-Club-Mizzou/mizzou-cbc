@@ -25,6 +25,12 @@ urlpatterns = [
     path('dashboard/projects/<int:pk>/edit/', views.project_edit, name='project_edit'),
     path('dashboard/projects/<int:pk>/delete/', views.project_delete, name='project_delete'),
 
+    # Submissions (public project submissions awaiting review)
+    path('dashboard/submissions/', views.submission_list, name='submissions'),
+    path('dashboard/submissions/<int:pk>/approve/', views.submission_review, {'decision': 'approve'}, name='submission_approve'),
+    path('dashboard/submissions/<int:pk>/reject/', views.submission_review, {'decision': 'reject'}, name='submission_reject'),
+    path('dashboard/submissions/<int:pk>/delete/', views.submission_delete, name='submission_delete'),
+
     # Builders
     path('dashboard/builders/', views.builder_list, name='builders'),
     path('dashboard/builders/new/', views.builder_create, name='builder_create'),

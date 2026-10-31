@@ -1,8 +1,12 @@
 from collections import defaultdict
 
-from django.shortcuts import get_object_or_404, render
+from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.templatetags.static import static
+from dashboard.forms import BuilderSubmissionForm, ProjectSubmissionForm, SubmissionImageFormSet
 from dashboard.models import Builder, GalleryImage, Event, Project, TeamMember
+from dashboard.notifications import notify_new_submission
 from dashboard.terms import all_terms, current_term, term_label, term_status
 
 NAV_ITEMS = [
@@ -142,14 +146,14 @@ def team(request):
 
 def projects(request):
     return _render(request, 'landing/projects.html', 'projects',
-                   projects=Project.objects.prefetch_related('builders'))
+                   projects=Project.objects.approved().prefetch_related('builders'))
 
 
 def _related_projects(project, limit=3):
     """Other projects ranked by shared builders and tech tags, topped up with the newest."""
     mine = {t.lower() for t in project.tech}
     builder_ids = {b.pk for b in project.builders.all()}
-    others = list(Project.objects.exclude(pk=project.pk).prefetch_related('builders'))
+    others = list(Project.objects.approved().exclude(pk=project.pk).prefetch_related('builders'))
 
     def score(p):
         shared_tech = len(mine & {t.lower() for t in p.tech})
@@ -161,24 +165,61 @@ def _related_projects(project, limit=3):
 
 
 def project_detail(request, slug):
-    project = get_object_or_404(Project.objects.prefetch_related('builders', 'images'), slug=slug)
+    project = get_object_or_404(Project.objects.approved().prefetch_related('builders', 'images'), slug=slug)
     return _render(
         request, 'landing/project_detail.html', 'projects',
         project=project,
-        builders=project.builders.all(),
+        builders=project.builders.filter(is_approved=True),
         images=project.images.all(),
         related=_related_projects(project),
     )
 
 
 def builder_detail(request, slug):
-    builder = get_object_or_404(Builder, slug=slug)
+    builder = get_object_or_404(Builder, slug=slug, is_approved=True)
     return _render(
         request, 'landing/builder_detail.html', 'projects',
         builder=builder,
-        projects=builder.projects.prefetch_related('builders'),
+        projects=builder.projects.approved().prefetch_related('builders'),
     )
 
 
 def connect(request):
     return _render(request, 'landing/connect.html', 'connect')
+
+
+def submit_project(request):
+    """Public form: a builder profile + a project, both held for exec review."""
+    if request.method == 'POST':
+        builder_form = BuilderSubmissionForm(request.POST, request.FILES, prefix='builder')
+        project_form = ProjectSubmissionForm(request.POST, request.FILES, prefix='project')
+        formset = SubmissionImageFormSet(request.POST, request.FILES, instance=project_form.instance)
+        # Hidden honeypot: people never see it, bots fill it. Pretend it worked and save nothing.
+        if request.POST.get('company'):
+            return redirect('submit_thanks')
+        if builder_form.is_valid() and project_form.is_valid() and formset.is_valid():
+            with transaction.atomic():
+                builder = builder_form.save(commit=False)
+                builder.is_approved = False
+                builder.save()
+                project = project_form.save(commit=False)
+                project.status = Project.PENDING
+                project.save()
+                project_form.save_m2m()
+                project.builders.add(builder)
+                formset.save()
+            notify_new_submission(project, builder)
+            return redirect('submit_thanks')
+    else:
+        builder_form = BuilderSubmissionForm(prefix='builder')
+        project_form = ProjectSubmissionForm(prefix='project')
+        formset = SubmissionImageFormSet(instance=project_form.instance)
+
+    return _render(
+        request, 'landing/submit.html', 'projects',
+        builder_form=builder_form, project_form=project_form, formset=formset,
+    )
+
+
+def submit_thanks(request):
+    return _render(request, 'landing/submit_thanks.html', 'projects')
